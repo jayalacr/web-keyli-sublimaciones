@@ -1,0 +1,389 @@
+// =============================================================
+// Keyli Sublimaciones — Data (productos, temporadas, contenido)
+// =============================================================
+
+window.KEYLI_DATA = (function () {
+  const PHONE = "525512345678"; // placeholder
+  const WA_BASE = `https://wa.me/${PHONE}`;
+
+  const waLink = (text) =>
+    `${WA_BASE}?text=${encodeURIComponent(text)}`;
+
+  const techniques = [
+    {
+      id: "dtf",
+      label: "DTF",
+      tagline: "Estampado textil full color",
+      desc: "Transferencia DTF para playeras, sudaderas y prendas claras u oscuras. Tinta resistente al lavado y al tacto.",
+      includes: ["Playeras", "Sudaderas", "Mandiles", "Tote bags"]
+    },
+    {
+      id: "sublimacion",
+      label: "Sublimación",
+      tagline: "Color permanente sobre rígidos",
+      desc: "Estampado permanente para tazas, termos, llaveros, mousepads, cojines y poliéster claro. Colores intensos y duraderos.",
+      includes: ["Tazas", "Termos", "Llaveros", "Cojines", "Cuadros MDF"]
+    },
+    {
+      id: "digital",
+      label: "Trabajos digitales",
+      tagline: "Vinil, papelería y diseño",
+      desc: "Cortes de vinil textil y decorativo, tarjetas de presentación, invitaciones, lonas, stickers y diseño gráfico a medida para tu marca o evento.",
+      includes: ["Vinil textil", "Vinil decorativo", "Tarjetas de presentación", "Invitaciones", "Stickers", "Lonas"]
+    }
+  ];
+
+  const seasons = [
+    { id: "madres",       label: "Día de las Madres",   emoji: "🌷", month: "Mayo",      tint: "#F5D8E8" },
+    { id: "padres",       label: "Día del Padre",       emoji: "👔", month: "Junio",     tint: "#D5E1F5" },
+    { id: "ninos",        label: "Día del Niño",        emoji: "🎈", month: "Abril",     tint: "#FFE6C2" },
+    { id: "maestros",     label: "Día del Maestro",     emoji: "📚", month: "Mayo",      tint: "#E0F0DC" },
+    { id: "valentin",     label: "San Valentín",        emoji: "💝", month: "Febrero",   tint: "#FAD0D8" },
+    { id: "navidad",      label: "Navidad",             emoji: "🎄", month: "Diciembre", tint: "#D7EFD9" },
+    { id: "muertos",      label: "Día de Muertos",      emoji: "💀", month: "Noviembre", tint: "#F1D9F0" },
+    { id: "graduaciones", label: "Graduaciones",        emoji: "🎓", month: "Jun – Jul", tint: "#E1DAF5" },
+    { id: "xv",           label: "Bautizos / XV años",  emoji: "👑", month: "Todo el año",tint:"#EFDFF7" },
+    { id: "babyshower",   label: "Baby Shower",         emoji: "🍼", month: "Todo el año",tint:"#F0E2D8" }
+  ];
+
+  const products = [
+    {
+      id: "playera-dtf-madre",
+      name: "Playera DTF — Edición Mamá",
+      technique: "dtf",
+      seasons: ["madres"],
+      category: "Playeras",
+      priceFrom: 220,
+      blurb: "Algodón premium con transfer DTF a todo color. Diseños listos o personaliza el tuyo.",
+      colors: ["Blanco", "Rosa pastel", "Lila", "Negro"],
+      sizes: ["CH", "M", "G", "XG", "2XG"],
+      gradient: ["#F5D8E8", "#E6D3FB"],
+      icon: "shirt",
+      featured: true,
+      stock: 24,
+      badge: "Más vendido"
+    },
+    {
+      id: "playera-sub-maestra",
+      name: "Playera sublimada — Maestra favorita",
+      technique: "sublimacion",
+      seasons: ["maestros"],
+      category: "Playeras",
+      priceFrom: 250,
+      blurb: "Sublimación full color sobre playera blanca poliéster. Frase y nombre personalizables.",
+      colors: ["Blanco"],
+      sizes: ["CH", "M", "G", "XG"],
+      gradient: ["#E0F0DC", "#FFF1B0"],
+      icon: "shirt",
+      stock: 18
+    },
+    {
+      id: "taza-mama",
+      name: "Taza mágica — Te amo Mamá",
+      technique: "sublimacion",
+      seasons: ["madres", "valentin"],
+      category: "Tazas",
+      priceFrom: 130,
+      blurb: "Taza cerámica 11oz. Cambia de color con líquidos calientes. Incluye empaque de regalo.",
+      colors: ["Negro mágico", "Rojo mágico"],
+      sizes: ["11 oz"],
+      gradient: ["#E7D7F7", "#CAB0EC"],
+      icon: "mug",
+      featured: true,
+      stock: 36,
+      badge: "Edición temporada"
+    },
+    {
+      id: "taza-blanca",
+      name: "Taza blanca personalizada",
+      technique: "sublimacion",
+      seasons: ["navidad", "graduaciones", "xv", "babyshower"],
+      category: "Tazas",
+      priceFrom: 95,
+      blurb: "Taza cerámica blanca 11 oz. Diseño full color por ambos lados.",
+      colors: ["Blanca"],
+      sizes: ["11 oz", "15 oz"],
+      gradient: ["#FBF7FF", "#E6D3FB"],
+      icon: "mug",
+      stock: 60
+    },
+    {
+      id: "termo-acero",
+      name: "Termo de acero 600 ml",
+      technique: "sublimacion",
+      seasons: ["padres", "graduaciones"],
+      category: "Termos",
+      priceFrom: 320,
+      blurb: "Termo doble pared, mantiene frío/caliente. Sublimación grado profesional resistente a lavado.",
+      colors: ["Blanco", "Plata"],
+      sizes: ["500 ml", "600 ml", "1 L"],
+      gradient: ["#D5E1F5", "#E6D3FB"],
+      icon: "bottle",
+      featured: true,
+      stock: 12
+    },
+    {
+      id: "llavero-pareja",
+      name: "Llavero MDF — Pareja",
+      technique: "sublimacion",
+      seasons: ["valentin", "madres", "padres"],
+      category: "Llaveros",
+      priceFrom: 60,
+      blurb: "Llavero de MDF 5 cm con foto y frase. Se vende por pieza o en par.",
+      colors: ["Madera", "Blanco"],
+      sizes: ["Corazón", "Redondo", "Rectangular"],
+      gradient: ["#FAD0D8", "#FFE066"],
+      icon: "key",
+      stock: 80
+    },
+    {
+      id: "vinil-uniforme",
+      name: "Vinil textil — Nombre y número",
+      technique: "digital",
+      seasons: ["graduaciones"],
+      category: "Vinil",
+      priceFrom: 45,
+      blurb: "Corte de vinil termoadherido. Ideal para uniformes deportivos, generaciones y empresas.",
+      colors: ["12 colores disponibles"],
+      sizes: ["Hasta 30 cm de alto"],
+      gradient: ["#FFE066", "#FFE6C2"],
+      icon: "tag",
+      stock: 200
+    },
+    {
+      id: "playera-navidad",
+      name: "Playera familiar — Navidad",
+      technique: "dtf",
+      seasons: ["navidad"],
+      category: "Playeras",
+      priceFrom: 240,
+      blurb: "Set de playeras coordinadas para toda la familia. Diseños navideños o personalizados.",
+      colors: ["Roja", "Verde", "Blanca"],
+      sizes: ["0-2 años", "CH", "M", "G", "XG"],
+      gradient: ["#D7EFD9", "#FAD0D8" ],
+      icon: "shirt",
+      stock: 15,
+      badge: "Set familiar"
+    },
+    {
+      id: "taza-maestro",
+      name: "Taza — Mejor Maestro",
+      technique: "sublimacion",
+      seasons: ["maestros"],
+      category: "Tazas",
+      priceFrom: 120,
+      blurb: "Taza con frase, foto del grupo o nombre. Detalle perfecto para fin de ciclo escolar.",
+      colors: ["Blanca", "Mágica"],
+      sizes: ["11 oz"],
+      gradient: ["#E0F0DC", "#E6D3FB"],
+      icon: "mug",
+      stock: 30
+    },
+    {
+      id: "termo-deporte",
+      name: "Botella deportiva 750 ml",
+      technique: "sublimacion",
+      seasons: ["ninos", "graduaciones"],
+      category: "Termos",
+      priceFrom: 180,
+      blurb: "Botella deportiva con popote. Personaliza con nombre del peque o equipo.",
+      colors: ["Blanca", "Rosa", "Azul"],
+      sizes: ["500 ml", "750 ml"],
+      gradient: ["#FFE6C2", "#D5E1F5"],
+      icon: "bottle",
+      stock: 22
+    },
+    {
+      id: "playera-papa",
+      name: "Playera DTF — Papá nivel pro",
+      technique: "dtf",
+      seasons: ["padres"],
+      category: "Playeras",
+      priceFrom: 230,
+      blurb: "Playera DTF con frase, foto o logo. Algodón 180 g, corte unisex.",
+      colors: ["Negra", "Gris jaspe", "Blanca", "Azul marino"],
+      sizes: ["M", "G", "XG", "2XG", "3XG"],
+      gradient: ["#D5E1F5", "#3E2566"],
+      icon: "shirt",
+      stock: 28
+    },
+    {
+      id: "llavero-grupo",
+      name: "Llavero generación — Graduación",
+      technique: "sublimacion",
+      seasons: ["graduaciones"],
+      category: "Llaveros",
+      priceFrom: 55,
+      blurb: "Llavero conmemorativo con foto del grupo, año y nombre. Pedido mínimo de 10.",
+      colors: ["Madera", "Acrílico"],
+      sizes: ["Rectangular", "Birrete"],
+      gradient: ["#E1DAF5", "#FFE066"],
+      icon: "key",
+      stock: 0,
+      badge: "Bajo pedido"
+    }
+  ];
+
+  const categoryMeta = {
+    "Playeras": {
+      id: "playeras",
+      label: "Playeras",
+      tagline: "Algodón premium con tu diseño",
+      desc: "Estampamos playeras a todo color con DTF y sublimación. Perfectas para regalar, familias coordinadas, equipos, escuelas, eventos o uniformes empresariales.",
+      inspiration: ["Para mamá", "Familias coordinadas", "Eventos", "Frases personalizadas", "Logo de empresa", "Foto + nombre"],
+      icon: "shirt",
+      gradient: ["#F5D8E8", "#CAB0EC"],
+      techniques: ["dtf", "sublimacion"]
+    },
+    "Tazas": {
+      id: "tazas",
+      label: "Tazas",
+      tagline: "Cerámica sublimada full color",
+      desc: "Tazas blancas, mágicas (cambian con líquido caliente) y de colores. Impresión por ambos lados con tu foto, frase o diseño. Incluyen empaque de regalo.",
+      inspiration: ["Foto familiar", "Mejor maestro", "Cumpleaños", "Aniversarios", "Frase favorita"],
+      icon: "mug",
+      gradient: ["#E7D7F7", "#CAB0EC"],
+      techniques: ["sublimacion"]
+    },
+    "Termos": {
+      id: "termos",
+      label: "Termos",
+      tagline: "Acero de doble pared, listos para regalo",
+      desc: "Termos de acero inoxidable y botellas deportivas con sublimación grado profesional. Mantienen temperatura y el diseño resiste lavado.",
+      inspiration: ["Para papá", "Generaciones", "Equipos deportivos", "Empresariales"],
+      icon: "bottle",
+      gradient: ["#D5E1F5", "#B991E5"],
+      techniques: ["sublimacion"]
+    },
+    "Llaveros": {
+      id: "llaveros",
+      label: "Llaveros",
+      tagline: "Recuerditos en MDF y acrílico",
+      desc: "Llaveros con foto, nombre o frase. Ideales como recuerdos de XV años, bodas, bautizos, generaciones o regalos en pareja.",
+      inspiration: ["Parejas", "Recuerdos de evento", "Generaciones", "Mascotas"],
+      icon: "key",
+      gradient: ["#FAD0D8", "#FFE066"],
+      techniques: ["sublimacion"]
+    },
+    "Vinil": {
+      id: "vinil",
+      label: "Vinil & Trabajos digitales",
+      tagline: "Cortes, tarjetas, lonas y más",
+      desc: "Vinil textil para uniformes, vinil decorativo, tarjetas de presentación, invitaciones, stickers y lonas. Diseño gráfico incluido.",
+      inspiration: ["Uniformes deportivos", "Lonas para evento", "Tarjetas de presentación", "Invitaciones", "Stickers"],
+      icon: "tag",
+      gradient: ["#FFE066", "#FFB770"],
+      techniques: ["digital"]
+    }
+  };
+
+  const buyingSteps = [
+    {
+      n: 1,
+      title: "Cotización",
+      desc: "Escríbenos por WhatsApp con el producto, cantidad y referencias o foto del diseño. Te respondemos con cotización lo más pronto posible.",
+      icon: "chat",
+      time: "Lo más pronto posible"
+    },
+    {
+      n: 2,
+      title: "Aprobación del diseño",
+      desc: "Te mandamos una mockup digital con tu diseño aplicado. Hacemos ajustes hasta que quede perfecto.",
+      icon: "preview",
+      time: "Según el diseño"
+    },
+    {
+      n: 3,
+      title: "Apartado (50%)",
+      desc: "Una vez aprobado, separas tu pedido con el 50% del total vía transferencia, depósito u OXXO.",
+      icon: "wallet",
+      time: "Al confirmar"
+    },
+    {
+      n: 4,
+      title: "Producción",
+      desc: "Iniciamos producción cuando tu apartado esté confirmado. Recibes fotos del avance.",
+      icon: "factory",
+      time: "Según producto y cantidad"
+    },
+    {
+      n: 5,
+      title: "Entrega",
+      desc: "Liquidas el 50% restante y entregamos: en domicilio (CDMX/EdoMex), punto acordado o envío nacional.",
+      icon: "truck",
+      time: "Día acordado"
+    }
+  ];
+
+  const cancellationPolicy = [
+    {
+      window: "Antes de aprobar diseño",
+      status: "Cancelación libre",
+      detail: "Si aún no se aprueba la mockup ni se ha apartado, puedes cancelar sin costo.",
+      tone: "ok"
+    },
+    {
+      window: "Después de aprobar diseño y apartar",
+      status: "Reembolso parcial",
+      detail: "Se reembolsa el 70% del apartado. El 30% cubre diseño y materiales preparados.",
+      tone: "warn"
+    },
+    {
+      window: "Pedido en producción",
+      status: "Sin reembolso",
+      detail: "Una vez impreso el diseño no es posible cancelar. Puedes recoger el pedido o redirigirlo.",
+      tone: "danger"
+    },
+    {
+      window: "Cambios de diseño tras aprobar",
+      status: "Aplica re-cotización",
+      detail: "Si necesitas modificar arte/talla después de aprobar, se cotiza nuevamente desde el paso 2.",
+      tone: "warn"
+    }
+  ];
+
+  const faqs = [
+    {
+      q: "¿Puedo hacer mi compra directamente desde la página?",
+      a: "No. Todos los pedidos se realizan por WhatsApp porque el precio cambia según el diseño, técnica, cantidad y tiempo de entrega. La página es tu catálogo y referencia."
+    },
+    {
+      q: "¿Hay pedido mínimo?",
+      a: "Para piezas únicas no. Para algunos productos como llaveros o vinil aplica pedido mínimo; te lo confirmamos al cotizar."
+    },
+    {
+      q: "¿Cuánto tarda mi pedido?",
+      a: "Depende del producto, la cantidad y la temporada. Te confirmamos el tiempo estimado antes de apartar para que llegue cuando lo necesitas."
+    },
+    {
+      q: "¿Hacen envíos?",
+      a: "Sí, a toda la república por paquetería. CDMX y zona conurbada con repartidor local. Envío se cobra aparte y se confirma en cotización."
+    },
+    {
+      q: "¿Y si mi diseño no es muy bueno?",
+      a: "No te preocupes. Te ayudamos a mejorarlo o lo rediseñamos sin costo si es ajuste menor. Diseño desde cero se cotiza aparte."
+    }
+  ];
+
+  const testimonials = [
+    { name: "Diana R.", text: "Pedí playeras para todo el grupo de mi hija el día del maestro. Quedaron hermosas y a tiempo.", season: "maestros", rating: 5 },
+    { name: "Luis A.", text: "Mi taza mágica de papá voló. La calidad del estampado es brutal.", season: "padres", rating: 5 },
+    { name: "Marina G.", text: "Hicieron mi pedido de XV años con todo el detalle. 100% recomendados.", season: "xv", rating: 5 }
+  ];
+
+  return {
+    PHONE,
+    WA_BASE,
+    waLink,
+    techniques,
+    seasons,
+    products,
+    categoryMeta,
+    buyingSteps,
+    cancellationPolicy,
+    faqs,
+    testimonials,
+    SLOGAN: "Creamos tu idea.",
+    NAME: "Keyli Sublimaciones"
+  };
+})();

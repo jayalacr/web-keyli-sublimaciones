@@ -1,7 +1,19 @@
+import { Hero } from "@/components/home/Hero";
+import { SparkleBand } from "@/components/home/SparkleBand";
+import { ServicesSection } from "@/components/home/ServicesSection";
+import { FeaturedProducts } from "@/components/home/FeaturedProducts";
+import { CTAClose } from "@/components/home/CTAClose";
+import { products } from "@/lib/data";
+
 export default function Home() {
+  const featured = products.filter((p) => p.featured);
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh]" style={{ color: "var(--color-ink-soft)" }}>
-      <p className="text-sm">Próximo paso: Prompt 4 — Landing page</p>
-    </div>
+    <>
+      <Hero variant="gradient" />
+      <SparkleBand />
+      <ServicesSection />
+      <FeaturedProducts items={featured} />
+      <CTAClose />
+    </>
   );
 }

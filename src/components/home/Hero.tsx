@@ -182,22 +182,24 @@ function HeroLogoComp({ isDeep }: { isDeep: boolean }) {
       />
 
       {/* Logo */}
-      <Image
-        src="/assets/logo-keyli.jpeg"
-        alt="Keyli Sublimaciones"
-        fill
-        className="rounded-full object-cover"
+      <div
+        className="absolute rounded-full overflow-hidden"
         style={{
-          inset: "14%",
-          width: "72%",
-          height: "72%",
-          position: "absolute",
+          top: "14%", left: "14%",
+          width: "72%", height: "72%",
           boxShadow: isDeep
             ? "0 30px 80px -20px rgba(0,0,0,.5), 0 0 0 4px rgba(255,255,255,.15)"
             : "0 30px 80px -20px rgba(92,58,140,.35), 0 0 0 4px rgba(255,255,255,.8)",
         }}
-        priority
-      />
+      >
+        <Image
+          src="/assets/logo-keyli.jpeg"
+          alt="Keyli Sublimaciones"
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
 
       {/* Sparkles */}
       <div className="absolute top-[6%] right-[10%]" style={{ color: "var(--color-yellow-300)", animation: "sparkle-float 3s ease-in-out infinite" }}>

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Dancing_Script, Plus_Jakarta_Sans } from "next/font/google";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { WhatsAppFAB } from "@/components/layout/WhatsAppFAB";
 import "./globals.css";
 
 const dancingScript = Dancing_Script({
@@ -30,7 +33,12 @@ export default function RootLayout({
       lang="es"
       className={`${dancingScript.variable} ${plusJakarta.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col" style={{ background: "var(--color-cream)", color: "var(--color-ink)" }}>
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
+        <WhatsAppFAB />
+      </body>
     </html>
   );
 }

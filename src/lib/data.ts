@@ -269,18 +269,18 @@ export const categoryMeta: CategoryMeta[] = [
 ];
 
 export const buyingSteps: BuyingStep[] = [
-  { step: 1, title: "Cotización",             desc: "Escríbenos por WhatsApp con el producto, cantidad y referencias o foto del diseño. Te respondemos con cotización lo más pronto posible." },
-  { step: 2, title: "Aprobación del diseño",  desc: "Te mandamos una mockup digital con tu diseño aplicado. Hacemos ajustes hasta que quede perfecto." },
-  { step: 3, title: "Apartado (50%)",         desc: "Una vez aprobado, separas tu pedido con el 50% del total vía transferencia, depósito u OXXO." },
-  { step: 4, title: "Producción",             desc: "Iniciamos producción cuando tu apartado esté confirmado. Recibes fotos del avance." },
-  { step: 5, title: "Entrega",                desc: "Liquidas el 50% restante y entregamos: en domicilio (CDMX/EdoMex), punto acordado o envío nacional." },
+  { step: 1, title: "Cotización",             desc: "Escríbenos por WhatsApp con el producto, cantidad y referencias o foto del diseño. Te respondemos con cotización lo más pronto posible.", time: "Lo más pronto posible", icon: "chat" },
+  { step: 2, title: "Aprobación del diseño",  desc: "Te mandamos una mockup digital con tu diseño aplicado. Hacemos ajustes hasta que quede perfecto.",                                     time: "Según el diseño",          icon: "preview" },
+  { step: 3, title: "Apartado (50%)",         desc: "Una vez aprobado, separas tu pedido con el 50% del total vía transferencia, depósito u OXXO.",                                        time: "Al confirmar",             icon: "wallet" },
+  { step: 4, title: "Producción",             desc: "Iniciamos producción cuando tu apartado esté confirmado. Recibes fotos del avance.",                                                   time: "Según producto y cantidad", icon: "factory" },
+  { step: 5, title: "Entrega",                desc: "Liquidas el 50% restante y entregamos: en domicilio (CDMX/EdoMex), punto acordado o envío nacional.",                                 time: "Día acordado",             icon: "truck" },
 ];
 
 export const cancellationPolicy: CancellationPolicy[] = [
-  { title: "Antes de aprobar diseño",                   body: "Si aún no se aprueba la mockup ni se ha apartado, puedes cancelar sin costo." },
-  { title: "Después de aprobar diseño y apartar",       body: "Se reembolsa el 70% del apartado. El 30% cubre diseño y materiales preparados." },
-  { title: "Pedido en producción",                      body: "Una vez impreso el diseño no es posible cancelar. Puedes recoger el pedido o redirigirlo." },
-  { title: "Cambios de diseño tras aprobar",            body: "Si necesitas modificar arte/talla después de aprobar, se cotiza nuevamente desde el paso 2." },
+  { title: "Antes de aprobar diseño",             status: "Cancelación libre",      tone: "ok",     body: "Si aún no se aprueba la mockup ni se ha apartado, puedes cancelar sin costo." },
+  { title: "Después de aprobar diseño y apartar", status: "Reembolso parcial",      tone: "warn",   body: "Se reembolsa el 70% del apartado. El 30% cubre diseño y materiales preparados." },
+  { title: "Pedido en producción",                status: "Sin reembolso",          tone: "danger", body: "Una vez impreso el diseño no es posible cancelar. Puedes recoger el pedido o redirigirlo." },
+  { title: "Cambios de diseño tras aprobar",      status: "Aplica re-cotización",   tone: "warn",   body: "Si necesitas modificar arte/talla después de aprobar, se cotiza nuevamente desde el paso 2." },
 ];
 
 export const faqs: FaqItem[] = [

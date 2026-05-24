@@ -35,6 +35,8 @@ export interface BuyingStep {
   step: number;
   title: string;
   desc: string;
+  time?: string;
+  icon?: string;
 }
 
 export interface FaqItem {
@@ -45,6 +47,8 @@ export interface FaqItem {
 export interface CancellationPolicy {
   title: string;
   body: string;
+  status?: string;
+  tone?: "ok" | "warn" | "danger";
 }
 
 export interface CategoryMeta {

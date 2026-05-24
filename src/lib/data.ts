@@ -1,4 +1,4 @@
-import type { Technique, Season, Product, BuyingStep, FaqItem, CancellationPolicy } from "@/types";
+import type { Technique, Season, Product, BuyingStep, FaqItem, CancellationPolicy, CategoryMeta } from "@/types";
 
 export const techniques: Technique[] = [
   {
@@ -212,6 +212,59 @@ export const products: Product[] = [
     icon: "key",
     stock: 0,
     badge: "Bajo pedido",
+  },
+];
+
+export const categoryMeta: CategoryMeta[] = [
+  {
+    id: "playeras",
+    label: "Playeras",
+    tagline: "Algodón premium con tu diseño",
+    desc: "Estampamos playeras a todo color con DTF y sublimación. Perfectas para regalar, familias coordinadas, equipos, escuelas, eventos o uniformes empresariales.",
+    inspiration: ["Para mamá", "Familias coordinadas", "Eventos", "Frases personalizadas", "Logo de empresa", "Foto + nombre"],
+    icon: "shirt",
+    gradient: ["#F5D8E8", "#CAB0EC"],
+    techniques: ["dtf", "sublimacion"],
+  },
+  {
+    id: "tazas",
+    label: "Tazas",
+    tagline: "Cerámica sublimada full color",
+    desc: "Tazas blancas, mágicas (cambian con líquido caliente) y de colores. Impresión por ambos lados con tu foto, frase o diseño. Incluyen empaque de regalo.",
+    inspiration: ["Foto familiar", "Mejor maestro", "Cumpleaños", "Aniversarios", "Frase favorita"],
+    icon: "mug",
+    gradient: ["#E7D7F7", "#CAB0EC"],
+    techniques: ["sublimacion"],
+  },
+  {
+    id: "termos",
+    label: "Termos",
+    tagline: "Acero de doble pared, listos para regalo",
+    desc: "Termos de acero inoxidable y botellas deportivas con sublimación grado profesional. Mantienen temperatura y el diseño resiste lavado.",
+    inspiration: ["Para papá", "Generaciones", "Equipos deportivos", "Empresariales"],
+    icon: "bottle",
+    gradient: ["#D5E1F5", "#B991E5"],
+    techniques: ["sublimacion"],
+  },
+  {
+    id: "llaveros",
+    label: "Llaveros",
+    tagline: "Recuerditos en MDF y acrílico",
+    desc: "Llaveros con foto, nombre o frase. Ideales como recuerdos de XV años, bodas, bautizos, generaciones o regalos en pareja.",
+    inspiration: ["Parejas", "Recuerdos de evento", "Generaciones", "Mascotas"],
+    icon: "key",
+    gradient: ["#FAD0D8", "#FFE066"],
+    techniques: ["sublimacion"],
+  },
+  {
+    id: "vinil",
+    label: "Vinil & Trabajos digitales",
+    tagline: "Cortes, tarjetas, lonas y más",
+    desc: "Vinil textil para uniformes, vinil decorativo, tarjetas de presentación, invitaciones, stickers y lonas. Diseño gráfico incluido.",
+    inspiration: ["Uniformes deportivos", "Lonas para evento", "Tarjetas de presentación", "Invitaciones", "Stickers"],
+    icon: "tag",
+    gradient: ["#FFE066", "#FFB770"],
+    techniques: ["digital"],
   },
 ];
 

@@ -46,3 +46,14 @@ export interface CancellationPolicy {
   title: string;
   body: string;
 }
+
+export interface CategoryMeta {
+  id: string;
+  label: string;
+  tagline: string;
+  desc: string;
+  inspiration: string[];
+  icon: "shirt" | "mug" | "bottle" | "key" | "tag";
+  gradient: [string, string];
+  techniques: string[];
+}

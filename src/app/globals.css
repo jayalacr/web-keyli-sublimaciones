@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+/* ─── Design System — Keyli Sublimaciones ─── */
+@theme {
+  /* Paleta Lila */
+  --color-lilac-50:  #FAF4FB;
+  --color-lilac-100: #F2E3F4;
+  --color-lilac-200: #E6CCEB;
+  --color-lilac-300: #D7B5DE;
+  --color-lilac-400: #CFA8D8;
+  --color-lilac-500: #B98AC4;
+  --color-lilac-600: #9D6BAA;
+  --color-lilac-700: #7C4F8C;
+  --color-lilac-800: #5E3E80;
+  --color-lilac-900: #3D2756;
+
+  /* Paleta Amarillo */
+  --color-yellow-50:  #FFF1B0;
+  --color-yellow-100: #FFE066;
+  --color-yellow-200: #FFD84D;
+  --color-yellow-300: #FFC926;
+  --color-yellow-400: #E6AF14;
+
+  /* Neutros */
+  --color-cream:     #FFFBF0;
+  --color-paper:     #FFFFFF;
+  --color-ink:       #2A1F44;
+  --color-ink-soft:  #5A4E73;
+  --color-ink-faint: #8B82A1;
+
+  /* Líneas */
+  --color-line:      #EDE6F7;
+  --color-line-soft: #F6F1FC;
+
+  /* Tipografía */
+  --font-display: var(--font-dancing-script), cursive;
+  --font-sans:    var(--font-plus-jakarta), sans-serif;
+
+  /* Sombras tintadas con púrpura */
+  --shadow-sm: 0 1px 2px rgba(92, 58, 140, 0.06);
+  --shadow-md: 0 8px 24px -8px rgba(92, 58, 140, 0.18);
+  --shadow-lg: 0 24px 60px -20px rgba(92, 58, 140, 0.30);
+
+  /* Border radius */
+  --radius-xs:   6px;
+  --radius-sm:   10px;
+  --radius-md:   16px;
+  --radius-lg:   24px;
+  --radius-xl:   32px;
+  --radius-pill: 999px;
+
+  /* Espaciado (escala 8pt) */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-24: 96px;
+  --spacing-32: 128px;
+
+  /* Animaciones */
+  --animate-sparkle-float: sparkle-float 3s ease-in-out infinite;
+  --animate-fade-in-up: fade-in-up 0.5s ease-out forwards;
+  --animate-sparkle-scroll: sparkle-scroll 20s linear infinite;
+}
+
+@keyframes sparkle-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-8px) rotate(5deg); }
+  66% { transform: translateY(-4px) rotate(-3deg); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sparkle-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}

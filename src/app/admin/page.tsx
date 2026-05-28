@@ -4,7 +4,16 @@ import { useState, useMemo } from "react";
 import { products, seasons, categoryMeta } from "@/lib/data";
 
 // ── Simulated analytics ───────────────────────────────────────
+function seededRng(seed: number) {
+  let s = seed >>> 0;
+  return () => {
+    s ^= s << 13; s ^= s >> 17; s ^= s << 5;
+    return (s >>> 0) / 0xffffffff;
+  };
+}
+
 function genDaily(days: number, base: number, variance: number) {
+  const rng = seededRng(days * 7919 + base);
   const now = new Date();
   return Array.from({ length: days }, (_, i) => {
     const d = new Date(now);
@@ -12,11 +21,11 @@ function genDaily(days: number, base: number, variance: number) {
     const label = `${d.getDate()}/${d.getMonth() + 1}`;
     return {
       label,
-      visits:    Math.round(base + Math.random() * variance),
-      whatsapp:  Math.round(base * 0.18 + Math.random() * (variance * 0.1)),
-      instagram: Math.round(base * 0.35 + Math.random() * (variance * 0.15)),
-      facebook:  Math.round(base * 0.12 + Math.random() * (variance * 0.06)),
-      tiktok:    Math.round(base * 0.08 + Math.random() * (variance * 0.05)),
+      visits:    Math.round(base + rng() * variance),
+      whatsapp:  Math.round(base * 0.18 + rng() * (variance * 0.1)),
+      instagram: Math.round(base * 0.35 + rng() * (variance * 0.15)),
+      facebook:  Math.round(base * 0.12 + rng() * (variance * 0.06)),
+      tiktok:    Math.round(base * 0.08 + rng() * (variance * 0.05)),
     };
   });
 }
@@ -111,7 +120,7 @@ function KpiCard({
           {up ? "▲" : "▼"} {Math.abs(delta)}%
         </span>
       </div>
-      <div style={{ fontSize: 28, fontWeight: 800, color: "#1E0F3C", lineHeight: 1 }}>
+      <div style={{ fontSize: 28, fontWeight: 800, color: "#1E0F3C", lineHeight: 1 }} suppressHydrationWarning>
         {value.toLocaleString("es-MX")}
       </div>
       <Sparkline values={sparkValues} color={color} />
@@ -128,7 +137,7 @@ function SocialBar({ label, value, max, color }: { label: string; value: number;
       <div style={{ flex: 1, background: "#F0EBF8", borderRadius: 999, height: 8 }}>
         <div style={{ width: `${pct}%`, background: color, borderRadius: 999, height: "100%", transition: "width .4s" }} />
       </div>
-      <span style={{ fontSize: 12, fontWeight: 700, color: "#1E0F3C", width: 40, textAlign: "right" }}>{value.toLocaleString()}</span>
+      <span style={{ fontSize: 12, fontWeight: 700, color: "#1E0F3C", width: 40, textAlign: "right" }} suppressHydrationWarning>{value.toLocaleString("es-MX")}</span>
     </div>
   );
 }

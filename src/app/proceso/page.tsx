@@ -136,7 +136,6 @@ function ProcesoContent() {
                 fontWeight: 700,
                 fontSize: 14,
                 color: tab === t.id ? "var(--color-lilac-700)" : "var(--color-ink-soft)",
-                borderBottom: `3px solid ${tab === t.id ? "var(--color-lilac-700)" : "transparent"}`,
                 marginBottom: -1,
                 background: "none",
                 border: "none",

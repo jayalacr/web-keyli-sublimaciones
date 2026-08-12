@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { id: "home",    label: "Inicio",       href: "/" },
   { id: "catalog", label: "Catálogo",     href: "/catalogo" },
   { id: "process", label: "Cómo comprar", href: "/proceso" },
+  { id: "contact", label: "Contacto",     href: "/contacto" },
 ];
 
 const SOCIAL_LINKS = [
@@ -23,6 +24,7 @@ function activeId(pathname: string) {
   if (pathname === "/") return "home";
   if (pathname.startsWith("/catalogo")) return "catalog";
   if (pathname.startsWith("/proceso")) return "process";
+  if (pathname.startsWith("/contacto")) return "contact";
   return "";
 }
 

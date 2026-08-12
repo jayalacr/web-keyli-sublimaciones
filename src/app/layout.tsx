@@ -3,6 +3,7 @@ import { Dancing_Script, Plus_Jakarta_Sans } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFAB } from "@/components/layout/WhatsAppFAB";
+import { SITE_URL } from "@/lib/constants";
 import "./globals.css";
 
 const dancingScript = Dancing_Script({
@@ -20,9 +21,27 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Keyli Sublimaciones — Personaliza tu mundo",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Keyli Sublimaciones — Personaliza tu mundo",
+    template: "%s · Keyli Sublimaciones",
+  },
   description:
     "Playeras, tazas, termos, llaveros y más con impresión DTF, sublimación y vinil. Envíos a toda la república.",
+  openGraph: {
+    type: "website",
+    locale: "es_MX",
+    siteName: "Keyli Sublimaciones",
+    title: "Keyli Sublimaciones — Personaliza tu mundo",
+    description:
+      "Playeras, tazas, termos, llaveros y más con impresión DTF, sublimación y vinil. Envíos a toda la república.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Keyli Sublimaciones — Personaliza tu mundo",
+    description:
+      "Playeras, tazas, termos, llaveros y más con impresión DTF, sublimación y vinil. Envíos a toda la república.",
+  },
 };
 
 export default function RootLayout({

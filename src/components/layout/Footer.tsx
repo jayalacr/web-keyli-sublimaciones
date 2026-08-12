@@ -1,5 +1,15 @@
 import Image from "next/image";
+import Link from "next/link";
 import { SocialRow } from "@/components/ui/SocialRow";
+import { WhatsAppGlyph } from "@/components/ui/Icons";
+import { waLink } from "@/lib/constants";
+
+const FOOTER_LINKS = [
+  { label: "Inicio", href: "/" },
+  { label: "Catálogo", href: "/catalogo" },
+  { label: "Cómo comprar", href: "/proceso" },
+  { label: "Contacto", href: "/contacto" },
+];
 
 export function Footer() {
   return (
@@ -41,6 +51,32 @@ export function Footer() {
           <SocialRow size={40} iconSize={16} />
         </div>
 
+        {/* Nav row */}
+        <nav
+          className="footer-nav mt-6 flex items-center gap-6 flex-wrap"
+          style={{ fontSize: 14, fontWeight: 600 }}
+        >
+          {FOOTER_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="transition-colors hover:opacity-80"
+              style={{ color: "rgba(255,255,255,.85)" }}
+            >
+              {link.label}
+            </Link>
+          ))}
+          <a
+            href={waLink("Hola Keyli, quiero cotizar un producto.")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 transition-colors hover:opacity-80"
+            style={{ color: "#7CE8A4" }}
+          >
+            <WhatsAppGlyph size={16} /> Escríbenos por WhatsApp
+          </a>
+        </nav>
+
         {/* Bottom row: copyright */}
         <div
           className="mt-6 pt-[18px] flex justify-between items-center gap-3 flex-wrap text-[13px]"
@@ -57,6 +93,7 @@ export function Footer() {
       <style>{`
         @media (max-width: 640px) {
           .footer-row { justify-content: center; text-align: center; }
+          .footer-nav { justify-content: center; }
         }
       `}</style>
     </footer>

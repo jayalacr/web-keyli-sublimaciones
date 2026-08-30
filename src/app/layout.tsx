@@ -1,62 +1,40 @@
 import type { Metadata } from "next";
-import { Dancing_Script, Plus_Jakarta_Sans } from "next/font/google";
+import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { WhatsAppFAB } from "@/components/layout/WhatsAppFAB";
-import { SITE_URL } from "@/lib/constants";
 import "./globals.css";
 
-const dancingScript = Dancing_Script({
-  variable: "--font-dancing-script",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
 });
 
-const plusJakarta = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta",
+const hanken = Hanken_Grotesk({
+  variable: "--font-hanken",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-  display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: "Keyli Sublimaciones — Personaliza tu mundo",
-    template: "%s · Keyli Sublimaciones",
-  },
-  description:
-    "Playeras, tazas, termos, llaveros y más con impresión DTF, sublimación y vinil. Envíos a toda la república.",
-  openGraph: {
-    type: "website",
-    locale: "es_MX",
-    siteName: "Keyli Sublimaciones",
-    title: "Keyli Sublimaciones — Personaliza tu mundo",
-    description:
-      "Playeras, tazas, termos, llaveros y más con impresión DTF, sublimación y vinil. Envíos a toda la república.",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Keyli Sublimaciones — Personaliza tu mundo",
-    description:
-      "Playeras, tazas, termos, llaveros y más con impresión DTF, sublimación y vinil. Envíos a toda la república.",
-  },
+  title: "Keyli Sublimaciones",
+  description: "Artículos personalizados por sublimación",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${dancingScript.variable} ${plusJakarta.variable} h-full antialiased`}
+      className={`${bricolage.variable} ${hanken.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col" style={{ background: "var(--color-cream)", color: "var(--color-ink)" }}>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="min-h-full flex flex-col bg-surface text-on-surface">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        <WhatsAppFAB />
       </body>
     </html>
   );

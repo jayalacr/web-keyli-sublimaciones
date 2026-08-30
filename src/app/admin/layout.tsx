@@ -1,21 +1,16 @@
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
+import { AdminBottomBar } from "@/components/admin/AdminBottomBar";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({ children }: LayoutProps<"/admin">) {
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "240px 1fr",
-        minHeight: "100vh",
-        background: "#F7F3FB",
-      }}
-    >
+    <div className="font-admin-body text-on-surface bg-background min-h-screen">
       <AdminSidebar />
-      <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+      <div className="pl-sidebar-width pb-20">
         <AdminTopbar />
-        <main style={{ flex: 1, padding: 28 }}>{children}</main>
+        <main className="relative pt-16 min-h-screen bg-surface px-stack-md py-stack-md">{children}</main>
       </div>
+      <AdminBottomBar />
     </div>
   );
 }

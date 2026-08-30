@@ -1,176 +1,73 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Logo } from "@/components/ui/Logo";
-import { Menu, XClose, FacebookGlyph, InstagramGlyph, TikTokGlyph } from "@/components/ui/Icons";
-import { SocialRow } from "@/components/ui/SocialRow";
+import { useEffect, useState } from "react";
 
-const NAV_ITEMS = [
-  { id: "home",    label: "Inicio",       href: "/" },
-  { id: "catalog", label: "Catálogo",     href: "/catalogo" },
-  { id: "process", label: "Cómo comprar", href: "/proceso" },
-  { id: "contact", label: "Contacto",     href: "/contacto" },
+const NAV_LINKS = [
+  { href: "/", label: "Inicio" },
+  { href: "/articulos", label: "Artículos" },
+  { href: "/temporadas", label: "Temporadas" },
+  { href: "/nosotros", label: "Nosotros" },
+  { href: "/contacto", label: "Contacto" },
 ];
-
-const SOCIAL_LINKS = [
-  { id: "facebook",  label: "Facebook",  href: "https://facebook.com/keylisublimaciones",  Glyph: FacebookGlyph },
-  { id: "instagram", label: "Instagram", href: "https://instagram.com/keylisublimaciones", Glyph: InstagramGlyph },
-  { id: "tiktok",    label: "TikTok",    href: "https://tiktok.com/@keylisublimaciones",   Glyph: TikTokGlyph },
-];
-
-function activeId(pathname: string) {
-  if (pathname === "/") return "home";
-  if (pathname.startsWith("/catalogo")) return "catalog";
-  if (pathname.startsWith("/proceso")) return "process";
-  if (pathname.startsWith("/contacto")) return "contact";
-  return "";
-}
 
 export function Header() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-  const active = activeId(pathname);
+  const [scrolled, setScrolled] = useState(false);
 
-  if (pathname.startsWith("/admin")) return null;
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <>
-      <header
-        className="sticky top-0 z-30"
-        style={{
-          background: "var(--color-lilac-400)",
-          backdropFilter: "blur(14px)",
-          borderBottom: "1px solid rgba(94,62,128,.12)",
-          boxShadow: "0 4px 18px -8px rgba(94,62,128,.25)",
-        }}
-      >
-        <div
-          className="flex items-center justify-between py-4"
-          style={{ width: "min(1440px, 100% - 32px)", marginInline: "auto" }}
-        >
-          {/* Logo */}
-          <div style={{ filter: "drop-shadow(0 0 0 2px rgba(255,255,255,.35)) drop-shadow(0 4px 12px rgba(0,0,0,.18))" }}>
-            <Logo />
-          </div>
-
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.id}
-                href={item.href}
-                className="text-sm font-semibold px-[14px] py-2 rounded-full transition-colors"
-                style={{
-                  color: active === item.id ? "white" : "var(--color-lilac-800)",
-                  background: active === item.id ? "var(--color-lilac-800)" : "transparent",
-                }}
-                onMouseEnter={(e) => {
-                  if (active !== item.id) {
-                    (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,.55)";
-                    (e.currentTarget as HTMLElement).style.color = "var(--color-lilac-900)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (active !== item.id) {
-                    (e.currentTarget as HTMLElement).style.background = "transparent";
-                    (e.currentTarget as HTMLElement).style.color = "var(--color-lilac-800)";
-                  }
-                }}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Desktop social */}
-          <div className="hidden md:flex items-center">
-            <SocialRow size={36} iconSize={15} />
-          </div>
-
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden flex items-center justify-center rounded-xl bg-white"
-            style={{ padding: 10, border: "1px solid var(--color-line)" }}
-            onClick={() => setOpen(true)}
-            aria-label="Abrir menú"
-          >
-            <Menu size={22} />
-          </button>
-        </div>
-      </header>
-
-      {/* Mobile drawer */}
-      {open && (
-        <>
-          <div
-            className="fixed inset-0 z-40"
-            style={{ background: "rgba(39,21,66,.4)" }}
-            onClick={() => setOpen(false)}
+    <header
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        scrolled ? "bg-surface shadow-[0_1px_8px_rgba(0,0,0,0.04)]" : "bg-transparent"
+      }`}
+    >
+      <div className="h-20 w-full px-container-margin flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-4">
+          <Image
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGcNq66cnqblgwshguwg6GpEHWZiXvgoUwFgWm1CE7duA35NcEPXfXQLf_FmLmYs2mPtCGVhHuXiZmEN7pRydWhJUY3sHrl5nANZ-8pHNWWwr7G_3Ct1fgdR1CuUr8kk8NAh4X_ScCmaAHYaYI-EmCX-S8M2XOupbFwYo9xHvhxIzd91FeaYinqWzgB1gFAzlzSgFE9Vgl9-m1yxygDR_N6FSDLxQDOy4P4A8mgMRbxkVnxtB8nqvU"
+            alt="Keyli Sublimaciones"
+            width={40}
+            height={40}
+            className="w-10 h-10 rounded-full object-cover"
           />
-          <aside
-            className="fixed top-0 right-0 z-[41] flex flex-col gap-3 bg-white"
-            style={{
-              width: "min(86vw, 340px)",
-              height: "100vh",
-              padding: 24,
-              boxShadow: "0 40px 100px -30px rgba(92,58,140,.40)",
-            }}
-          >
-            <div className="flex justify-between items-center mb-2">
-              <Logo />
-              <button
-                onClick={() => setOpen(false)}
-                className="p-2 rounded-lg transition-colors hover:bg-[var(--color-lilac-50)]"
-                aria-label="Cerrar menú"
-              >
-                <XClose size={22} />
-              </button>
-            </div>
-
-            {NAV_ITEMS.map((item) => (
+          <span className="font-display-md text-body-main tracking-tight text-on-surface">Keyli</span>
+        </Link>
+        <nav className="hidden lg:flex items-center gap-stack-lg">
+          {NAV_LINKS.map((link) => {
+            const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+            return (
               <Link
-                key={item.id}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="text-base font-semibold px-4 py-[14px] rounded-full transition-colors"
-                style={{
-                  color: active === item.id ? "white" : "var(--color-ink-soft)",
-                  background: active === item.id ? "var(--color-lilac-800)" : "transparent",
-                }}
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={
+                  active
+                    ? "font-label-caps transition-colors text-primary font-semibold"
+                    : "font-label-caps text-on-surface-variant hover:text-on-surface transition-colors"
+                }
               >
-                {item.label}
+                {link.label}
               </Link>
-            ))}
-
-            <div
-              className="mt-4 pt-4 flex gap-2"
-              style={{ borderTop: "1px solid var(--color-line)" }}
-            >
-              {SOCIAL_LINKS.map((s) => (
-                <a
-                  key={s.id}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  className="grid place-items-center rounded-full"
-                  style={{
-                    width: 40,
-                    height: 40,
-                    background: "var(--color-lilac-50)",
-                    color: "var(--color-lilac-700)",
-                    border: "1px solid var(--color-lilac-200)",
-                  }}
-                >
-                  <s.Glyph size={16} />
-                </a>
-              ))}
-            </div>
-          </aside>
-        </>
-      )}
-    </>
+            );
+          })}
+        </nav>
+        <div className="flex items-center">
+          <Link
+            href="/contacto"
+            className="px-6 py-2 border border-on-secondary-fixed-variant rounded-full font-label-caps text-on-secondary-fixed-variant hover:bg-on-secondary-fixed-variant hover:text-white transition-all"
+          >
+            Cotizar
+          </Link>
+        </div>
+      </div>
+    </header>
   );
 }

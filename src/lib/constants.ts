@@ -1,8 +1,6 @@
-export const PHONE = "525512345678";
-export const WA_BASE = "https://wa.me";
+// ponytail: número placeholder — reemplazar por el real de Keyli Sublimaciones
+export const PHONE = "5218110000000";
 
-export const waLink = (text: string) =>
-  `${WA_BASE}/${PHONE}?text=${encodeURIComponent(text)}`;
-
-// ponytail: sin dominio propio aún — ajustar cuando el sitio tenga hosting definitivo
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://keylisublimaciones.vercel.app";
+export function waLink(message = "Hola, quiero cotizar un artículo personalizado") {
+  return `https://wa.me/${PHONE}?text=${encodeURIComponent(message)}`;
+}

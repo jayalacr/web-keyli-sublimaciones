@@ -1,10 +1,4 @@
-// ponytail: datos de ejemplo — se reemplazan por consultas reales cuando el admin se conecte a Supabase
-const STATS = [
-  { label: "Productos activos", value: "24", icon: "inventory_2" },
-  { label: "Temporadas activas", value: "6", icon: "calendar_month" },
-  { label: "Productos sin imagen", value: "3", icon: "image_not_supported", alert: true },
-  { label: "Productos destacados", value: "4", icon: "star" },
-];
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 const ACTIVITY = [
   { icon: "edit", action: "Edición de producto", item: "Taza Clásica Blanca", date: "24/05/24, 14:30" },
@@ -21,11 +15,26 @@ const QUICK_ACTIONS = [
   { icon: "edit_document", label: "Editar textos del sitio" },
 ];
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  const db = supabaseAdmin();
+  const [{ count: productosActivos }, { count: temporadasActivas }, { count: sinImagen }, { count: destacados }] = await Promise.all([
+    db.from("productos").select("*", { count: "exact", head: true }).eq("activo", true),
+    db.from("temporadas").select("*", { count: "exact", head: true }).eq("activa", true),
+    db.from("productos").select("*", { count: "exact", head: true }).is("imagen_url", null),
+    db.from("productos").select("*", { count: "exact", head: true }).eq("destacado", true),
+  ]);
+
+  const stats = [
+    { label: "Productos activos", value: String(productosActivos ?? 0), icon: "inventory_2" },
+    { label: "Temporadas activas", value: String(temporadasActivas ?? 0), icon: "calendar_month" },
+    { label: "Productos sin imagen", value: String(sinImagen ?? 0), icon: "image_not_supported", alert: (sinImagen ?? 0) > 0 },
+    { label: "Productos destacados", value: String(destacados ?? 0), icon: "star" },
+  ];
+
   return (
     <div className="flex flex-col w-full h-full gap-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-stack-sm">
-        {STATS.map((stat) => (
+        {stats.map((stat) => (
           <div
             key={stat.label}
             className="bg-surface p-4 rounded-lg flex items-center justify-between border border-outline-variant shadow-sm transition-transform hover:-translate-y-1"
@@ -53,6 +62,7 @@ export default function AdminDashboardPage() {
           <div className="bg-surface-container-low px-6 py-4 border-b border-outline-variant flex items-center justify-between">
             <h2 className="font-admin-section-header text-on-surface">Actividad reciente</h2>
           </div>
+          {/* ponytail: sin tabla de auditoría todavía — se conecta cuando exista un log real de cambios */}
           <div className="flex-1 overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>

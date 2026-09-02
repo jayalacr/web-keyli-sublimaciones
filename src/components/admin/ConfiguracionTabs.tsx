@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Image from "next/image";
-import type { SiteSettings } from "@/lib/siteSettings";
+import type { TextosInicio } from "@/lib/db";
+import { guardarTextosInicio } from "@/app/admin/configuracion/actions";
 
 const TABS: { id: "contacto" | "textos" | "envios" | "cuenta"; label: string; hint?: string }[] = [
   { id: "contacto", label: "Contacto", hint: "WhatsApp, Instagram, Facebook" },
@@ -13,34 +14,37 @@ const TABS: { id: "contacto" | "textos" | "envios" | "cuenta"; label: string; hi
 
 type TabId = (typeof TABS)[number]["id"];
 
-export function ConfiguracionTabs({ initialSettings }: { initialSettings: SiteSettings }) {
+export function ConfiguracionTabs({ initialSettings }: { initialSettings: TextosInicio }) {
   const [tab, setTab] = useState<TabId>("textos");
   const [settings, setSettings] = useState(initialSettings);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
-  function update<K extends keyof SiteSettings>(key: K, value: SiteSettings[K]) {
+  function update<K extends keyof TextosInicio>(key: K, value: TextosInicio[K]) {
     setSettings((s) => ({ ...s, [key]: value }));
   }
 
   function updateBadge(i: number, value: string) {
     setSettings((s) => {
-      const badges = [...s.trustBadges] as SiteSettings["trustBadges"];
+      const badges = [...s.insignias_confianza] as TextosInicio["insignias_confianza"];
       badges[i] = value;
-      return { ...s, trustBadges: badges };
+      return { ...s, insignias_confianza: badges };
     });
   }
 
   function save() {
-    // ponytail: sin persistencia todavía — se conecta cuando exista Supabase
-    setLastSaved(new Date().toLocaleString("es-MX", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }));
+    startTransition(async () => {
+      await guardarTextosInicio(settings);
+      setLastSaved(new Date().toLocaleString("es-MX", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }));
+    });
   }
 
   return (
     <div className="flex flex-col w-full">
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-admin-title text-on-surface">Configuración</h1>
-        <button onClick={save} className="bg-primary hover:bg-primary-container text-on-primary font-admin-body px-4 py-2 rounded transition-colors shadow-sm">
-          Guardar cambios
+        <button onClick={save} disabled={isPending} className="bg-primary hover:bg-primary-container text-on-primary font-admin-body px-4 py-2 rounded transition-colors shadow-sm disabled:opacity-60">
+          {isPending ? "Guardando..." : "Guardar cambios"}
         </button>
       </div>
 
@@ -71,25 +75,25 @@ export function ConfiguracionTabs({ initialSettings }: { initialSettings: SiteSe
                 <Field label="Título principal" hint="Se muestra en el banner superior de la página principal.">
                   <input
                     type="text"
-                    value={settings.heroTitle}
-                    onChange={(e) => update("heroTitle", e.target.value)}
+                    value={settings.hero_titulo}
+                    onChange={(e) => update("hero_titulo", e.target.value)}
                     className="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
                   />
                 </Field>
-                <Field label="Subtítulo" hint={`Texto secundario bajo el título principal. ${settings.heroSubtitle.length}/120 caracteres.`}>
+                <Field label="Subtítulo" hint={`Texto secundario bajo el título principal. ${settings.hero_subtitulo.length}/120 caracteres.`}>
                   <textarea
                     rows={3}
                     maxLength={120}
-                    value={settings.heroSubtitle}
-                    onChange={(e) => update("heroSubtitle", e.target.value)}
+                    value={settings.hero_subtitulo}
+                    onChange={(e) => update("hero_subtitulo", e.target.value)}
                     className="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface resize-none"
                   />
                 </Field>
                 <Field label="Texto del botón principal" hint="Botón que dirige a los productos.">
                   <input
                     type="text"
-                    value={settings.heroCta}
-                    onChange={(e) => update("heroCta", e.target.value)}
+                    value={settings.hero_cta}
+                    onChange={(e) => update("hero_cta", e.target.value)}
                     className="w-full max-w-md px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
                   />
                 </Field>
@@ -101,8 +105,8 @@ export function ConfiguracionTabs({ initialSettings }: { initialSettings: SiteSe
                     <Field label="Título de la sección">
                       <input
                         type="text"
-                        value={settings.historyTitle}
-                        onChange={(e) => update("historyTitle", e.target.value)}
+                        value={settings.historia_titulo}
+                        onChange={(e) => update("historia_titulo", e.target.value)}
                         className="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
                       />
                     </Field>
@@ -110,7 +114,7 @@ export function ConfiguracionTabs({ initialSettings }: { initialSettings: SiteSe
                       label={
                         <span className="flex justify-between">
                           <span>Texto de la historia</span>
-                          <span className="font-admin-data text-outline font-normal">{settings.historyText.length} / 1000</span>
+                          <span className="font-admin-data text-outline font-normal">{settings.historia_texto.length} / 1000</span>
                         </span>
                       }
                       hint='Se muestra en la sección "Sobre Nosotros" del sitio público.'
@@ -118,8 +122,8 @@ export function ConfiguracionTabs({ initialSettings }: { initialSettings: SiteSe
                       <textarea
                         rows={8}
                         maxLength={1000}
-                        value={settings.historyText}
-                        onChange={(e) => update("historyText", e.target.value)}
+                        value={settings.historia_texto}
+                        onChange={(e) => update("historia_texto", e.target.value)}
                         className="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface resize-none"
                       />
                     </Field>
@@ -127,7 +131,9 @@ export function ConfiguracionTabs({ initialSettings }: { initialSettings: SiteSe
                   <div className="col-span-1 flex flex-col gap-2">
                     <label className="font-admin-label-caps text-on-surface-variant">Imagen de Keyli</label>
                     <div className="relative rounded-lg overflow-hidden border border-outline-variant bg-surface-container h-48 w-full">
-                      <Image src={settings.historyImageSrc} alt={settings.historyImageAlt} fill sizes="240px" className="object-cover" />
+                      {settings.historia_imagen_url && (
+                        <Image src={settings.historia_imagen_url} alt={settings.historia_imagen_alt} fill sizes="240px" className="object-cover" />
+                      )}
                     </div>
                     <span className="font-admin-data text-outline mt-1 text-center">Recomendado: 1024x1024px, JPG o PNG.</span>
                   </div>
@@ -136,7 +142,7 @@ export function ConfiguracionTabs({ initialSettings }: { initialSettings: SiteSe
 
               <SettingsCard icon="verified_user" title="Franja de confianza">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {settings.trustBadges.map((badge, i) => (
+                  {settings.insignias_confianza.map((badge, i) => (
                     <Field key={i} label={`Beneficio ${i + 1}`}>
                       <input
                         type="text"

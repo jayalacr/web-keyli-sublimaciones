@@ -30,15 +30,14 @@ export function Header() {
       }`}
     >
       <div className="h-20 w-full px-container-margin flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-4">
+        <Link href="/" className="flex items-center">
           <Image
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGcNq66cnqblgwshguwg6GpEHWZiXvgoUwFgWm1CE7duA35NcEPXfXQLf_FmLmYs2mPtCGVhHuXiZmEN7pRydWhJUY3sHrl5nANZ-8pHNWWwr7G_3Ct1fgdR1CuUr8kk8NAh4X_ScCmaAHYaYI-EmCX-S8M2XOupbFwYo9xHvhxIzd91FeaYinqWzgB1gFAzlzSgFE9Vgl9-m1yxygDR_N6FSDLxQDOy4P4A8mgMRbxkVnxtB8nqvU"
+            src="/logoKeyli.jpeg"
             alt="Keyli Sublimaciones"
-            width={40}
-            height={40}
-            className="w-10 h-10 rounded-full object-cover"
+            width={64}
+            height={64}
+            className="w-16 h-16 rounded-full object-cover"
           />
-          <span className="font-display-md text-body-main tracking-tight text-on-surface">Keyli</span>
         </Link>
         <nav className="hidden lg:flex items-center gap-stack-lg">
           {NAV_LINKS.map((link) => {
@@ -50,8 +49,8 @@ export function Header() {
                 aria-current={active ? "page" : undefined}
                 className={
                   active
-                    ? "font-label-caps transition-colors text-primary font-semibold"
-                    : "font-label-caps text-on-surface-variant hover:text-on-surface transition-colors"
+                    ? "relative font-label-caps transition-colors text-primary font-semibold after:content-[''] after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
+                    : "relative font-label-caps text-on-surface-variant hover:text-on-surface transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:bg-transparent"
                 }
               >
                 {link.label}

@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import type { SeasonProduct } from "@/lib/seasons";
+
+export type SeasonProduct = { title: string; category: string; src: string; alt: string };
+
+// ponytail: variantes de aspecto cíclicas por índice — es presentación, no dato del producto.
+const ASPECT_VARIANTS = ["aspect-[3/4]", "aspect-square", "aspect-[3/5]"];
 
 export function SeasonProductGrid({ products }: { products: SeasonProduct[] }) {
   const categories = ["Todos", ...Array.from(new Set(products.map((p) => p.category)))];
@@ -38,18 +42,20 @@ export function SeasonProductGrid({ products }: { products: SeasonProduct[] }) {
               i === 0 ? "mt-0 md:mt-12" : i === 2 ? "mt-0 md:mt-24" : ""
             }`}
           >
-            {col.map((product) => (
+            {col.map((product, j) => (
               <div
                 key={product.title}
-                className={`group relative overflow-hidden rounded-2xl bg-surface-container ${product.aspect} border border-outline-variant/20 shadow-sm hover:shadow-md transition-shadow`}
+                className={`group relative overflow-hidden rounded-2xl bg-surface-container ${ASPECT_VARIANTS[j % ASPECT_VARIANTS.length]} border border-outline-variant/20 shadow-sm hover:shadow-md transition-shadow`}
               >
-                <Image
-                  src={product.src}
-                  alt={product.alt}
-                  fill
-                  sizes="(min-width: 768px) 33vw, 100vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+                {product.src && (
+                  <Image
+                    src={product.src}
+                    alt={product.alt}
+                    fill
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                )}
                 <div className="absolute top-4 left-4">
                   <span className="px-3 py-1 bg-surface-container-low/90 backdrop-blur-sm rounded-full font-label-caps text-on-surface text-[10px]">
                     {product.category}

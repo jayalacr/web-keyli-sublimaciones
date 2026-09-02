@@ -1,9 +1,21 @@
 import Link from "next/link";
 import Image from "next/image";
 import { waLink } from "@/lib/constants";
-import { SEASONS } from "@/lib/seasons";
+import { getTemporadasActivas } from "@/lib/db";
 
-export default function TemporadasPage() {
+// ponytail: variantes de tamaño/posición del mosaico, cíclicas por índice — es presentación, no dato de la temporada.
+const LAYOUT_VARIANTS = [
+  { wrap: "md:col-span-5 h-[600px] md:h-[700px]", title2xl: false, padLg: false },
+  { wrap: "md:col-span-7 h-[450px] md:h-[550px] md:mt-24", title2xl: false, padLg: false },
+  { wrap: "md:col-span-6 h-[500px] md:h-[600px]", title2xl: false, padLg: false },
+  { wrap: "md:col-span-5 md:col-start-8 h-[550px] md:h-[650px] md:-mt-16", title2xl: false, padLg: false },
+  { wrap: "md:col-span-4 h-[600px]", title2xl: true, padLg: false },
+  { wrap: "md:col-span-8 h-[500px] md:h-[600px] md:mt-32", title2xl: false, padLg: true },
+];
+
+export default async function TemporadasPage() {
+  const temporadas = await getTemporadasActivas();
+
   return (
     <div className="flex flex-col w-full bg-surface">
       <section className="w-full px-container-margin pt-section-gap-desktop pb-stack-lg max-w-7xl mx-auto">
@@ -33,35 +45,40 @@ export default function TemporadasPage() {
 
       <section className="w-full px-container-margin pb-section-gap-desktop max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-y-16 gap-x-8 md:gap-x-12">
-          {SEASONS.map((season) => (
-            <Link
-              key={season.slug}
-              href={`/temporadas/${season.slug}`}
-              className={`group relative bg-surface-container rounded-[20px] overflow-hidden cursor-pointer ${season.wrap}`}
-            >
-              <Image
-                src={season.src}
-                alt={season.alt}
-                fill
-                sizes="(min-width: 768px) 50vw, 100vw"
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <div className={`absolute inset-0 flex flex-col justify-end text-white ${season.padLg ? "p-8 md:p-12" : "p-8"}`}>
-                <span className="font-label-caps opacity-80 mb-3 tracking-wider">{season.pieces}</span>
-                <h2
-                  className={`leading-tight mb-2 transition-transform duration-500 ease-out group-hover:-translate-y-2 ${
-                    season.title2xl ? "font-display-sm-mobile" : "font-display-md"
-                  }`}
-                >
-                  {season.title}
-                </h2>
-                <p className="font-body-main opacity-90 transition-transform duration-500 ease-out group-hover:-translate-y-2 delay-75">
-                  {season.tagline}
-                </p>
-              </div>
-            </Link>
-          ))}
+          {temporadas.map((temporada, i) => {
+            const layout = LAYOUT_VARIANTS[i % LAYOUT_VARIANTS.length];
+            return (
+              <Link
+                key={temporada.slug}
+                href={`/temporadas/${temporada.slug}`}
+                className={`group relative bg-surface-container rounded-[20px] overflow-hidden cursor-pointer ${layout.wrap}`}
+              >
+                {temporada.portada_url && (
+                  <Image
+                    src={temporada.portada_url}
+                    alt={temporada.portada_alt ?? temporada.nombre}
+                    fill
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className={`absolute inset-0 flex flex-col justify-end text-white ${layout.padLg ? "p-8 md:p-12" : "p-8"}`}>
+                  <span className="font-label-caps opacity-80 mb-3 tracking-wider">{temporada.piezas} piezas</span>
+                  <h2
+                    className={`leading-tight mb-2 transition-transform duration-500 ease-out group-hover:-translate-y-2 ${
+                      layout.title2xl ? "font-display-sm-mobile" : "font-display-md"
+                    }`}
+                  >
+                    {temporada.nombre}
+                  </h2>
+                  <p className="font-body-main opacity-90 transition-transform duration-500 ease-out group-hover:-translate-y-2 delay-75">
+                    {temporada.eslogan}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 

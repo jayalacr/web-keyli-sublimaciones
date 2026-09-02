@@ -1,85 +1,41 @@
 import Image from "next/image";
 import Link from "next/link";
 import { waLink } from "@/lib/constants";
-
-const TRUST_ITEMS = [
-  "Envíos a todo México",
-  "Entrega en 3 a 5 días",
-  "Diseño incluido sin costo",
-  "Más de 500 pedidos entregados",
-];
+import { getTemporadasActivas, getTextosInicio } from "@/lib/db";
+import { SeasonCard } from "@/components/SeasonCard";
 
 const FEATURED = [
   {
-    href: "/articulos/tazas",
-    tag: "Hogar",
+    href: "/articulos?categoria=Tazas",
+    tag: "Tazas",
     title: "Tazas de Cerámica",
     size: "large" as const,
     alt: "Taza de cerámica personalizada rodeada de flores secas, luz cálida de mañana.",
     src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCD2fdG3gwpLVvRHAZ_IpnFJBmX9zi0wpEnZWZafTAlElJyR0nyh7BdC4A713DlcSlZ_pOGGuuU-2LYgqLFPf_8kwKtMG3cK3so-ZULGCUxVllsqERMmEqM2nc5AnI-QC3jjtVeZU2RLdwztxJE0bU2FQVrQI7Q4JT1YiGdkzyTLJci5SvtdrcHh32qZsRHpPjIZKmkuoQF7SjOHOKv2V2kSGQhvfprAl8GnBWZqHllaf0J3cA41dx-",
   },
   {
-    href: "/articulos/playeras",
-    tag: "Vestimenta",
+    href: "/articulos?categoria=Playeras",
+    tag: "Playeras",
     title: "Playeras Premium",
     size: "medium" as const,
     alt: "Playera premium sublimada colgada en un gancho de madera contra pared de yeso.",
     src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCsFmvlh7BLf7lT-mmjOjWC7Bg-GN9iB68nERgmTSavG201_KTZ3WhAQrr0osnSOrjxgx6p1OrEALJ-gS1IEVqNASuscyGIRbUYTr0IJJ6ZuJGRPAQ3SEZDaBGAfLFytuxtK7tjfTLNkOH6TXd6rcL0SF5QtImZ54hfeGHdhpOgHhZUnkKubaIvQtveruX1NM0BtSGqxZE7pcoIkB_ETxRolPkiZGEWsl6DFSSr-hqHU7yGcJ3fuXgf",
   },
   {
-    href: "/articulos/termos",
-    tag: "Térmicos",
+    href: "/articulos?categoria=Termos",
+    tag: "Termos",
     title: "Termos",
     size: "small" as const,
     alt: "Termo de acero inoxidable personalizado con gotas de condensación.",
     src: "https://lh3.googleusercontent.com/aida-public/AB6AXuASSX2QvjoM7ZWlXUbClJtREgHmFKRROHHmw_J73pqmFvV9XLVba-R8Fhva7AUOOr7rMfD-yLhpUX_EFwulKhKjPd9_Vbz7R4orUU3rUNvNRqY4vUqhAg4xfoNsrl-2hevwvfYqqdzffoFQbMTvzMAVqACQjaxMpJRmUrgRAZS41OrAt0Mx2_1Hqzws6DUXH6DQ7KWZCWFZuM9-ljVc7d078vi5A-ZRJffpE8i77EHnFcFbEzBsGKcF",
   },
   {
-    href: "/articulos/accesorios",
-    tag: "Oficina",
+    href: "/articulos?categoria=Papelería",
+    tag: "Papelería",
     title: "Accesorios",
     size: "small" as const,
     alt: "Mousepads y posavasos personalizados sobre un escritorio de roble.",
     src: "https://lh3.googleusercontent.com/aida-public/AB6AXuC5Bolqxku_HBxuhDyXm9hnu_UcuCSBuB6bAXljRqnGnICFr8oHJ-bV7B0qfF_AsuMAT9TKj97tdHNthy9Wa9bvLU4Dj9nAZSmKfOOah2ITeb8puNhCc8ldx6g0mOsH9dab4tqnjmnMir1lajglFCVj0tKvAOUpDUAo7250b_0fRksZ62gtAnwcr3g6EvWI1ca0ZgirvxIM-E_C26-6yZjt_ei2eg-wh72Iq2apsUocdkcuVNNHdF3T",
-  },
-];
-
-const SEASONS = [
-  {
-    href: "/temporadas/navidad",
-    title: "Navidad",
-    alt: "Set navideño de sublimación con luces cálidas y tazas de chocolate caliente.",
-    src: "https://lh3.googleusercontent.com/aida-public/AB6AXuAb_XUh8ZzPq4UwYRxaLm74o-qiDyelmbcm5NkbYoomJ6A769GBV5TD5hsdmkQNRZyUSvFo47Bo_cx0mSYpdB-8ZQ0IBfGcz2C0p4PUfOckkpXVjswWSvDNlhjAFvgqVLaRl-QutgYLYthNUBphqtGJyX89UmHjkAuIDa5WIpJyww5vzn6dsCr6RsVaqkNfncrTiU59VuVfART-8RXDesYfGPvYG7ozHKJhzk8gntZHR9RWd-MkemJ8",
-  },
-  {
-    href: "/temporadas/dia-de-las-madres",
-    title: "Día de las Madres",
-    alt: "Arreglo floral pastel sobre bolsas de lienzo personalizadas y tazas rosas.",
-    src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDjsZtiu5cE3HY3kLs70WHtF14lrw1TbPfxdBAWI82Q07ZBGVlEwvxTkFoyJjEaNDg2inxKyqS5VDUPTO_rJzMKvMYBRjRlhsLyw5wdq2xb4gsr7XaJ3d0rCF13NwA0z0hefUJ8omaLFA6eo9E6rQaAqT5Eb5JagVckfgLzBGn2Md6UsYoIho54HbXf48Zwtd_UYgikfkDgwQ1IljzkodnmKE-ysquVUdH4rKtYrUsS4XJGfopeuFPs",
-  },
-  {
-    href: "/temporadas/san-valentin",
-    title: "San Valentín",
-    alt: "Playeras de pareja personalizadas para San Valentín, tonos rojos intensos.",
-    src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBD09dm_EqecOPkd5xaD5jamgaVK2m523U1yX13Ls_zCqJSXpTAlkjoLIXwOPcLsbb0ekScLSOoxbSdiyS3PPludNQcmSoBjxya5NrR8vlJn5MEJsnEXRJ776us4GGTKr4ehyABwbVNcJsCESVskqu8hRK8vpYUVy0ZJEqsg4oYm-y16m0-1mPi00tnjGXkLoOW5j_xpjmIB9wHe_ZPTSgbBmTEbTXjV_LgUpP5h7YVe7CDHc03bW_n",
-  },
-];
-
-const PROCESS_STEPS = [
-  {
-    n: "1",
-    title: "Cuéntanos tu idea",
-    body: "Compartimos referencias, colores y el propósito del artículo. Escuchamos lo que imaginas para hacerlo realidad.",
-  },
-  {
-    n: "2",
-    title: "Aprobamos el diseño juntos",
-    body: "Generamos una propuesta visual. Iteramos sobre los detalles hasta que el diseño sea exactamente lo que buscas.",
-  },
-  {
-    n: "3",
-    title: "Producimos y enviamos",
-    body: "Sublimamos con precisión y preparamos tu pedido con un embalaje seguro para que llegue perfecto a tus manos.",
   },
 ];
 
@@ -116,29 +72,45 @@ const INSTAGRAM_STRIP = [
   { alt: "Pedido empacado en caja kraft con listón color ciruela.", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCtOXODlHkuZ0hdic1_snze43lTHEv5gYcZTCBZjpFA_sTziuwoUDyUKmNP8fjg6ba9XsdfkLe3L75H9RdIKuUVFsM1GR3v4SNyR1yewI7Js5spPVNawsmmhx74jHMM5wsFKmJtmxACsBiGEBqnIidK3vo4ssDIs7prqUrkToCjOh7wILWtyPF-9Po8yMMOMWNXQ_EXT65RBAeOVBt2HZk1NY96OdudlDJ2OcC1OxnURV8eoRWw3IUM" },
 ];
 
-export default function Home() {
+const TEXTOS_INICIO_FALLBACK = {
+  hero_titulo: "Lo personalizado se siente distinto",
+  hero_subtitulo: "Creamos piezas únicas a través de la sublimación. Cada artículo cuenta una historia pensada exclusivamente para ti.",
+  hero_cta: "Ver artículos",
+  historia_titulo: "Todo empezó con Keyli",
+  historia_texto: "Keyli no es solo un nombre, es la inspiración detrás de nuestra dedicación. Al igual que la lealtad y el carácter único de un husky, cada pieza que creamos está hecha con un propósito y atención inquebrantable.",
+  historia_imagen_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBoQpbkM9y29c7H5i7QhXN0ox7NTur9mEEez8oZ_2dLy1TsMyctEz4c3CuF-5vs60LzGZCxrR0EmdVsKYzsm-xzAqCggKygAy6L7mNOdSZdGADGhRJXIfgqBsWe0_QP2kwtSzgORvkvH7vsV5RVk-5eCbAyiDCLTS0uwYdRM9BG3VZ7Gxgt2alF9RmxeKLvyEjUVOGopwDhtF-6aWkP958I3u_QcskaXNS7k6XlxGSl-U4c0LTvmpjX",
+  historia_imagen_alt: "Retrato de un husky en un estudio minimalista, luz cálida y natural.",
+  insignias_confianza: ["Envíos a todo México", "Entrega en 3 a 5 días", "Diseño incluido sin costo", "Más de 500 pedidos entregados"] as [string, string, string, string],
+};
+
+export default async function Home() {
+  const [textos, temporadas] = await Promise.all([
+    getTextosInicio().then((t) => t ?? TEXTOS_INICIO_FALLBACK),
+    getTemporadasActivas(),
+  ]);
+  const seasons = temporadas.filter((t) => t.portada_url).slice(0, 3);
+
   return (
     <div className="flex flex-col w-full bg-surface">
       {/* Hero */}
-      <section className="relative w-full pt-[120px] pb-section-gap-desktop md:pt-[160px]">
-        <div className="px-container-margin grid grid-cols-1 md:grid-cols-12 gap-grid-gutter items-center">
+      <section className="relative w-full pt-24 pb-section-gap-desktop md:pt-28 md:min-h-screen md:flex md:items-center md:pb-0">
+        <div className="px-container-margin grid grid-cols-1 md:grid-cols-12 gap-grid-gutter items-center w-full">
           <div className="col-span-1 md:col-span-5 flex flex-col items-start space-y-stack-md z-10">
             <span className="font-label-caps text-on-surface-variant text-[11px] tracking-[0.2em] uppercase">
               Monterrey, México
             </span>
             <h1 className="font-display-lg text-on-surface leading-[0.9] -ml-1">
-              Lo personalizado se siente distinto
+              {textos.hero_titulo}
             </h1>
             <p className="font-body-main text-on-surface-variant max-w-[400px]">
-              Creamos piezas únicas a través de la sublimación. Cada artículo cuenta una historia
-              pensada exclusivamente para ti.
+              {textos.hero_subtitulo}
             </p>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pt-4">
               <Link
                 href="/articulos"
                 className="inline-flex items-center justify-center px-8 py-3 bg-primary text-on-primary font-label-caps rounded-full transition-transform hover:-translate-y-1"
               >
-                Ver artículos
+                {textos.hero_cta}
               </Link>
               <a href={waLink()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 group font-label-caps text-on-surface">
                 <span>Escríbenos por WhatsApp</span>
@@ -148,7 +120,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <div className="col-span-1 md:col-span-7 mt-stack-lg md:mt-0 relative h-[600px] w-[calc(100%+64px)] -mr-container-margin md:h-[700px]">
+          <div className="col-span-1 md:col-span-7 mt-stack-lg md:mt-0 relative h-[600px] w-[calc(100%+64px)] -mr-container-margin md:h-[60vh]">
             <Image
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAPGKwmkRk1c-SeY9RxFxWCn9T0FRlX0Ia85So39yAv2fKWVlkHkPfAWLlBemvLR4mn-bdbYmb1O7G8H9AjjO_XtFcdtZNU_QR70VqQwdGzxJedmJf5k640Eum6hOl6a5lj1Uh91CQNoGvUQqXMmMBgQHj6OQypfREa9Nl8MWDZr6L5uUCW4S5yS4Yw674FxBaM0zFqXDg3CfC8elUN1_tmEqu57qjHaiepQ7SwUh7N6EEDq5z8gsD"
               alt="Termo y playera personalizados sobre una superficie de concreto, iluminación editorial."
@@ -162,17 +134,19 @@ export default function Home() {
       </section>
 
       {/* Trust Row */}
-      <section className="w-full border-y border-outline-variant/20 py-8">
-        <div className="px-container-margin flex flex-wrap justify-between gap-y-8 divide-x-0 md:divide-x divide-outline-variant/20">
-          {TRUST_ITEMS.map((item, i) => (
-            <div
-              key={item}
-              className={`w-1/2 md:w-1/4 px-0 md:px-6 first:pl-0 last:pr-0 flex flex-col gap-2 ${i % 2 === 1 ? "px-4" : ""}`}
-            >
-              <span className="font-label-caps text-on-surface tracking-widest text-[11px]">{item}</span>
-              <span className="block w-6 h-[1px] bg-outline-variant/40" />
-            </div>
-          ))}
+      <section className="w-full bg-surface-container-low py-stack-lg">
+        <div className="px-container-margin grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4">
+          {textos.insignias_confianza.map((item, i) => {
+            const icon = ["local_shipping", "schedule", "palette", "verified"][i];
+            return (
+              <div key={item} className="flex items-center gap-3">
+                <span className="shrink-0 w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                  <span className="material-symbols-outlined leading-none text-[20px]">{icon}</span>
+                </span>
+                <span className="font-label-caps text-on-surface text-[12px] leading-tight">{item}</span>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -243,25 +217,15 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-grid-gutter">
-            {SEASONS.map((season) => (
-              <Link
-                key={season.href}
-                href={season.href}
-                className="group block relative h-[400px] rounded-2xl overflow-hidden"
-              >
-                <Image
-                  src={season.src}
-                  alt={season.alt}
-                  fill
-                  sizes="(min-width: 768px) 33vw, 100vw"
-                  className="object-cover transition-transform duration-1000 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-on-secondary-fixed-variant/40 group-hover:bg-on-secondary-fixed-variant/30 transition-colors" />
-                <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                  <h3 className="font-display-sm-mobile text-white mb-2">{season.title}</h3>
-                  <span className="font-label-caps text-white/80 tracking-widest">Explorar colección</span>
-                </div>
-              </Link>
+            {seasons.map((season) => (
+              <SeasonCard
+                key={season.slug}
+                href={`/temporadas/${season.slug}`}
+                title={season.nombre}
+                portadaUrl={season.portada_url!}
+                portadaAlt={season.portada_alt ?? season.nombre}
+                galeria={season.galeria}
+              />
             ))}
           </div>
         </div>
@@ -272,25 +236,17 @@ export default function Home() {
         <div className="px-container-margin grid grid-cols-1 md:grid-cols-12 gap-grid-gutter items-center">
           <div className="col-span-1 md:col-span-5 relative -mt-[180px] md:-mt-[240px] z-10 aspect-[3/4]">
             <Image
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoQpbkM9y29c7H5i7QhXN0ox7NTur9mEEez8oZ_2dLy1TsMyctEz4c3CuF-5vs60LzGZCxrR0EmdVsKYzsm-xzAqCggKygAy6L7mNOdSZdGADGhRJXIfgqBsWe0_QP2kwtSzgORvkvH7vsV5RVk-5eCbAyiDCLTS0uwYdRM9BG3VZ7Gxgt2alF9RmxeKLvyEjUVOGopwDhtF-6aWkP958I3u_QcskaXNS7k6XlxGSl-U4c0LTvmpjX"
-              alt="Retrato de un husky en un estudio minimalista, luz cálida y natural."
+              src={textos.historia_imagen_url}
+              alt={textos.historia_imagen_alt}
               fill
               className="object-cover rounded-2xl shadow-xl"
             />
           </div>
           <div className="col-span-1 md:col-span-6 md:col-start-7 flex flex-col items-start space-y-6 pt-12 md:pt-0">
             <span className="font-label-caps text-on-surface-variant tracking-[0.2em]">Nuestra historia</span>
-            <h2 className="font-display-md text-on-surface leading-[1.1]">Todo empezó con Keyli</h2>
+            <h2 className="font-display-md text-on-surface leading-[1.1]">{textos.historia_titulo}</h2>
             <div className="space-y-4 font-body-main text-on-surface-variant max-w-[480px]">
-              <p>
-                Keyli no es solo un nombre, es la inspiración detrás de nuestra dedicación. Al igual
-                que la lealtad y el carácter único de un husky, cada pieza que creamos está hecha con
-                un propósito y atención inquebrantable.
-              </p>
-              <p>
-                Nacimos de la idea de que los objetos cotidianos deben reflejar la personalidad de
-                quien los usa. No producimos en masa; sublimamos historias.
-              </p>
+              <p>{textos.historia_texto}</p>
             </div>
             <Link
               href="/nosotros"
@@ -302,22 +258,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Process */}
+      {/* Process teaser */}
       <section className="w-full py-section-gap-mobile">
         <div className="px-container-margin">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8">
-            {PROCESS_STEPS.map((step) => (
-              <div key={step.n} className="flex flex-col gap-6 relative">
-                <span className="font-display-lg text-outline-variant/30 text-[120px] leading-none absolute -top-16 -left-6 z-0 select-none">
-                  {step.n}
-                </span>
-                <div className="z-10 pt-8">
-                  <h3 className="font-display-sm-mobile text-on-surface text-[24px] mb-4">{step.title}</h3>
-                  <span className="block w-8 h-[1px] bg-on-surface-variant/40 mb-4" />
-                  <p className="font-body-secondary text-on-surface-variant">{step.body}</p>
-                </div>
-              </div>
-            ))}
+          <div className="bg-surface-container-low rounded-2xl px-8 py-16 md:py-20 flex flex-col items-center text-center gap-6">
+            <span className="font-label-caps text-on-surface-variant tracking-[0.2em]">Cómo trabajamos</span>
+            <h2 className="font-display-md text-on-surface leading-[1.1] max-w-xl">
+              De tu idea a tu pedido, en tres pasos simples
+            </h2>
+            <Link
+              href="/proceso"
+              className="inline-flex items-center gap-2 mt-2 px-8 py-3 bg-primary text-on-primary font-label-caps rounded-full transition-transform hover:-translate-y-1"
+            >
+              Ver el proceso completo
+              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </Link>
           </div>
         </div>
       </section>

@@ -1,20 +1,62 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Image from "next/image";
-import type { AdminSeason } from "@/lib/adminSeasons";
-import type { AdminProduct } from "@/lib/adminProducts";
+import { toggleTemporadaActiva, guardarTemporada } from "@/app/admin/temporadas/actions";
+
+export type AdminSeason = {
+  id: string;
+  name: string;
+  slug: string;
+  order: number;
+  active: boolean;
+  description: string;
+  coverSrc: string | null;
+  coverAlt: string;
+  fechaInicioMes: number | null;
+  fechaInicioDia: number | null;
+  fechaFinMes: number | null;
+  fechaFinDia: number | null;
+  productIds: string[];
+};
+
+// ponytail: input type="date" no soporta "solo mes/día" — usamos un año fijo (bisiesto) solo para mostrar/editar.
+const ANIO_REFERENCIA = 2024;
+
+function fechaAInput(mes: number | null, dia: number | null): string {
+  if (!mes || !dia) return "";
+  return `${ANIO_REFERENCIA}-${String(mes).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+}
+
+function inputAFecha(value: string): { mes: number | null; dia: number | null } {
+  if (!value) return { mes: null, dia: null };
+  const [, mes, dia] = value.split("-").map(Number);
+  return { mes, dia };
+}
+
+const MESES_CORTOS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+
+function formatRango(mesInicio: number, diaInicio: number, mesFin: number, diaFin: number): string {
+  return `${diaInicio} ${MESES_CORTOS[mesInicio - 1]} — ${diaFin} ${MESES_CORTOS[mesFin - 1]}`;
+}
+
+export type AdminProduct = { id: string; name: string; imageSrc: string | null; imageAlt: string };
 
 export function SeasonsManager({ initialSeasons, allProducts }: { initialSeasons: AdminSeason[]; allProducts: AdminProduct[] }) {
   const [seasons, setSeasons] = useState(initialSeasons);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState<AdminSeason | null>(null);
   const [productSearch, setProductSearch] = useState("");
+  const [, startTransition] = useTransition();
 
   const sorted = [...seasons].sort((a, b) => a.order - b.order);
 
   function toggleActive(id: string) {
-    setSeasons((prev) => prev.map((s) => (s.id === id ? { ...s, active: !s.active } : s)));
+    const next = !seasons.find((s) => s.id === id)?.active;
+    setSeasons((prev) => prev.map((s) => (s.id === id ? { ...s, active: next } : s)));
+    startTransition(() => {
+      toggleTemporadaActiva(id, next);
+    });
   }
 
   function openEditor(season: AdminSeason) {
@@ -31,6 +73,20 @@ export function SeasonsManager({ initialSeasons, allProducts }: { initialSeasons
   function saveEditor() {
     if (!draft) return;
     setSeasons((prev) => prev.map((s) => (s.id === draft.id ? draft : s)));
+    startTransition(() => {
+      guardarTemporada({
+        id: draft.id,
+        nombre: draft.name,
+        orden: draft.order,
+        descripcion: draft.description,
+        activa: draft.active,
+        fechaInicioMes: draft.fechaInicioMes,
+        fechaInicioDia: draft.fechaInicioDia,
+        fechaFinMes: draft.fechaFinMes,
+        fechaFinDia: draft.fechaFinDia,
+        productIds: draft.productIds,
+      });
+    });
     closeEditor();
   }
 
@@ -93,6 +149,11 @@ export function SeasonsManager({ initialSeasons, allProducts }: { initialSeasons
                 <div className="flex flex-col">
                   <h3 className="font-admin-section-header text-on-surface">{season.name}</h3>
                   <span className="font-admin-data text-on-surface-variant">{season.productIds.length} productos</span>
+                  {season.fechaInicioMes && season.fechaInicioDia && season.fechaFinMes && season.fechaFinDia && (
+                    <span className="font-admin-data text-on-surface-variant/70 text-[11px]">
+                      {formatRango(season.fechaInicioMes, season.fechaInicioDia, season.fechaFinMes, season.fechaFinDia)}
+                    </span>
+                  )}
                 </div>
                 <button
                   role="switch"
@@ -177,6 +238,41 @@ export function SeasonsManager({ initialSeasons, allProducts }: { initialSeasons
                   >
                     <span className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${draft.active ? "translate-x-4" : "translate-x-0.5"}`} />
                   </button>
+                </div>
+                <div className="flex flex-col gap-2 p-4 bg-surface rounded border border-outline-variant">
+                  <span className="font-admin-section-header text-sm text-on-surface">Vigencia anual</span>
+                  <span className="font-admin-body text-xs text-on-surface-variant">
+                    Fechas en las que se muestra automáticamente cada año. El año se ignora. Déjalo vacío para que solo dependa del interruptor de arriba.
+                  </span>
+                  <div className="flex items-center gap-3 mt-2">
+                    <div className="flex flex-col gap-1 flex-1">
+                      <label className="font-admin-label-caps text-on-surface-variant uppercase text-[10px]">Desde</label>
+                      <input
+                        type="date"
+                        value={fechaAInput(draft.fechaInicioMes, draft.fechaInicioDia)}
+                        onChange={(e) => {
+                          const { mes, dia } = inputAFecha(e.target.value);
+                          updateDraft("fechaInicioMes", mes);
+                          updateDraft("fechaInicioDia", dia);
+                        }}
+                        className="w-full h-10 px-3 bg-surface-container-lowest border border-outline-variant rounded font-admin-body text-on-surface focus:outline-none focus:border-primary transition-colors"
+                      />
+                    </div>
+                    <span className="text-on-surface-variant pt-5">—</span>
+                    <div className="flex flex-col gap-1 flex-1">
+                      <label className="font-admin-label-caps text-on-surface-variant uppercase text-[10px]">Hasta</label>
+                      <input
+                        type="date"
+                        value={fechaAInput(draft.fechaFinMes, draft.fechaFinDia)}
+                        onChange={(e) => {
+                          const { mes, dia } = inputAFecha(e.target.value);
+                          updateDraft("fechaFinMes", mes);
+                          updateDraft("fechaFinDia", dia);
+                        }}
+                        className="w-full h-10 px-3 bg-surface-container-lowest border border-outline-variant rounded font-admin-body text-on-surface focus:outline-none focus:border-primary transition-colors"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 

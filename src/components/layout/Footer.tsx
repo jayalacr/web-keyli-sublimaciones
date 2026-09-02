@@ -7,16 +7,13 @@ export function Footer() {
       <div className="w-full px-container-margin py-section-gap-mobile">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-grid-gutter">
           <div className="col-span-1 md:col-span-1 flex flex-col gap-4">
-            <div className="flex items-center gap-3">
-              <Image
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGcNq66cnqblgwshguwg6GpEHWZiXvgoUwFgWm1CE7duA35NcEPXfXQLf_FmLmYs2mPtCGVhHuXiZmEN7pRydWhJUY3sHrl5nANZ-8pHNWWwr7G_3Ct1fgdR1CuUr8kk8NAh4X_ScCmaAHYaYI-EmCX-S8M2XOupbFwYo9xHvhxIzd91FeaYinqWzgB1gFAzlzSgFE9Vgl9-m1yxygDR_N6FSDLxQDOy4P4A8mgMRbxkVnxtB8nqvU"
-                alt="Keyli Sublimaciones"
-                width={48}
-                height={48}
-                className="w-12 h-12 rounded-full object-cover grayscale opacity-80"
-              />
-              <span className="font-display-sm-mobile text-on-surface">Keyli</span>
-            </div>
+            <Image
+              src="/logoKeyli.jpeg"
+              alt="Keyli Sublimaciones"
+              width={48}
+              height={48}
+              className="w-12 h-12 rounded-full object-cover grayscale opacity-80"
+            />
             <p className="font-body-secondary text-on-surface-variant max-w-[240px]">
               Sublimación artesanal con precisión editorial. El arte de imprimir historias.
             </p>

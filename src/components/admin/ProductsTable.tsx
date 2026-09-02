@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import type { AdminProduct } from "@/lib/adminProducts";
+import type { AdminProduct } from "@/components/admin/ProductForm";
+import { toggleProductoActivo } from "@/app/admin/productos/actions";
 
 type StatusFilter = "Cualquier estado" | "Activo" | "Inactivo";
 
@@ -21,6 +22,7 @@ export function ProductsTable({
   const [category, setCategory] = useState("Todas las categorías");
   const [season, setSeason] = useState("Todas las temporadas");
   const [status, setStatus] = useState<StatusFilter>("Cualquier estado");
+  const [, startTransition] = useTransition();
 
   const filtered = products.filter((p) => {
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
@@ -32,7 +34,11 @@ export function ProductsTable({
   });
 
   function toggleActive(id: string) {
-    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, active: !p.active } : p)));
+    const next = !products.find((p) => p.id === id)?.active;
+    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, active: next } : p)));
+    startTransition(() => {
+      toggleProductoActivo(id, next);
+    });
   }
 
   function clearFilters() {

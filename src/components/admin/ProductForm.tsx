@@ -1,15 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import type { AdminProduct } from "@/lib/adminProducts";
-import { ADMIN_CATEGORIES, ADMIN_SEASONS } from "@/lib/adminProducts";
+import { guardarProducto, eliminarProducto } from "@/app/admin/productos/actions";
 
-export function ProductForm({ product, isNew }: { product: AdminProduct; isNew: boolean }) {
+export type ProductImage = { src: string; alt: string };
+
+export type AdminProduct = {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+  priceFrom: number;
+  seasons: string[];
+  active: boolean;
+  featured: boolean;
+  order: number;
+  description: string;
+  material: string;
+  technique: string;
+  capacities: string[];
+  colors: { hex: string; label: string }[];
+  productionDays: number;
+  imageSrc: string | null;
+  imageAlt: string;
+  gallery: ProductImage[];
+};
+
+export function ProductForm({
+  product,
+  isNew,
+  categories,
+  seasons,
+}: {
+  product: AdminProduct;
+  isNew: boolean;
+  categories: string[];
+  seasons: string[];
+}) {
   const [form, setForm] = useState(product);
   const [capacityDraft, setCapacityDraft] = useState("");
   const [seasonSearch, setSeasonSearch] = useState("");
+  const [isPending, startTransition] = useTransition();
+
+  function save() {
+    startTransition(async () => {
+      await guardarProducto(form);
+    });
+  }
+
+  function remove() {
+    if (!form.id) return;
+    startTransition(async () => {
+      await eliminarProducto(form.id);
+    });
+  }
 
   function update<K extends keyof AdminProduct>(key: K, value: AdminProduct[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -36,7 +82,7 @@ export function ProductForm({ product, isNew }: { product: AdminProduct; isNew: 
     );
   }
 
-  const availableSeasons = ADMIN_SEASONS.filter(
+  const availableSeasons = seasons.filter(
     (s) => !form.seasons.includes(s) && s.toLowerCase().includes(seasonSearch.toLowerCase())
   );
   const priceInvalid = form.priceFrom <= 0;
@@ -61,10 +107,13 @@ export function ProductForm({ product, isNew }: { product: AdminProduct; isNew: 
           >
             Descartar cambios
           </Link>
-          {/* ponytail: sin persistencia todavía — se conecta cuando exista Supabase */}
-          <button disabled className="px-5 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg flex items-center shadow-md opacity-60 cursor-not-allowed">
+          <button
+            onClick={save}
+            disabled={isPending || priceInvalid || !form.name}
+            className="px-5 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg flex items-center shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+          >
             <span className="material-symbols-outlined mr-2 text-[18px]">save</span>
-            Guardar cambios
+            {isPending ? "Guardando..." : "Guardar cambios"}
           </button>
         </div>
       </div>
@@ -106,7 +155,7 @@ export function ProductForm({ product, isNew }: { product: AdminProduct; isNew: 
                   onChange={(e) => update("category", e.target.value)}
                   className="w-full pl-3 pr-10 py-2 text-sm font-admin-body text-on-surface bg-surface border border-outline-variant rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                 >
-                  {ADMIN_CATEGORIES.map((c) => (
+                  {categories.map((c) => (
                     <option key={c}>{c}</option>
                   ))}
                 </select>
@@ -393,8 +442,7 @@ export function ProductForm({ product, isNew }: { product: AdminProduct; isNew: 
 
           {!isNew && (
             <div className="mt-4 pt-6 border-t border-outline-variant/50 flex flex-col items-center">
-              {/* ponytail: eliminar deshabilitado — sin backend que borre de verdad */}
-              <button disabled className="text-sm font-semibold text-error opacity-60 cursor-not-allowed">
+              <button onClick={remove} disabled={isPending} className="text-sm font-semibold text-error disabled:opacity-60">
                 Eliminar producto permanentemente
               </button>
               <p className="text-xs text-on-surface-variant mt-2 text-center">

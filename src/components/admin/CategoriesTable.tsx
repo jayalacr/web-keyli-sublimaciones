@@ -1,44 +1,50 @@
 "use client";
 
-import { useState } from "react";
-import type { AdminCategory } from "@/lib/adminCategories";
+import { useState, useTransition } from "react";
+import { crearCategoria, renombrarCategoria, eliminarCategoria } from "@/app/admin/categorias/actions";
+
+type Categoria = { id: string; nombre: string; slug: string; orden: number };
 
 export function CategoriesTable({
   initialCategories,
   productCounts,
 }: {
-  initialCategories: AdminCategory[];
+  initialCategories: Categoria[];
   productCounts: Record<string, number>;
 }) {
   const [categories, setCategories] = useState(initialCategories);
   const [search, setSearch] = useState("");
   const [draftName, setDraftName] = useState("");
+  const [, startTransition] = useTransition();
 
   const filtered = categories
-    .filter((c) => c.name.toLowerCase().includes(search.toLowerCase()))
-    .sort((a, b) => a.order - b.order);
+    .filter((c) => c.nombre.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => a.orden - b.orden);
 
-  function renameCategory(id: string, name: string) {
-    setCategories((prev) => prev.map((c) => (c.id === id ? { ...c, name } : c)));
+  function renameCategory(id: string, nombre: string) {
+    setCategories((prev) => prev.map((c) => (c.id === id ? { ...c, nombre } : c)));
+  }
+
+  function commitRename(id: string, nombre: string) {
+    startTransition(() => {
+      renombrarCategoria(id, nombre);
+    });
   }
 
   function removeCategory(id: string) {
     setCategories((prev) => prev.filter((c) => c.id !== id));
+    startTransition(() => {
+      eliminarCategoria(id);
+    });
   }
 
   function addCategory() {
-    const name = draftName.trim();
-    if (!name) return;
-    const id = name
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
-    if (!id || categories.some((c) => c.id === id)) return;
-    const maxOrder = categories.reduce((max, c) => Math.max(max, c.order), 0);
-    setCategories((prev) => [...prev, { id, name, slug: id, order: maxOrder + 10 }]);
+    const nombre = draftName.trim();
+    if (!nombre) return;
     setDraftName("");
+    startTransition(async () => {
+      await crearCategoria(nombre);
+    });
   }
 
   return (
@@ -103,15 +109,16 @@ export function CategoriesTable({
                     <td className="py-2 px-3 font-medium">
                       <input
                         type="text"
-                        value={cat.name}
+                        value={cat.nombre}
                         onChange={(e) => renameCategory(cat.id, e.target.value)}
+                        onBlur={(e) => commitRename(cat.id, e.target.value)}
                         className="bg-transparent border-0 focus:outline-none focus:ring-1 focus:ring-primary rounded px-1 -mx-1 w-full"
                       />
                     </td>
                     <td className="py-2 px-3 text-on-surface-variant">{cat.slug}</td>
                     <td className="py-2 px-3">
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface text-on-surface border border-outline-variant">
-                        {productCounts[cat.name] ?? 0}
+                        {productCounts[cat.id] ?? 0}
                       </span>
                     </td>
                     <td className="py-2 px-3 text-right">

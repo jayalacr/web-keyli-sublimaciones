@@ -8,9 +8,10 @@ export async function crearCategoria(nombre: string) {
   const db = supabaseAdmin();
   const { data: existentes } = await db.from("categorias").select("orden").order("orden", { ascending: false }).limit(1);
   const orden = (existentes?.[0]?.orden ?? 0) + 10;
-  const { error } = await db.from("categorias").insert({ nombre, slug: slugify(nombre), orden });
+  const { data, error } = await db.from("categorias").insert({ nombre, slug: slugify(nombre), orden }).select().single();
   if (error) throw error;
   revalidatePath("/admin/categorias");
+  return data;
 }
 
 export async function renombrarCategoria(id: string, nombre: string) {
@@ -22,6 +23,13 @@ export async function renombrarCategoria(id: string, nombre: string) {
 
 export async function eliminarCategoria(id: string) {
   const db = supabaseAdmin();
+
+  const { count, error: countErr } = await db.from("productos").select("*", { count: "exact", head: true }).eq("categoria_id", id);
+  if (countErr) throw countErr;
+  if (count) {
+    throw new Error(`No se puede eliminar: tiene ${count} producto(s) asignados. Cámbialos de categoría primero.`);
+  }
+
   const { error } = await db.from("categorias").delete().eq("id", id);
   if (error) throw error;
   revalidatePath("/admin/categorias");

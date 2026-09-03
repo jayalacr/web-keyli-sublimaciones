@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import Image from "next/image";
 import { toggleTemporadaActiva, guardarTemporada } from "@/app/admin/temporadas/actions";
+import { sortKeyTemporada } from "@/lib/temporadas";
 
 export type AdminSeason = {
   id: string;
@@ -49,7 +50,12 @@ export function SeasonsManager({ initialSeasons, allProducts }: { initialSeasons
   const [productSearch, setProductSearch] = useState("");
   const [, startTransition] = useTransition();
 
-  const sorted = [...seasons].sort((a, b) => a.order - b.order);
+  const hoy = new Date();
+  const sorted = [...seasons].sort(
+    (a, b) =>
+      sortKeyTemporada(a.fechaInicioMes, a.fechaInicioDia, a.order, hoy) -
+      sortKeyTemporada(b.fechaInicioMes, b.fechaInicioDia, b.order, hoy)
+  );
 
   function toggleActive(id: string) {
     const next = !seasons.find((s) => s.id === id)?.active;
@@ -112,11 +118,12 @@ export function SeasonsManager({ initialSeasons, allProducts }: { initialSeasons
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-element-gap">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-grid-gutter">
         {sorted.map((season) => (
           <div
             key={season.id}
-            className={`bg-surface-container-lowest rounded-lg border border-outline-variant overflow-hidden flex flex-col transition-shadow ${
+            onClick={() => openEditor(season)}
+            className={`bg-surface-container-lowest rounded-lg border border-outline-variant overflow-hidden flex flex-col cursor-pointer transition-shadow hover:shadow-md hover:-translate-y-0.5 ${
               season.active ? "" : "opacity-60"
             }`}
           >
@@ -158,16 +165,17 @@ export function SeasonsManager({ initialSeasons, allProducts }: { initialSeasons
                 <button
                   role="switch"
                   aria-checked={season.active}
-                  onClick={() => toggleActive(season.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleActive(season.id);
+                  }}
                   className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors ${season.active ? "bg-primary" : "bg-surface-variant"}`}
                 >
                   <span className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${season.active ? "translate-x-4" : "translate-x-0.5"}`} />
                 </button>
               </div>
               <div className="pt-2 border-t border-outline-variant/50">
-                <button onClick={() => openEditor(season)} className="text-primary hover:text-on-primary-fixed-variant font-admin-label-caps uppercase transition-colors">
-                  Editar
-                </button>
+                <span className="text-primary font-admin-label-caps uppercase">Editar</span>
               </div>
             </div>
           </div>
@@ -196,25 +204,14 @@ export function SeasonsManager({ initialSeasons, allProducts }: { initialSeasons
                     className="w-full h-10 px-3 bg-surface-container-lowest border border-outline-variant rounded font-admin-body text-on-surface focus:outline-none focus:border-primary transition-colors"
                   />
                 </div>
-                <div className="flex gap-4">
-                  <div className="flex flex-col gap-2 flex-1">
-                    <label className="font-admin-label-caps text-on-surface-variant uppercase">Slug</label>
-                    <input
-                      type="text"
-                      value={draft.slug}
-                      readOnly
-                      className="w-full h-10 px-3 bg-surface-variant/30 border border-outline-variant rounded font-admin-body text-on-surface-variant focus:outline-none"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2 w-24">
-                    <label className="font-admin-label-caps text-on-surface-variant uppercase">Orden</label>
-                    <input
-                      type="number"
-                      value={draft.order}
-                      onChange={(e) => updateDraft("order", Number(e.target.value))}
-                      className="w-full h-10 px-3 bg-surface-container-lowest border border-outline-variant rounded font-admin-body text-on-surface focus:outline-none focus:border-primary transition-colors"
-                    />
-                  </div>
+                <div className="flex flex-col gap-2">
+                  <label className="font-admin-label-caps text-on-surface-variant uppercase">Slug</label>
+                  <input
+                    type="text"
+                    value={draft.slug}
+                    readOnly
+                    className="w-full h-10 px-3 bg-surface-variant/30 border border-outline-variant rounded font-admin-body text-on-surface-variant focus:outline-none"
+                  />
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="font-admin-label-caps text-on-surface-variant uppercase">Descripción</label>

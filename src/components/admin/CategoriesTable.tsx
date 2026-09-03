@@ -15,6 +15,9 @@ export function CategoriesTable({
   const [categories, setCategories] = useState(initialCategories);
   const [search, setSearch] = useState("");
   const [draftName, setDraftName] = useState("");
+  const [pendingDelete, setPendingDelete] = useState<Categoria | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [, startTransition] = useTransition();
 
   const filtered = categories
@@ -31,11 +34,20 @@ export function CategoriesTable({
     });
   }
 
-  function removeCategory(id: string) {
-    setCategories((prev) => prev.filter((c) => c.id !== id));
-    startTransition(() => {
-      eliminarCategoria(id);
-    });
+  async function confirmRemoveCategory() {
+    if (!pendingDelete) return;
+    const id = pendingDelete.id;
+    setDeleteError(null);
+    setIsDeleting(true);
+    try {
+      await eliminarCategoria(id);
+      setCategories((prev) => prev.filter((c) => c.id !== id));
+      setPendingDelete(null);
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : "No se pudo eliminar la categoría.");
+    } finally {
+      setIsDeleting(false);
+    }
   }
 
   function addCategory() {
@@ -43,7 +55,8 @@ export function CategoriesTable({
     if (!nombre) return;
     setDraftName("");
     startTransition(async () => {
-      await crearCategoria(nombre);
+      const nueva = await crearCategoria(nombre);
+      setCategories((prev) => [...prev, nueva]);
     });
   }
 
@@ -123,7 +136,10 @@ export function CategoriesTable({
                     </td>
                     <td className="py-2 px-3 text-right">
                       <button
-                        onClick={() => removeCategory(cat.id)}
+                        onClick={() => {
+                          setDeleteError(null);
+                          setPendingDelete(cat);
+                        }}
                         className="p-1.5 text-outline hover:text-error transition-colors rounded hover:bg-error-container/20 opacity-0 group-hover:opacity-100"
                         title="Eliminar"
                       >
@@ -136,6 +152,45 @@ export function CategoriesTable({
             </table>
           </div>
         </div>
+      )}
+
+      {pendingDelete && (
+        <>
+          <div className="fixed inset-0 bg-inverse-surface/30 backdrop-blur-[1px] z-40" onClick={() => setPendingDelete(null)} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="bg-surface-container-lowest rounded-xl shadow-2xl border border-outline-variant max-w-sm w-full p-6 flex flex-col items-center text-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-error-container/50 flex items-center justify-center">
+                <span className="material-symbols-outlined text-error text-2xl">warning</span>
+              </div>
+              <h3 className="font-admin-title text-lg text-on-surface">¿Eliminar &quot;{pendingDelete.nombre}&quot;?</h3>
+              {productCounts[pendingDelete.id] ? (
+                <p className="text-sm text-error">
+                  No se puede eliminar todavía: tiene {productCounts[pendingDelete.id]} producto(s) asignados. Cámbialos de categoría primero desde Productos.
+                </p>
+              ) : (
+                <p className="text-sm text-on-surface-variant">Esta acción no se puede deshacer.</p>
+              )}
+              {deleteError && <p className="text-sm text-error">{deleteError}</p>}
+              <div className="flex items-center gap-3 mt-3 w-full">
+                <button
+                  onClick={() => setPendingDelete(null)}
+                  className="flex-1 px-4 py-2 text-sm font-semibold text-on-surface-variant border border-outline-variant rounded-lg hover:bg-surface-container transition-colors"
+                >
+                  {productCounts[pendingDelete.id] ? "Entendido" : "Cancelar"}
+                </button>
+                {!productCounts[pendingDelete.id] && (
+                  <button
+                    onClick={confirmRemoveCategory}
+                    disabled={isDeleting}
+                    className="flex-1 px-4 py-2 text-sm font-semibold text-on-error bg-error rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60"
+                  >
+                    {isDeleting ? "Eliminando..." : "Sí, eliminar"}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </>
   );

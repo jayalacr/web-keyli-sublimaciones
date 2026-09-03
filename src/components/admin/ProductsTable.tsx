@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import type { AdminProduct } from "@/components/admin/ProductForm";
 import { toggleProductoActivo } from "@/app/admin/productos/actions";
@@ -17,6 +17,7 @@ export function ProductsTable({
   categories: string[];
   seasons: string[];
 }) {
+  const router = useRouter();
   const [products, setProducts] = useState(initialProducts);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Todas las categorías");
@@ -62,35 +63,50 @@ export function ProductsTable({
           />
         </div>
         <div className="flex items-center gap-3 overflow-x-auto pb-2 md:pb-0">
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="px-3 py-2 bg-surface text-on-surface text-sm border-0 shadow-inner rounded-lg focus:ring-1 focus:ring-primary focus:outline-none"
-          >
-            <option>Todas las categorías</option>
-            {categories.map((c) => (
-              <option key={c}>{c}</option>
-            ))}
-          </select>
-          <select
-            value={season}
-            onChange={(e) => setSeason(e.target.value)}
-            className="px-3 py-2 bg-surface text-on-surface text-sm border-0 shadow-inner rounded-lg focus:ring-1 focus:ring-primary focus:outline-none"
-          >
-            <option>Todas las temporadas</option>
-            {seasons.map((s) => (
-              <option key={s}>{s}</option>
-            ))}
-          </select>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as StatusFilter)}
-            className="px-3 py-2 bg-surface text-on-surface text-sm border-0 shadow-inner rounded-lg focus:ring-1 focus:ring-primary focus:outline-none"
-          >
-            <option>Cualquier estado</option>
-            <option>Activo</option>
-            <option>Inactivo</option>
-          </select>
+          <div className="relative shrink-0">
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="appearance-none pl-3 pr-9 py-2 bg-surface text-on-surface text-sm border-0 shadow-inner rounded-lg cursor-pointer focus:ring-1 focus:ring-primary focus:outline-none"
+            >
+              <option>Todas las categorías</option>
+              {categories.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+            </select>
+            <span className="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-outline text-[18px]">
+              expand_more
+            </span>
+          </div>
+          <div className="relative shrink-0">
+            <select
+              value={season}
+              onChange={(e) => setSeason(e.target.value)}
+              className="appearance-none pl-3 pr-9 py-2 bg-surface text-on-surface text-sm border-0 shadow-inner rounded-lg cursor-pointer focus:ring-1 focus:ring-primary focus:outline-none"
+            >
+              <option>Todas las temporadas</option>
+              {seasons.map((s) => (
+                <option key={s}>{s}</option>
+              ))}
+            </select>
+            <span className="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-outline text-[18px]">
+              expand_more
+            </span>
+          </div>
+          <div className="relative shrink-0">
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as StatusFilter)}
+              className="appearance-none pl-3 pr-9 py-2 bg-surface text-on-surface text-sm border-0 shadow-inner rounded-lg cursor-pointer focus:ring-1 focus:ring-primary focus:outline-none"
+            >
+              <option>Cualquier estado</option>
+              <option>Activo</option>
+              <option>Inactivo</option>
+            </select>
+            <span className="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-outline text-[18px]">
+              expand_more
+            </span>
+          </div>
         </div>
       </div>
 
@@ -123,7 +139,8 @@ export function ProductsTable({
                 {filtered.map((product, i) => (
                   <tr
                     key={product.id}
-                    className={`group hover:bg-surface-container-lowest/50 transition-colors h-row-height-dense ${
+                    onClick={() => router.push(`/admin/productos/${product.id}`)}
+                    className={`group cursor-pointer hover:bg-primary-fixed/40 transition-colors h-row-height-dense ${
                       i < filtered.length - 1 ? "border-b border-surface-variant" : ""
                     } ${!product.active ? "opacity-50" : ""}`}
                   >
@@ -172,7 +189,10 @@ export function ProductsTable({
                         <button
                           role="switch"
                           aria-checked={product.active}
-                          onClick={() => toggleActive(product.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleActive(product.id);
+                          }}
                           className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors ${
                             product.active ? "bg-primary" : "bg-surface-variant border border-outline-variant"
                           }`}
@@ -190,10 +210,15 @@ export function ProductsTable({
                     </td>
                     <td className="py-2 px-3 text-right">
                       <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Link href={`/admin/productos/${product.id}`} className="p-1.5 text-outline hover:text-primary transition-colors rounded hover:bg-primary/10" title="Editar">
+                        <span className="p-1.5 text-outline" title="Editar">
                           <span className="material-symbols-outlined text-[18px]">edit</span>
-                        </Link>
-                        <button disabled className="p-1.5 text-outline rounded" title="Duplicar (próximamente)">
+                        </span>
+                        <button
+                          disabled
+                          onClick={(e) => e.stopPropagation()}
+                          className="p-1.5 text-outline rounded"
+                          title="Duplicar (próximamente)"
+                        >
                           <span className="material-symbols-outlined text-[18px]">content_copy</span>
                         </button>
                       </div>

@@ -124,6 +124,8 @@ export type TextosInicio = {
   hero_titulo: string;
   hero_subtitulo: string;
   hero_cta: string;
+  hero_imagen_url: string;
+  hero_imagen_alt: string;
   historia_titulo: string;
   historia_texto: string;
   historia_imagen_url: string;

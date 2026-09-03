@@ -41,7 +41,10 @@ export function ProductForm({
 }) {
   const [form, setForm] = useState(product);
   const [capacityDraft, setCapacityDraft] = useState("");
+  const [colorHexDraft, setColorHexDraft] = useState("#6c538b");
+  const [colorLabelDraft, setColorLabelDraft] = useState("");
   const [seasonSearch, setSeasonSearch] = useState("");
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   function save() {
@@ -72,6 +75,21 @@ export function ProductForm({
     update(
       "capacities",
       form.capacities.filter((c) => c !== cap)
+    );
+  }
+
+  function addColor() {
+    const hex = colorHexDraft.trim();
+    const label = colorLabelDraft.trim();
+    if (!hex || !label || form.colors.some((c) => c.hex === hex)) return;
+    update("colors", [...form.colors, { hex, label }]);
+    setColorLabelDraft("");
+  }
+
+  function removeColor(hex: string) {
+    update(
+      "colors",
+      form.colors.filter((c) => c.hex !== hex)
     );
   }
 
@@ -150,15 +168,20 @@ export function ProductForm({
               </div>
               <div className="col-span-2 md:col-span-1 flex flex-col gap-1.5">
                 <label className="font-admin-label-caps text-xs text-on-surface-variant">Categoría</label>
-                <select
-                  value={form.category}
-                  onChange={(e) => update("category", e.target.value)}
-                  className="w-full pl-3 pr-10 py-2 text-sm font-admin-body text-on-surface bg-surface border border-outline-variant rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                >
-                  {categories.map((c) => (
-                    <option key={c}>{c}</option>
-                  ))}
-                </select>
+                <div className="relative w-full">
+                  <select
+                    value={form.category}
+                    onChange={(e) => update("category", e.target.value)}
+                    className="appearance-none w-full pl-3 pr-10 py-2 text-sm font-admin-body text-on-surface bg-surface border border-outline-variant rounded-lg cursor-pointer focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                  >
+                    {categories.map((c) => (
+                      <option key={c}>{c}</option>
+                    ))}
+                  </select>
+                  <span className="material-symbols-outlined pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">
+                    expand_more
+                  </span>
+                </div>
               </div>
               <div className="col-span-2 md:col-span-1 flex flex-col gap-1.5">
                 <label className={`font-admin-label-caps text-xs ${priceInvalid ? "text-error" : "text-on-surface-variant"}`}>
@@ -261,15 +284,43 @@ export function ProductForm({
               </div>
               <div className="col-span-2 md:col-span-1 flex flex-col gap-2">
                 <label className="font-admin-label-caps text-xs text-on-surface-variant">Colores de Recubrimiento</label>
-                <div className="flex flex-wrap gap-2 items-center h-9">
+                <div className="flex flex-wrap gap-2 items-center">
                   {form.colors.map((c) => (
-                    <div
-                      key={c.hex}
-                      title={c.label}
-                      className="w-6 h-6 rounded-full border border-outline-variant shadow-sm"
-                      style={{ backgroundColor: c.hex }}
-                    />
+                    <div key={c.hex} title={c.label} className="relative group/color">
+                      <div className="w-6 h-6 rounded-full border border-outline-variant shadow-sm" style={{ backgroundColor: c.hex }} />
+                      <button
+                        onClick={() => removeColor(c.hex)}
+                        className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-surface border border-outline-variant text-on-surface-variant flex items-center justify-center opacity-0 group-hover/color:opacity-100 transition-opacity hover:text-error hover:border-error"
+                        aria-label={`Quitar color ${c.label}`}
+                      >
+                        <span className="material-symbols-outlined text-[10px]">close</span>
+                      </button>
+                    </div>
                   ))}
+                </div>
+                <div className="flex items-center gap-2 mt-1">
+                  <input
+                    type="color"
+                    value={colorHexDraft}
+                    onChange={(e) => setColorHexDraft(e.target.value)}
+                    className="w-9 h-9 p-0.5 bg-surface border border-outline-variant rounded-lg cursor-pointer"
+                    aria-label="Elegir color"
+                  />
+                  <input
+                    type="text"
+                    value={colorLabelDraft}
+                    onChange={(e) => setColorLabelDraft(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addColor())}
+                    placeholder="Nombre del color"
+                    className="flex-1 min-w-0 px-3 py-1.5 bg-surface text-sm border border-outline-variant border-dashed rounded-md focus:outline-none focus:border-primary"
+                  />
+                  <button
+                    onClick={addColor}
+                    disabled={!colorLabelDraft.trim()}
+                    className="px-3 py-1.5 bg-surface text-on-surface-variant rounded-md text-sm font-medium border border-outline-variant border-dashed hover:bg-surface-variant transition-colors flex items-center shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <span className="material-symbols-outlined text-[16px] mr-1">add</span> Agregar
+                  </button>
                 </div>
               </div>
               <div className="col-span-2 md:col-span-1 flex flex-col gap-2">
@@ -442,7 +493,12 @@ export function ProductForm({
 
           {!isNew && (
             <div className="mt-4 pt-6 border-t border-outline-variant/50 flex flex-col items-center">
-              <button onClick={remove} disabled={isPending} className="text-sm font-semibold text-error disabled:opacity-60">
+              <button
+                onClick={() => setConfirmingDelete(true)}
+                disabled={isPending}
+                className="flex items-center gap-2 px-5 py-2 text-sm font-semibold text-error border border-error/30 rounded-lg hover:bg-error-container/20 transition-colors disabled:opacity-60"
+              >
+                <span className="material-symbols-outlined text-[18px]">delete</span>
                 Eliminar producto permanentemente
               </button>
               <p className="text-xs text-on-surface-variant mt-2 text-center">
@@ -452,6 +508,38 @@ export function ProductForm({
           )}
         </div>
       </div>
+
+      {confirmingDelete && (
+        <>
+          <div className="fixed inset-0 bg-inverse-surface/30 backdrop-blur-[1px] z-40" onClick={() => setConfirmingDelete(false)} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="bg-surface-container-lowest rounded-xl shadow-2xl border border-outline-variant max-w-sm w-full p-6 flex flex-col items-center text-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-error-container/50 flex items-center justify-center">
+                <span className="material-symbols-outlined text-error text-2xl">warning</span>
+              </div>
+              <h3 className="font-admin-title text-lg text-on-surface">¿Eliminar &quot;{form.name}&quot;?</h3>
+              <p className="text-sm text-on-surface-variant">
+                Esta acción no se puede deshacer. El producto se borrará permanentemente del catálogo y de cualquier temporada donde aparezca.
+              </p>
+              <div className="flex items-center gap-3 mt-3 w-full">
+                <button
+                  onClick={() => setConfirmingDelete(false)}
+                  className="flex-1 px-4 py-2 text-sm font-semibold text-on-surface-variant border border-outline-variant rounded-lg hover:bg-surface-container transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={remove}
+                  disabled={isPending}
+                  className="flex-1 px-4 py-2 text-sm font-semibold text-on-error bg-error rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60"
+                >
+                  {isPending ? "Eliminando..." : "Sí, eliminar"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

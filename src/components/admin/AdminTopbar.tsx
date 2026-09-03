@@ -1,13 +1,22 @@
+"use client";
+
 import Link from "next/link";
 
-export function AdminTopbar() {
-  const today = new Date().toLocaleDateString("es-MX", { day: "numeric", month: "long", year: "numeric" });
-
+export function AdminTopbar({ onMenuClick }: { onMenuClick: () => void }) {
   return (
-    <header className="fixed top-0 left-sidebar-width right-0 h-16 bg-surface/80 backdrop-blur-xl border-b border-outline-variant z-40 flex items-center justify-between px-8">
-      <div className="text-sm text-on-surface-variant flex items-center gap-2">
-        <span className="material-symbols-outlined text-[18px]">calendar_month</span>
-        <span className="capitalize">{today}</span>
+    <header className="fixed top-0 left-0 right-0 h-16 bg-surface/80 backdrop-blur-xl border-b border-outline-variant z-30 flex items-center justify-between px-4 md:px-8">
+      <div className="flex items-center gap-4">
+        <button
+          onClick={onMenuClick}
+          aria-label="Abrir menú"
+          className="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-container-high transition-colors"
+        >
+          <span className="material-symbols-outlined">menu</span>
+        </button>
+        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+          <span className="material-symbols-outlined text-on-primary text-[18px]">brush</span>
+        </div>
+        <span className="hidden sm:inline font-admin-title text-base text-on-surface">Keyli Sub.</span>
       </div>
       <div className="flex items-center gap-4">
         <Link

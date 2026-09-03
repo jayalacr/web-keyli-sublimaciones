@@ -1,4 +1,5 @@
 import { supabasePublic } from "@/lib/supabase/public";
+import { sortKeyTemporada } from "@/lib/temporadas";
 
 export type Categoria = { id: string; nombre: string; slug: string; orden: number };
 
@@ -39,16 +40,6 @@ export type Temporada = {
   fecha_fin_dia: number | null;
 };
 
-// ponytail: comparación mes*100+dia — evita el año al comparar fechas recurrentes anuales.
-function estaVigente(t: Pick<Temporada, "fecha_inicio_mes" | "fecha_inicio_dia" | "fecha_fin_mes" | "fecha_fin_dia">, hoy: Date): boolean {
-  if (!t.fecha_inicio_mes || !t.fecha_inicio_dia || !t.fecha_fin_mes || !t.fecha_fin_dia) return true;
-  const hoyVal = (hoy.getMonth() + 1) * 100 + hoy.getDate();
-  const inicioVal = t.fecha_inicio_mes * 100 + t.fecha_inicio_dia;
-  const finVal = t.fecha_fin_mes * 100 + t.fecha_fin_dia;
-  if (inicioVal <= finVal) return hoyVal >= inicioVal && hoyVal <= finVal;
-  return hoyVal >= inicioVal || hoyVal <= finVal; // rango que cruza fin de año (ej. 20 dic - 5 ene)
-}
-
 export async function getCategorias(): Promise<Categoria[]> {
   const { data, error } = await supabasePublic().from("categorias").select("id,nombre,slug,orden").order("orden");
   if (error) throw error;
@@ -77,9 +68,8 @@ export async function getTemporadasActivas(): Promise<(Temporada & { piezas: num
   if (error) throw error;
 
   const hoy = new Date();
-  const vigentes = temporadas.filter((t) => estaVigente(t, hoy));
-  const sortKey = (t: Temporada) => (t.fecha_inicio_mes && t.fecha_inicio_dia ? t.fecha_inicio_mes * 100 + t.fecha_inicio_dia : 10000 + t.orden);
-  vigentes.sort((a, b) => sortKey(a) - sortKey(b));
+  const sortKey = (t: Temporada) => sortKeyTemporada(t.fecha_inicio_mes, t.fecha_inicio_dia, t.orden, hoy);
+  const ordenadas = [...temporadas].sort((a, b) => sortKey(a) - sortKey(b));
 
   const { data: relaciones, error: relErr } = await db
     .from("productos_temporadas")
@@ -98,7 +88,7 @@ export async function getTemporadasActivas(): Promise<(Temporada & { piezas: num
     }
   }
 
-  return vigentes.map((t) => ({
+  return ordenadas.map((t) => ({
     ...t,
     piezas: conteoPorTemporada.get(t.id) ?? 0,
     galeria: galeriaPorTemporada.get(t.id) ?? [],

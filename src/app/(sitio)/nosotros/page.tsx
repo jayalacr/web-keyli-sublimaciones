@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { waLink } from "@/lib/constants";
+import { DEFAULT_PHONE, waLink } from "@/lib/constants";
+import { getContacto } from "@/lib/db";
 
 const MILESTONES = [
   { year: "2020", text: "El inicio de un sueño con una prensa térmica pequeña." },
@@ -44,7 +45,12 @@ const PROCESS_PHOTOS = [
   },
 ];
 
-export default function NosotrosPage() {
+export default async function NosotrosPage() {
+  const contacto = await getContacto();
+  const whatsapp = contacto?.whatsapp ?? DEFAULT_PHONE;
+  const instagramUrl = contacto?.instagram_url ?? "https://instagram.com/keylisublimaciones";
+  const facebookUrl = contacto?.facebook_url ?? "https://facebook.com/keylisublimaciones";
+
   return (
     <div className="flex flex-col w-full bg-surface">
       {/* Hero */}
@@ -217,7 +223,7 @@ export default function NosotrosPage() {
           </div>
           <div className="flex flex-wrap gap-4 mt-4">
             <a
-              href={waLink()}
+              href={waLink(whatsapp)}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-3 bg-primary rounded-full font-label-caps text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors flex items-center gap-2"
@@ -225,7 +231,7 @@ export default function NosotrosPage() {
               <span className="material-symbols-outlined text-sm">chat</span> WhatsApp
             </a>
             <a
-              href="https://instagram.com/keylisublimaciones"
+              href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-3 bg-transparent border border-outline-variant/30 rounded-full font-label-caps text-on-primary hover:bg-white/10 transition-colors flex items-center gap-2"
@@ -233,7 +239,7 @@ export default function NosotrosPage() {
               <span className="material-symbols-outlined text-sm">photo_camera</span> Instagram
             </a>
             <a
-              href="https://facebook.com/keylisublimaciones"
+              href={facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-3 bg-transparent border border-outline-variant/30 rounded-full font-label-caps text-on-primary hover:bg-white/10 transition-colors flex items-center gap-2"

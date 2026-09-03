@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { waLink } from "@/lib/constants";
-import { getTemporadasActivas } from "@/lib/db";
+import { DEFAULT_PHONE, waLink } from "@/lib/constants";
+import { getContacto, getTemporadasActivas } from "@/lib/db";
 
 // ponytail: variantes de tamaño/posición del mosaico, cíclicas por índice — es presentación, no dato de la temporada.
 const LAYOUT_VARIANTS = [
@@ -14,7 +14,8 @@ const LAYOUT_VARIANTS = [
 ];
 
 export default async function TemporadasPage() {
-  const temporadas = await getTemporadasActivas();
+  const [temporadas, contacto] = await Promise.all([getTemporadasActivas(), getContacto()]);
+  const whatsapp = contacto?.whatsapp ?? DEFAULT_PHONE;
 
   return (
     <div className="flex flex-col w-full bg-surface">
@@ -96,7 +97,7 @@ export default async function TemporadasPage() {
             </p>
           </div>
           <a
-            href={waLink()}
+            href={waLink(whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
             className="z-10 shrink-0 inline-flex items-center justify-center px-8 py-4 bg-primary text-on-primary rounded-full font-label-caps tracking-widest hover:bg-on-surface transition-colors duration-300"

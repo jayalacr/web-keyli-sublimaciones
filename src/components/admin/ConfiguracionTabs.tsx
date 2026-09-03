@@ -2,26 +2,35 @@
 
 import { useState, useTransition } from "react";
 import Image from "next/image";
-import type { TextosInicio } from "@/lib/db";
-import { guardarTextosInicio } from "@/app/admin/configuracion/actions";
+import type { Contacto, TextosInicio } from "@/lib/db";
+import { guardarContacto, guardarTextosInicio } from "@/app/admin/configuracion/actions";
 
-const TABS: { id: "contacto" | "textos" | "envios" | "cuenta"; label: string; hint?: string }[] = [
+const TABS: { id: "contacto" | "textos"; label: string; hint?: string }[] = [
   { id: "contacto", label: "Contacto", hint: "WhatsApp, Instagram, Facebook" },
   { id: "textos", label: "Textos del sitio" },
-  { id: "envios", label: "Envíos" },
-  { id: "cuenta", label: "Cuenta" },
 ];
 
 type TabId = (typeof TABS)[number]["id"];
 
-export function ConfiguracionTabs({ initialSettings }: { initialSettings: TextosInicio }) {
+export function ConfiguracionTabs({
+  initialSettings,
+  initialContacto,
+}: {
+  initialSettings: TextosInicio;
+  initialContacto: Contacto;
+}) {
   const [tab, setTab] = useState<TabId>("textos");
   const [settings, setSettings] = useState(initialSettings);
+  const [contacto, setContacto] = useState(initialContacto);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   function update<K extends keyof TextosInicio>(key: K, value: TextosInicio[K]) {
     setSettings((s) => ({ ...s, [key]: value }));
+  }
+
+  function updateContacto<K extends keyof Contacto>(key: K, value: Contacto[K]) {
+    setContacto((c) => ({ ...c, [key]: value }));
   }
 
   function updateBadge(i: number, value: string) {
@@ -34,7 +43,7 @@ export function ConfiguracionTabs({ initialSettings }: { initialSettings: Textos
 
   function save() {
     startTransition(async () => {
-      await guardarTextosInicio(settings);
+      await Promise.all([guardarTextosInicio(settings), guardarContacto(contacto)]);
       setLastSaved(new Date().toLocaleString("es-MX", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }));
     });
   }
@@ -69,34 +78,88 @@ export function ConfiguracionTabs({ initialSettings }: { initialSettings: Textos
         </div>
 
         <div className="flex-1 flex flex-col space-y-6">
-          {tab === "textos" ? (
+          {tab === "contacto" ? (
+            <SettingsCard icon="alternate_email" title="Contacto">
+              <Field label="Número de WhatsApp" hint="Solo dígitos, con código de país. Ej: 5218110000000">
+                <input
+                  type="text"
+                  value={contacto.whatsapp}
+                  onChange={(e) => updateContacto("whatsapp", e.target.value)}
+                  className="w-full max-w-md px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
+                />
+              </Field>
+              <Field label="Instagram" hint="URL completa del perfil.">
+                <input
+                  type="text"
+                  value={contacto.instagram_url}
+                  onChange={(e) => updateContacto("instagram_url", e.target.value)}
+                  className="w-full max-w-md px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
+                />
+              </Field>
+              <Field label="Facebook" hint="URL completa de la página.">
+                <input
+                  type="text"
+                  value={contacto.facebook_url}
+                  onChange={(e) => updateContacto("facebook_url", e.target.value)}
+                  className="w-full max-w-md px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
+                />
+              </Field>
+            </SettingsCard>
+          ) : (
             <>
               <SettingsCard icon="home" title="Inicio">
-                <Field label="Título principal" hint="Se muestra en el banner superior de la página principal.">
-                  <input
-                    type="text"
-                    value={settings.hero_titulo}
-                    onChange={(e) => update("hero_titulo", e.target.value)}
-                    className="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
-                  />
-                </Field>
-                <Field label="Subtítulo" hint={`Texto secundario bajo el título principal. ${settings.hero_subtitulo.length}/120 caracteres.`}>
-                  <textarea
-                    rows={3}
-                    maxLength={120}
-                    value={settings.hero_subtitulo}
-                    onChange={(e) => update("hero_subtitulo", e.target.value)}
-                    className="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface resize-none"
-                  />
-                </Field>
-                <Field label="Texto del botón principal" hint="Botón que dirige a los productos.">
-                  <input
-                    type="text"
-                    value={settings.hero_cta}
-                    onChange={(e) => update("hero_cta", e.target.value)}
-                    className="w-full max-w-md px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
-                  />
-                </Field>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="col-span-2 flex flex-col gap-5">
+                    <Field label="Título principal" hint="Se muestra en el banner superior de la página principal.">
+                      <input
+                        type="text"
+                        value={settings.hero_titulo}
+                        onChange={(e) => update("hero_titulo", e.target.value)}
+                        className="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
+                      />
+                    </Field>
+                    <Field label="Subtítulo" hint={`Texto secundario bajo el título principal. ${settings.hero_subtitulo.length}/120 caracteres.`}>
+                      <textarea
+                        rows={3}
+                        maxLength={120}
+                        value={settings.hero_subtitulo}
+                        onChange={(e) => update("hero_subtitulo", e.target.value)}
+                        className="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface resize-none"
+                      />
+                    </Field>
+                    <Field label="Texto del botón principal" hint="Botón que dirige a los productos.">
+                      <input
+                        type="text"
+                        value={settings.hero_cta}
+                        onChange={(e) => update("hero_cta", e.target.value)}
+                        className="w-full max-w-md px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
+                      />
+                    </Field>
+                  </div>
+                  <div className="col-span-1 flex flex-col gap-2">
+                    <label className="font-admin-label-caps text-on-surface-variant">Imagen de portada</label>
+                    <div className="relative rounded-lg overflow-hidden border border-outline-variant bg-surface-container h-48 w-full">
+                      {settings.hero_imagen_url && (
+                        <Image src={settings.hero_imagen_url} alt={settings.hero_imagen_alt} fill sizes="240px" className="object-cover" />
+                      )}
+                    </div>
+                    <input
+                      type="text"
+                      value={settings.hero_imagen_url}
+                      onChange={(e) => update("hero_imagen_url", e.target.value)}
+                      placeholder="URL de la imagen"
+                      className="w-full px-3 py-2 mt-1 text-sm bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
+                    />
+                    <input
+                      type="text"
+                      value={settings.hero_imagen_alt}
+                      onChange={(e) => update("hero_imagen_alt", e.target.value)}
+                      placeholder="Texto alternativo (accesibilidad)"
+                      className="w-full px-3 py-2 text-sm bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
+                    />
+                    <span className="font-admin-data text-outline mt-1 text-center">Recomendado: imagen horizontal, mínimo 1200px de ancho.</span>
+                  </div>
+                </div>
               </SettingsCard>
 
               <SettingsCard icon="history_edu" title="Historia">
@@ -156,13 +219,6 @@ export function ConfiguracionTabs({ initialSettings }: { initialSettings: Textos
                 <span className="font-admin-data text-outline mt-4 block">Iconos y textos breves mostrados sobre el footer del sitio.</span>
               </SettingsCard>
             </>
-          ) : (
-            <div className="bg-surface rounded-xl shadow-sm p-6 flex flex-col items-center text-center gap-2 py-16">
-              <span className="material-symbols-outlined text-outline text-3xl">construction</span>
-              <p className="font-admin-body text-on-surface-variant">
-                {TABS.find((t) => t.id === tab)?.label} llega cuando esta sección se diseñe en Stitch.
-              </p>
-            </div>
           )}
         </div>
       </div>

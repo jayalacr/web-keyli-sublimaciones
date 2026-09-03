@@ -1,15 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { waLink } from "@/lib/constants";
-import { getTemporadaConProductos, getTemporadasActivas } from "@/lib/db";
+import { DEFAULT_PHONE, waLink } from "@/lib/constants";
+import { getContacto, getTemporadaConProductos, getTemporadasActivas } from "@/lib/db";
 import { SeasonProductGrid, type SeasonProduct } from "./SeasonProductGrid";
 
 export default async function SeasonDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const result = await getTemporadaConProductos(slug);
+  const [result, contacto] = await Promise.all([getTemporadaConProductos(slug), getContacto()]);
   if (!result) notFound();
   const { temporada, productos } = result;
+  const whatsapp = contacto?.whatsapp ?? DEFAULT_PHONE;
 
   const seasonProducts: SeasonProduct[] = productos.map((p) => ({
     title: p.nombre,
@@ -80,7 +81,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ s
             con anticipación para garantizar la entrega a tiempo.
           </p>
           <a
-            href={waLink(`Hola, quiero cotizar algo de la colección ${temporada.nombre}`)}
+            href={waLink(whatsapp, `Hola, quiero cotizar algo de la colección ${temporada.nombre}`)}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-8 py-4 rounded-full bg-on-secondary-fixed text-secondary-fixed font-label-caps hover:bg-on-secondary-fixed-variant transition-colors shadow-md"

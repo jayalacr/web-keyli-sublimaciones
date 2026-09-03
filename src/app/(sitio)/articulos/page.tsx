@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { waLink } from "@/lib/constants";
-import { getCategorias, getProductosActivos } from "@/lib/db";
+import { DEFAULT_PHONE, waLink } from "@/lib/constants";
+import { getCategorias, getContacto, getProductosActivos } from "@/lib/db";
 import { ArticulosGrid } from "@/components/ArticulosGrid";
 
 export default async function ArticulosPage(props: PageProps<"/articulos">) {
   const searchParams = await props.searchParams;
   const categoriaParam = typeof searchParams.categoria === "string" ? searchParams.categoria : undefined;
-  const [categorias, productos] = await Promise.all([getCategorias(), getProductosActivos()]);
+  const [categorias, productos, contacto] = await Promise.all([getCategorias(), getProductosActivos(), getContacto()]);
+  const whatsapp = contacto?.whatsapp ?? DEFAULT_PHONE;
 
   return (
     <div className="flex flex-col w-full bg-surface text-on-surface">
@@ -22,7 +23,7 @@ export default async function ArticulosPage(props: PageProps<"/articulos">) {
         </div>
       </div>
 
-      <ArticulosGrid categorias={categorias.map((c) => c.nombre)} productos={productos} initialCategory={categoriaParam} />
+      <ArticulosGrid categorias={categorias.map((c) => c.nombre)} productos={productos} initialCategory={categoriaParam} whatsapp={whatsapp} />
 
       <div className="bg-surface-container-low mt-section-gap-mobile w-full py-section-gap-desktop px-container-margin relative overflow-hidden">
         <div className="absolute -right-32 -top-32 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
@@ -35,7 +36,7 @@ export default async function ArticulosPage(props: PageProps<"/articulos">) {
             </p>
           </div>
           <a
-            href={waLink()}
+            href={waLink(whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 rounded-full bg-primary text-on-primary font-label-caps hover:bg-on-primary-fixed-variant transition-colors shadow-lg hover:shadow-xl flex items-center gap-2"

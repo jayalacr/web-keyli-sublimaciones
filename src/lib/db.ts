@@ -142,3 +142,19 @@ export async function getTextosInicio(): Promise<TextosInicio | null> {
   if (error) throw error;
   return (data?.valor as TextosInicio) ?? null;
 }
+
+export type Contacto = {
+  whatsapp: string;
+  instagram_url: string;
+  facebook_url: string;
+};
+
+export async function getContacto(): Promise<Contacto | null> {
+  const { data, error } = await supabasePublic()
+    .from("configuracion_sitio")
+    .select("valor")
+    .eq("clave", "contacto")
+    .maybeSingle();
+  if (error) throw error;
+  return (data?.valor as Contacto) ?? null;
+}

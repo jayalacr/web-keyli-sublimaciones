@@ -17,10 +17,12 @@ export function ArticulosGrid({
   categorias,
   productos,
   initialCategory,
+  whatsapp,
 }: {
   categorias: string[];
   productos: Producto[];
   initialCategory?: string;
+  whatsapp: string;
 }) {
   const [category, setCategory] = useState(
     initialCategory && categorias.includes(initialCategory) ? initialCategory : "Todos"
@@ -92,12 +94,12 @@ export function ArticulosGrid({
         </div>
       </div>
 
-      {selected && <ProductModal producto={selected} onClose={() => setSelected(null)} />}
+      {selected && <ProductModal producto={selected} whatsapp={whatsapp} onClose={() => setSelected(null)} />}
     </>
   );
 }
 
-function ProductModal({ producto, onClose }: { producto: Producto; onClose: () => void }) {
+function ProductModal({ producto, whatsapp, onClose }: { producto: Producto; whatsapp: string; onClose: () => void }) {
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-surface/90 backdrop-blur-sm px-4 py-12 overflow-y-auto"
@@ -149,7 +151,7 @@ function ProductModal({ producto, onClose }: { producto: Producto; onClose: () =
             </div>
           </div>
           <a
-            href={waLink(`Hola, quiero cotizar: ${producto.nombre}`)}
+            href={waLink(whatsapp, `Hola, quiero cotizar: ${producto.nombre}`)}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-12 w-full py-4 rounded-full bg-primary text-on-primary font-label-caps hover:bg-on-primary-fixed-variant transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-xl"

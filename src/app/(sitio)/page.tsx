@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { waLink } from "@/lib/constants";
-import { getTemporadasActivas, getTextosInicio } from "@/lib/db";
+import { DEFAULT_PHONE, waLink } from "@/lib/constants";
+import { getContacto, getOpinionesAprobadas, getTemporadasActivas, getTextosInicio } from "@/lib/db";
 import { SeasonCard } from "@/components/SeasonCard";
+import { TestimonialForm } from "@/components/TestimonialForm";
 
 const FEATURED = [
   {
@@ -39,29 +40,8 @@ const FEATURED = [
   },
 ];
 
-const TESTIMONIALS = [
-  {
-    quote:
-      "La calidad de impresión en los termos que pedí para mi empresa es impecable. Los colores son vibrantes y el trato fue excepcional de principio a fin.",
-    name: "Mariana",
-    detail: "Termos corporativos",
-    offset: "md:mt-0",
-  },
-  {
-    quote:
-      "Hicieron unas playeras para un evento familiar y el diseño quedó exactamente como lo imaginamos. La tela es muy cómoda y el estampado no se siente pesado.",
-    name: "Roberto",
-    detail: "Playeras familiares",
-    offset: "md:mt-16",
-  },
-  {
-    quote:
-      "Pedí un set de tazas personalizadas para un regalo de aniversario. La nitidez de las fotografías es increíble. Llegaron súper rápido y muy bien protegidas.",
-    name: "Sofia",
-    detail: "Tazas conmemorativas",
-    offset: "md:mt-32",
-  },
-];
+// ponytail: desfase vertical cíclico por índice para el mosaico de tarjetas — es presentación, no dato de la opinión.
+const TESTIMONIAL_OFFSETS = ["md:mt-0", "md:mt-16", "md:mt-32"];
 
 const INSTAGRAM_STRIP = [
   { alt: "Taza sublimada sobre mesa de madera junto a un cuaderno.", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDMYAl-tsYTVEIXvVJc69h_-AU1JQIIqaeN2Fmt1SZFWHeX7-dsJTbNN6kCP5acqn6gnm6NNjxwFqBejaEJqB7_6tf92SsyOfz-g6Ah1N0v-8k8vR-kJZe7Q3bV1hW0rhnp9mM683lTXyzHv7K01nvf7TIvsf3_rohBMCkrjDZV7G6supu7_mLZU6ODZwwM6dmHerGHWnfbQL4BvA-LXerwIc9ts7NWYLoDNpDdn8ImBql4hPocJy2o" },
@@ -76,6 +56,9 @@ const TEXTOS_INICIO_FALLBACK = {
   hero_titulo: "Lo personalizado se siente distinto",
   hero_subtitulo: "Creamos piezas únicas a través de la sublimación. Cada artículo cuenta una historia pensada exclusivamente para ti.",
   hero_cta: "Ver artículos",
+  hero_imagen_url:
+    "https://lh3.googleusercontent.com/aida-public/AB6AXuBAPGKwmkRk1c-SeY9RxFxWCn9T0FRlX0Ia85So39yAv2fKWVlkHkPfAWLlBemvLR4mn-bdbYmb1O7G8H9AjjO_XtFcdtZNU_QR70VqQwdGzxJedmJf5k640Eum6hOl6a5lj1Uh91CQNoGvUQqXMmMBgQHj6OQypfREa9Nl8MWDZr6L5uUCW4S5yS4Yw674FxBaM0zFqXDg3CfC8elUN1_tmEqu57qjHaiepQ7SwUh7N6EEDq5z8gsD",
+  hero_imagen_alt: "Termo y playera personalizados sobre una superficie de concreto, iluminación editorial.",
   historia_titulo: "Todo empezó con Keyli",
   historia_texto: "Keyli no es solo un nombre, es la inspiración detrás de nuestra dedicación. Al igual que la lealtad y el carácter único de un husky, cada pieza que creamos está hecha con un propósito y atención inquebrantable.",
   historia_imagen_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBoQpbkM9y29c7H5i7QhXN0ox7NTur9mEEez8oZ_2dLy1TsMyctEz4c3CuF-5vs60LzGZCxrR0EmdVsKYzsm-xzAqCggKygAy6L7mNOdSZdGADGhRJXIfgqBsWe0_QP2kwtSzgORvkvH7vsV5RVk-5eCbAyiDCLTS0uwYdRM9BG3VZ7Gxgt2alF9RmxeKLvyEjUVOGopwDhtF-6aWkP958I3u_QcskaXNS7k6XlxGSl-U4c0LTvmpjX",
@@ -84,11 +67,16 @@ const TEXTOS_INICIO_FALLBACK = {
 };
 
 export default async function Home() {
-  const [textos, temporadas] = await Promise.all([
+  const [textos, temporadas, contacto, opiniones] = await Promise.all([
     getTextosInicio().then((t) => t ?? TEXTOS_INICIO_FALLBACK),
     getTemporadasActivas(),
+    getContacto(),
+    getOpinionesAprobadas(),
   ]);
   const seasons = temporadas.filter((t) => t.portada_url).slice(0, 3);
+  const whatsapp = contacto?.whatsapp ?? DEFAULT_PHONE;
+  const instagramUrl = contacto?.instagram_url ?? "https://instagram.com/keylisublimaciones";
+  const facebookUrl = contacto?.facebook_url ?? "https://facebook.com/keylisublimaciones";
 
   return (
     <div className="flex flex-col w-full bg-surface">
@@ -112,7 +100,7 @@ export default async function Home() {
               >
                 {textos.hero_cta}
               </Link>
-              <a href={waLink()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 group font-label-caps text-on-surface">
+              <a href={waLink(whatsapp)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 group font-label-caps text-on-surface">
                 <span>Escríbenos por WhatsApp</span>
                 <span className="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-1">
                   arrow_forward
@@ -122,8 +110,8 @@ export default async function Home() {
           </div>
           <div className="col-span-1 md:col-span-7 mt-stack-lg md:mt-0 relative h-[600px] w-[calc(100%+64px)] -mr-container-margin md:h-[60vh]">
             <Image
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAPGKwmkRk1c-SeY9RxFxWCn9T0FRlX0Ia85So39yAv2fKWVlkHkPfAWLlBemvLR4mn-bdbYmb1O7G8H9AjjO_XtFcdtZNU_QR70VqQwdGzxJedmJf5k640Eum6hOl6a5lj1Uh91CQNoGvUQqXMmMBgQHj6OQypfREa9Nl8MWDZr6L5uUCW4S5yS4Yw674FxBaM0zFqXDg3CfC8elUN1_tmEqu57qjHaiepQ7SwUh7N6EEDq5z8gsD"
-              alt="Termo y playera personalizados sobre una superficie de concreto, iluminación editorial."
+              src={textos.hero_imagen_url}
+              alt={textos.hero_imagen_alt}
               fill
               priority
               sizes="(min-width: 768px) 60vw, 100vw"
@@ -280,19 +268,26 @@ export default async function Home() {
       {/* Testimonials */}
       <section className="w-full py-section-gap-desktop bg-surface-container-low">
         <div className="px-container-margin">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-            {TESTIMONIALS.map((t) => (
-              <div key={t.name} className={`col-span-1 md:col-span-4 ${t.offset}`}>
-                <div className="bg-surface p-8 rounded-2xl border border-outline-variant/20">
-                  <p className="font-body-main text-on-surface italic mb-6">&ldquo;{t.quote}&rdquo;</p>
-                  <div className="flex flex-col">
-                    <span className="font-label-caps text-on-surface">{t.name}</span>
-                    <span className="font-body-secondary text-on-surface-variant text-sm">{t.detail}</span>
+          {opiniones.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-stack-lg">
+              {opiniones.map((o, i) => (
+                <div key={o.id} className={`col-span-1 md:col-span-4 ${TESTIMONIAL_OFFSETS[i % TESTIMONIAL_OFFSETS.length]}`}>
+                  <div className="bg-surface p-8 rounded-2xl border border-outline-variant/20">
+                    <p className="font-body-main text-on-surface italic mb-6">&ldquo;{o.texto}&rdquo;</p>
+                    <div className="flex flex-col">
+                      <span className="font-label-caps text-on-surface">{o.nombre}</span>
+                      {o.detalle && <span className="font-body-secondary text-on-surface-variant text-sm">{o.detalle}</span>}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="font-body-main text-on-surface-variant text-center mb-stack-lg max-w-md mx-auto">
+              ¿Ya recibiste tu pedido? Nos encantaría conocer tu experiencia.
+            </p>
+          )}
+          <TestimonialForm />
         </div>
       </section>
 
@@ -301,7 +296,7 @@ export default async function Home() {
         <div className="px-container-margin mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <span className="font-display-md text-on-surface text-2xl tracking-tight">@keylisublimaciones</span>
           <a
-            href="https://instagram.com/keylisublimaciones"
+            href={instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="font-label-caps text-on-surface-variant hover:text-primary transition-colors"
@@ -332,7 +327,7 @@ export default async function Home() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href={waLink()}
+              href={waLink(whatsapp)}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-white text-on-secondary-fixed-variant font-label-caps rounded-full hover:scale-105 transition-transform"
@@ -340,7 +335,7 @@ export default async function Home() {
               WhatsApp
             </a>
             <a
-              href="https://instagram.com/keylisublimaciones"
+              href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 border border-white/30 text-white font-label-caps rounded-full hover:bg-white/10 transition-colors"
@@ -348,7 +343,7 @@ export default async function Home() {
               Instagram
             </a>
             <a
-              href="https://facebook.com/keylisublimaciones"
+              href={facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 border border-white/30 text-white font-label-caps rounded-full hover:bg-white/10 transition-colors"

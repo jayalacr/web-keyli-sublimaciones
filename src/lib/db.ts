@@ -149,6 +149,24 @@ export type Contacto = {
   facebook_url: string;
 };
 
+export type Opinion = {
+  id: string;
+  nombre: string;
+  detalle: string | null;
+  texto: string;
+};
+
+export async function getOpinionesAprobadas(): Promise<Opinion[]> {
+  const { data, error } = await supabasePublic()
+    .from("opiniones")
+    .select("id,nombre,detalle,texto")
+    .eq("aprobada", true)
+    .order("creado_en", { ascending: false })
+    .limit(6);
+  if (error) throw error;
+  return data;
+}
+
 export async function getContacto(): Promise<Contacto | null> {
   const { data, error } = await supabasePublic()
     .from("configuracion_sitio")

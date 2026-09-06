@@ -29,7 +29,7 @@ export function SeasonCard({
   }, [galeria]);
 
   return (
-    <Link href={href} className="group block h-[400px] rounded-2xl [perspective:1500px]">
+    <Link href={href} className="group block h-[300px] sm:h-[360px] md:h-[400px] rounded-2xl [perspective:1500px]">
       <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
         <div className="absolute inset-0 rounded-2xl overflow-hidden [backface-visibility:hidden]">
           <Image
@@ -40,7 +40,7 @@ export function SeasonCard({
             className="object-cover"
           />
           <div className="absolute inset-0 bg-on-secondary-fixed-variant/40" />
-          <div className="absolute inset-0 p-8 flex flex-col justify-end">
+          <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
             <h3 className="font-display-sm-mobile text-white mb-2">{title}</h3>
             <span className="font-label-caps text-white/80 tracking-widest">Explorar colección</span>
           </div>
@@ -54,7 +54,7 @@ export function SeasonCard({
             className="object-cover"
           />
           <div className="absolute inset-0 bg-on-secondary-fixed-variant/30" />
-          <div className="absolute inset-0 p-8 flex flex-col justify-end">
+          <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
             <span className="font-label-caps text-white tracking-widest">Explorar colección</span>
           </div>
         </div>

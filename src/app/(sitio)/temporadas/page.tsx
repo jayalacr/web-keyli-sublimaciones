@@ -5,12 +5,12 @@ import { getContacto, getTemporadasActivas } from "@/lib/db";
 
 // ponytail: variantes de tamaño/posición del mosaico, cíclicas por índice — es presentación, no dato de la temporada.
 const LAYOUT_VARIANTS = [
-  { wrap: "md:col-span-5 h-[600px] md:h-[700px]", title2xl: false, padLg: false },
-  { wrap: "md:col-span-7 h-[450px] md:h-[550px] md:mt-24", title2xl: false, padLg: false },
-  { wrap: "md:col-span-6 h-[500px] md:h-[600px]", title2xl: false, padLg: false },
-  { wrap: "md:col-span-5 md:col-start-8 h-[550px] md:h-[650px] md:-mt-16", title2xl: false, padLg: false },
-  { wrap: "md:col-span-4 h-[600px]", title2xl: true, padLg: false },
-  { wrap: "md:col-span-8 h-[500px] md:h-[600px] md:mt-32", title2xl: false, padLg: true },
+  { wrap: "md:col-span-5 h-[340px] sm:h-[480px] md:h-[700px]", title2xl: false, padLg: false },
+  { wrap: "md:col-span-7 h-[300px] sm:h-[420px] md:h-[550px] md:mt-24", title2xl: false, padLg: false },
+  { wrap: "md:col-span-6 h-[320px] sm:h-[450px] md:h-[600px]", title2xl: false, padLg: false },
+  { wrap: "md:col-span-5 md:col-start-8 h-[330px] sm:h-[460px] md:h-[650px] md:-mt-16", title2xl: false, padLg: false },
+  { wrap: "md:col-span-4 h-[340px] sm:h-[480px] md:h-[600px]", title2xl: true, padLg: false },
+  { wrap: "md:col-span-8 h-[320px] sm:h-[450px] md:h-[600px] md:mt-32", title2xl: false, padLg: true },
 ];
 
 export default async function TemporadasPage() {
@@ -45,7 +45,7 @@ export default async function TemporadasPage() {
       </section>
 
       <section className="w-full px-container-margin pb-section-gap-desktop max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-y-16 gap-x-8 md:gap-x-12">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-y-8 md:gap-y-16 gap-x-8 md:gap-x-12">
           {temporadas.map((temporada, i) => {
             const layout = LAYOUT_VARIANTS[i % LAYOUT_VARIANTS.length];
             return (
@@ -64,7 +64,7 @@ export default async function TemporadasPage() {
                   />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                <div className={`absolute inset-0 flex flex-col justify-end text-white ${layout.padLg ? "p-8 md:p-12" : "p-8"}`}>
+                <div className={`absolute inset-0 flex flex-col justify-end text-white ${layout.padLg ? "p-6 md:p-12" : "p-6 md:p-8"}`}>
                   <span className="font-label-caps opacity-80 mb-3 tracking-wider">{temporada.piezas} piezas</span>
                   <h2
                     className={`leading-tight mb-2 transition-transform duration-500 ease-out group-hover:-translate-y-2 ${
@@ -84,7 +84,7 @@ export default async function TemporadasPage() {
       </section>
 
       <section className="w-full px-container-margin pb-section-gap-desktop max-w-7xl mx-auto">
-        <div className="bg-surface-container rounded-[24px] p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden">
+        <div className="bg-surface-container rounded-[24px] p-8 md:p-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-12 relative overflow-hidden">
           <div className="absolute -right-24 -top-24 w-64 h-64 border border-outline-variant/30 rounded-full opacity-50 pointer-events-none" />
           <div className="absolute right-12 -bottom-12 w-32 h-32 border border-outline-variant/20 rounded-full opacity-50 pointer-events-none" />
           <div className="flex flex-col gap-4 max-w-xl z-10">
@@ -100,7 +100,7 @@ export default async function TemporadasPage() {
             href={waLink(whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
-            className="z-10 shrink-0 inline-flex items-center justify-center px-8 py-4 bg-primary text-on-primary rounded-full font-label-caps tracking-widest hover:bg-on-surface transition-colors duration-300"
+            className="z-10 shrink-0 inline-flex w-full md:w-auto items-center justify-center px-6 md:px-8 py-4 text-center bg-primary text-on-primary rounded-full font-label-caps tracking-widest hover:bg-on-surface transition-colors duration-300"
           >
             <span className="material-symbols-outlined mr-2 text-[18px]">chat</span>
             Contactar por WhatsApp

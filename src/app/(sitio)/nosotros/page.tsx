@@ -19,7 +19,7 @@ export default async function NosotrosPage() {
     <div className="flex flex-col w-full bg-surface">
       {/* Hero */}
       <section className="w-full min-h-[85vh] flex flex-col lg:flex-row relative pt-section-gap-mobile lg:pt-section-gap-desktop">
-        <div className="w-full lg:w-5/12 h-[60vh] lg:h-auto relative bg-surface-container-low">
+        <div className="w-full lg:w-5/12 h-[45vh] min-h-[280px] lg:h-auto relative bg-surface-container-low">
           <Image
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsZ-QLNPxoNzXdvc7V-6N-J60XgVNdBxMDaHclP4GuWwim8Gyo4EZPPJH9lnzFGBRDymymad_xpDHpnsriE7NqBij59W4Q6XhMnUUhmNBK_iLvILYI-kQlDRx4InIuabdQ6O3nYQ6VT31G56Gifhga_oWo5CtpcprILgDZo04yeu1n2aaLquMkN629vT37d7T_2YhJ6aXuHAgT7_5lxi9p9EuE_sDCV3mULmiAynIvTmJ0xE5RRHg7"
             alt="Retrato editorial de una husky siberiana en un estudio, luz suave y natural."
@@ -29,7 +29,7 @@ export default async function NosotrosPage() {
             className="object-cover"
           />
         </div>
-        <div className="w-full lg:w-7/12 px-container-margin py-section-gap-mobile lg:py-section-gap-desktop flex flex-col justify-center bg-surface z-10 lg:-ml-8 relative">
+        <div className="w-full lg:w-7/12 px-container-margin py-section-gap-mobile lg:py-section-gap-desktop flex flex-col justify-center bg-surface z-10 lg:-ml-8 relative rounded-t-2xl -mt-6 lg:mt-0 lg:rounded-none">
           <div className="max-w-[800px] flex flex-col gap-stack-md">
             <span className="font-label-caps text-secondary tracking-widest uppercase">Mi Historia</span>
             <h1 className="font-display-lg text-on-surface text-balance">
@@ -62,7 +62,7 @@ export default async function NosotrosPage() {
             Me di cuenta de que no estaba simplemente imprimiendo imágenes sobre cerámica o tela.
             Estaba materializando emociones.
           </p>
-          <div className="my-stack-lg py-stack-md border-l border-outline-variant/30 pl-8 ml-[-2rem] relative">
+          <div className="my-stack-lg py-stack-md border-l border-outline-variant/30 pl-6 md:pl-8 md:ml-[-2rem] relative">
             <p className="font-display-md text-primary leading-tight tracking-tight">
               Cada regalo que entrego lleva un pedacito de mi historia.
             </p>
@@ -78,7 +78,7 @@ export default async function NosotrosPage() {
 
       {/* Values */}
       <section className="w-full bg-secondary-container/30 px-container-margin py-section-gap-desktop relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-96 h-96 max-w-full bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="flex flex-col gap-stack-lg relative z-10">
           <div className="flex flex-col gap-2">
             <span className="font-label-caps text-primary tracking-widest">En qué creo</span>

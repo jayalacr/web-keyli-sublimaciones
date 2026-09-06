@@ -61,14 +61,15 @@
   --font-body: var(--font-hanken), sans-serif;
   --font-sans: var(--font-hanken), sans-serif;
 
-  /* Named spacing from Stitch config — enables px-container-margin, py-section-gap-desktop, gap-grid-gutter, space-y-stack-md, etc. */
-  --spacing-section-gap-desktop: 120px;
-  --spacing-section-gap-mobile: 80px;
-  --spacing-container-margin: 64px;
-  --spacing-grid-gutter: 24px;
+  /* Named spacing from Stitch config — enables px-container-margin, py-section-gap-desktop, gap-grid-gutter, space-y-stack-md, etc.
+     ponytail: fluidos con clamp() en vez de duplicar cada utilidad con variante md: — el valor de Stitch es el tope. */
+  --spacing-section-gap-desktop: clamp(56px, 10vw, 120px);
+  --spacing-section-gap-mobile: clamp(40px, 7vw, 80px);
+  --spacing-container-margin: clamp(20px, 5vw, 64px);
+  --spacing-grid-gutter: clamp(16px, 2.5vw, 24px);
   --spacing-stack-sm: 12px;
-  --spacing-stack-md: 24px;
-  --spacing-stack-lg: 48px;
+  --spacing-stack-md: clamp(16px, 3vw, 24px);
+  --spacing-stack-lg: clamp(28px, 5vw, 48px);
 
   /* Admin dashboard (Stitch "Admin Keyli Sublimaciones") reuses the colors above — same MD3 roles,
      nearly identical hex — but adds its own dense-data spacing not used by the public site. */
@@ -81,22 +82,22 @@
    family + size + line-height + tracking + weight, so we mirror that as one utility each. */
 @utility font-display-lg {
   font-family: var(--font-display);
-  font-size: 72px;
-  line-height: 68px;
+  font-size: clamp(38px, 8.5vw, 72px);
+  line-height: 0.95;
   letter-spacing: -0.04em;
   font-weight: 800;
 }
 @utility font-display-md {
   font-family: var(--font-display);
-  font-size: 48px;
-  line-height: 48px;
+  font-size: clamp(28px, 5.5vw, 48px);
+  line-height: 1;
   letter-spacing: -0.03em;
   font-weight: 700;
 }
 @utility font-display-sm-mobile {
   font-family: var(--font-display);
-  font-size: 36px;
-  line-height: 38px;
+  font-size: clamp(24px, 4.5vw, 36px);
+  line-height: 1.06;
   letter-spacing: -0.02em;
   font-weight: 700;
 }
@@ -161,6 +162,8 @@ body {
   background: var(--color-surface);
   color: var(--color-on-surface);
   font-family: var(--font-body);
+  /* ponytail: clip (no hidden) corta desbordes laterales sin romper position:sticky. */
+  overflow-x: clip;
 }
 
 .material-symbols-outlined {

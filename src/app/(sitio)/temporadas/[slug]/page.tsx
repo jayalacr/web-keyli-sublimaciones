@@ -24,7 +24,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ s
   return (
     <div className="flex flex-col w-full bg-surface">
       <section
-        className="relative w-full h-[60vh] min-h-[500px] flex flex-col justify-end px-container-margin py-section-gap-mobile"
+        className="relative w-full h-[70vh] min-h-[380px] md:h-[60vh] md:min-h-[500px] flex flex-col justify-end px-container-margin py-section-gap-mobile"
       >
         {temporada.portada_url && (
           <Image
@@ -38,7 +38,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ s
         )}
         <div className="absolute inset-0 bg-on-tertiary-fixed-variant/60 mix-blend-multiply" />
         <div className="relative z-10 max-w-4xl">
-          <nav className="flex items-center gap-2 mb-stack-md font-label-caps text-on-primary opacity-80 uppercase tracking-widest">
+          <nav className="flex flex-wrap items-center gap-2 mb-stack-md font-label-caps text-on-primary opacity-80 uppercase tracking-widest">
             <span>Catálogo</span>
             <span className="w-4 border-t border-on-primary/50" />
             <Link href="/temporadas">Temporadas</Link>
@@ -52,7 +52,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ s
         </div>
       </section>
 
-      <div className="px-container-margin py-stack-md border-b border-outline-variant/20 flex flex-col md:flex-row justify-between items-center gap-stack-sm sticky top-20 bg-surface/90 backdrop-blur-md z-40">
+      <div className="px-container-margin py-stack-md border-b border-outline-variant/20 flex flex-col md:flex-row justify-between items-center gap-stack-sm sticky top-16 md:top-20 bg-surface/90 backdrop-blur-md z-40">
         <Link
           href="/temporadas"
           className="flex items-center gap-2 font-label-caps text-on-surface-variant hover:text-primary transition-colors"
@@ -92,7 +92,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ s
       </section>
 
       <section className="px-container-margin py-section-gap-mobile bg-surface-container-low">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-stack-lg">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-stack-lg">
           <h2 className="font-display-sm-mobile text-on-surface">Explora otras temporadas</h2>
           <Link
             href="/temporadas"
@@ -119,7 +119,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ s
               )}
               <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
               <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                <h4 className="font-display-sm-mobile text-white text-2xl">{s.nombre}</h4>
+                <h4 className="font-display-sm-mobile text-white text-xl sm:text-2xl">{s.nombre}</h4>
               </div>
             </Link>
           ))}

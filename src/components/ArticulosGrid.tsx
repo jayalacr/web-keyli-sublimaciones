@@ -7,10 +7,10 @@ import type { Producto } from "@/lib/db";
 
 // ponytail: variantes de layout tipo mosaico, cíclicas por índice — es presentación, no dato del producto.
 const LAYOUT_VARIANTS = [
-  { aspect: "aspect-[4/5]", offset: "mt-12" },
+  { aspect: "aspect-[4/5]", offset: "md:mt-12" },
   { aspect: "aspect-[3/4]", offset: "" },
-  { aspect: "aspect-square", offset: "mt-4" },
-  { aspect: "aspect-[4/3]", offset: "-mt-8" },
+  { aspect: "aspect-square", offset: "md:mt-4" },
+  { aspect: "aspect-[4/3]", offset: "md:-mt-8" },
 ];
 
 export function ArticulosGrid({
@@ -84,7 +84,7 @@ export function ArticulosGrid({
                     </span>
                   </div>
                 </div>
-                <div className="p-6 pt-2 flex flex-col gap-1">
+                <div className="p-5 sm:p-6 pt-2 flex flex-col gap-1">
                   <span className="font-label-caps text-primary">{producto.categoria?.nombre}</span>
                   <h3 className="font-body-main text-on-surface font-semibold text-lg">{producto.nombre}</h3>
                 </div>
@@ -102,7 +102,7 @@ export function ArticulosGrid({
 function ProductModal({ producto, whatsapp, onClose }: { producto: Producto; whatsapp: string; onClose: () => void }) {
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-surface/90 backdrop-blur-sm px-4 py-12 overflow-y-auto"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-surface/90 backdrop-blur-sm px-4 py-6 sm:py-12 overflow-y-auto"
       onClick={onClose}
     >
       <div
@@ -111,7 +111,7 @@ function ProductModal({ producto, whatsapp, onClose }: { producto: Producto; wha
       >
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-variant transition-colors"
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-variant transition-colors"
         >
           <span className="material-symbols-outlined text-on-surface-variant">close</span>
         </button>
@@ -131,7 +131,7 @@ function ProductModal({ producto, whatsapp, onClose }: { producto: Producto; wha
             </div>
           )}
         </div>
-        <div className="w-full lg:w-1/2 p-8 lg:p-12 flex flex-col justify-between">
+        <div className="w-full lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-between">
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <span className="font-label-caps text-primary uppercase tracking-widest">{producto.categoria?.nombre}</span>
@@ -154,7 +154,7 @@ function ProductModal({ producto, whatsapp, onClose }: { producto: Producto; wha
             href={waLink(whatsapp, `Hola, quiero cotizar: ${producto.nombre}`)}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-12 w-full py-4 rounded-full bg-primary text-on-primary font-label-caps hover:bg-on-primary-fixed-variant transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-xl"
+            className="mt-8 lg:mt-12 w-full py-4 rounded-full bg-primary text-on-primary font-label-caps hover:bg-on-primary-fixed-variant transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-xl"
           >
             Cotizar este producto por WhatsApp
             <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -167,9 +167,9 @@ function ProductModal({ producto, whatsapp, onClose }: { producto: Producto; wha
 
 function Spec({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-start justify-between border-b border-outline-variant/20 pb-4">
+    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 border-b border-outline-variant/20 pb-4">
       <span className="font-label-caps text-secondary uppercase">{label}</span>
-      <span className="font-body-main text-on-surface-variant text-right">{value}</span>
+      <span className="font-body-main text-on-surface-variant sm:text-right">{value}</span>
     </div>
   );
 }

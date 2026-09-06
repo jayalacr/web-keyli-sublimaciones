@@ -61,8 +61,8 @@ export function SeasonProductGrid({ products }: { products: SeasonProduct[] }) {
                     {product.category}
                   </span>
                 </div>
-                <div className="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black/60 to-transparent">
-                  <h3 className="font-display-sm-mobile text-white text-2xl">{product.title}</h3>
+                <div className="absolute bottom-0 w-full p-5 sm:p-6 bg-gradient-to-t from-black/60 to-transparent">
+                  <h3 className="font-display-sm-mobile text-white text-xl sm:text-2xl">{product.title}</h3>
                 </div>
               </div>
             ))}

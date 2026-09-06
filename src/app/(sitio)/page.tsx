@@ -89,7 +89,7 @@ export default async function Home() {
   return (
     <div className="flex flex-col w-full bg-surface">
       {/* Hero */}
-      <section className="relative w-full pt-24 pb-section-gap-desktop md:pt-28 md:min-h-screen md:flex md:items-center md:pb-0">
+      <section className="relative w-full pt-20 pb-section-gap-mobile md:pt-28 md:min-h-screen md:flex md:items-center md:pb-0">
         <div className="px-container-margin grid grid-cols-1 md:grid-cols-12 gap-grid-gutter items-center w-full">
           <div className="col-span-1 md:col-span-5 flex flex-col items-start space-y-stack-md z-10">
             <span className="font-label-caps text-on-surface-variant text-[11px] tracking-[0.2em] uppercase">
@@ -116,7 +116,7 @@ export default async function Home() {
               </a>
             </div>
           </div>
-          <div className="col-span-1 md:col-span-7 mt-stack-lg md:mt-0 relative h-[600px] w-[calc(100%+64px)] -mr-container-margin md:h-[60vh]">
+          <div className="col-span-1 md:col-span-7 mt-stack-md md:mt-0 relative h-[320px] sm:h-[440px] w-[calc(100%+var(--spacing-container-margin))] -mr-container-margin md:h-[60vh] rounded-l-2xl overflow-hidden md:rounded-none">
             <Image
               src={textos.hero_imagen_url}
               alt={textos.hero_imagen_alt}
@@ -153,13 +153,13 @@ export default async function Home() {
             <span className="font-label-caps text-on-surface-variant tracking-[0.2em]">Selección</span>
             <h2 className="font-display-md text-on-surface tracking-tight">Lo más pedido</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-12 grid-rows-2 gap-6 h-auto md:h-[700px]">
+          <div className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-2 gap-4 md:gap-6 h-auto md:h-[700px]">
             <Link
               href={FEATURED[0].href}
-              className="group col-span-1 md:col-span-6 row-span-2 relative block overflow-hidden bg-surface-container rounded-2xl min-h-[300px]"
+              className="group col-span-1 md:col-span-6 md:row-span-2 relative block overflow-hidden bg-surface-container rounded-2xl min-h-[240px] md:min-h-[300px]"
             >
               <FeaturedImage item={FEATURED[0]} />
-              <div className="absolute bottom-0 left-0 p-8 flex flex-col items-start gap-3">
+              <div className="absolute bottom-0 left-0 p-6 md:p-8 flex flex-col items-start gap-3">
                 <span className="px-3 py-1 bg-surface/90 backdrop-blur-sm rounded-full font-label-caps text-on-surface text-[10px] tracking-widest">
                   {FEATURED[0].tag}
                 </span>
@@ -168,7 +168,7 @@ export default async function Home() {
             </Link>
             <Link
               href={FEATURED[1].href}
-              className="group col-span-1 md:col-span-6 row-span-1 relative block overflow-hidden bg-surface-container rounded-2xl min-h-[300px]"
+              className="group col-span-1 md:col-span-6 md:row-span-1 relative block overflow-hidden bg-surface-container rounded-2xl min-h-[240px] md:min-h-[300px]"
             >
               <FeaturedImage item={FEATURED[1]} />
               <div className="absolute bottom-0 left-0 p-6 flex flex-col items-start gap-3">
@@ -178,12 +178,12 @@ export default async function Home() {
                 <h3 className="font-body-main font-semibold text-on-surface text-xl">{FEATURED[1].title}</h3>
               </div>
             </Link>
-            <div className="col-span-1 md:col-span-6 row-span-1 grid grid-cols-2 gap-6">
+            <div className="col-span-1 md:col-span-6 md:row-span-1 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
               {FEATURED.slice(2).map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group relative block overflow-hidden bg-surface-container rounded-2xl min-h-[300px]"
+                  className="group relative block overflow-hidden bg-surface-container rounded-2xl min-h-[240px] md:min-h-[300px]"
                 >
                   <FeaturedImage item={item} />
                   <div className="absolute bottom-0 left-0 p-6 flex flex-col items-start gap-2">
@@ -228,9 +228,9 @@ export default async function Home() {
       </section>
 
       {/* Brand Story */}
-      <section className="w-full bg-secondary-fixed/30 py-[140px] mt-section-gap-desktop">
+      <section className="w-full bg-secondary-fixed/30 py-section-gap-mobile md:py-[140px] mt-section-gap-desktop">
         <div className="px-container-margin grid grid-cols-1 md:grid-cols-12 gap-grid-gutter items-center">
-          <div className="col-span-1 md:col-span-5 relative -mt-[180px] md:-mt-[240px] z-10 aspect-[3/4]">
+          <div className="col-span-1 md:col-span-5 relative -mt-[100px] md:-mt-[240px] z-10 aspect-[3/4]">
             <Image
               src={textos.historia_imagen_url}
               alt={textos.historia_imagen_alt}
@@ -335,7 +335,7 @@ export default async function Home() {
       </section>
 
       {/* Contact Band */}
-      <section className="w-full bg-on-secondary-fixed-variant text-white py-[100px]">
+      <section className="w-full bg-on-secondary-fixed-variant text-white py-section-gap-mobile md:py-[100px]">
         <div className="px-container-margin flex flex-col items-center text-center max-w-4xl mx-auto space-y-stack-lg">
           <h2 className="font-display-md text-white tracking-tight leading-tight">Cuéntanos qué tienes en mente</h2>
           <p className="font-body-main text-white/80 max-w-lg">

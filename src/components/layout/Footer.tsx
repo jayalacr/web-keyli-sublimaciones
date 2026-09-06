@@ -17,7 +17,7 @@ export function Footer({
   return (
     <footer className="w-full bg-surface-container-low border-t border-outline-variant/20">
       <div className="w-full px-container-margin py-section-gap-mobile">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-grid-gutter">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-grid-gutter">
           <div className="col-span-1 md:col-span-1 flex flex-col gap-4">
             <Image
               src="/logoKeyli.jpeg"
@@ -70,7 +70,7 @@ export function Footer({
             </div>
           </div>
         </div>
-        <div className="mt-stack-lg pt-stack-md border-t border-outline-variant/10 flex justify-between items-center">
+        <div className="mt-stack-lg pt-stack-md border-t border-outline-variant/10 flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center">
           <span className="font-label-caps text-on-surface-variant opacity-60 text-xs">© 2026 keyli sublimaciones</span>
           <a
             href="https://instagram.com/code4u_mx"

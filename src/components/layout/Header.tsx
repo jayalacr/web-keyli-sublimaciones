@@ -19,10 +19,12 @@ export function Header({
   whatsapp,
   instagramUrl,
   facebookUrl,
+  logoUrl = "/logoKeyli.jpeg",
 }: {
   whatsapp: string;
   instagramUrl: string;
   facebookUrl: string;
+  logoUrl?: string;
 }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
@@ -54,7 +56,7 @@ export function Header({
       <div className="h-16 md:h-20 w-full px-container-margin flex items-center justify-between gap-3">
         <Link href="/" className="flex items-center gap-3 min-w-0">
           <Image
-            src="/logoKeyli.jpeg"
+            src={logoUrl}
             alt="Keyli Sublimaciones"
             width={48}
             height={48}

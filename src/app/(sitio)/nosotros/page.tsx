@@ -1,7 +1,11 @@
 import Image from "next/image";
 import { DEFAULT_PHONE, waLink } from "@/lib/constants";
-import { getContacto } from "@/lib/db";
+import { getContacto, getTextosInicio } from "@/lib/db";
 import { SOCIAL_ICONS } from "@/components/SocialIcons";
+
+const HERO_FALLBACK_URL =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuAsZ-QLNPxoNzXdvc7V-6N-J60XgVNdBxMDaHclP4GuWwim8Gyo4EZPPJH9lnzFGBRDymymad_xpDHpnsriE7NqBij59W4Q6XhMnUUhmNBK_iLvILYI-kQlDRx4InIuabdQ6O3nYQ6VT31G56Gifhga_oWo5CtpcprILgDZo04yeu1n2aaLquMkN629vT37d7T_2YhJ6aXuHAgT7_5lxi9p9EuE_sDCV3mULmiAynIvTmJ0xE5RRHg7";
+const HERO_FALLBACK_ALT = "Retrato editorial de una husky siberiana en un estudio, luz suave y natural.";
 
 const VALUES = [
   { n: "01", title: "Cada pieza es única", body: "No hay dos productos iguales porque no hay dos historias iguales." },
@@ -10,10 +14,12 @@ const VALUES = [
 ];
 
 export default async function NosotrosPage() {
-  const contacto = await getContacto();
+  const [contacto, textos] = await Promise.all([getContacto(), getTextosInicio()]);
   const whatsapp = contacto?.whatsapp ?? DEFAULT_PHONE;
   const instagramUrl = contacto?.instagram_url ?? "https://instagram.com/keylisublimaciones";
   const facebookUrl = contacto?.facebook_url ?? "https://facebook.com/keylisublimaciones";
+  const heroUrl = textos?.nosotros_imagen_url || HERO_FALLBACK_URL;
+  const heroAlt = textos?.nosotros_imagen_alt || HERO_FALLBACK_ALT;
 
   return (
     <div className="flex flex-col w-full bg-surface">
@@ -21,8 +27,8 @@ export default async function NosotrosPage() {
       <section className="w-full min-h-[85vh] flex flex-col lg:flex-row relative pt-section-gap-mobile lg:pt-section-gap-desktop">
         <div className="w-full lg:w-5/12 h-[45vh] min-h-[280px] lg:h-auto relative bg-surface-container-low">
           <Image
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsZ-QLNPxoNzXdvc7V-6N-J60XgVNdBxMDaHclP4GuWwim8Gyo4EZPPJH9lnzFGBRDymymad_xpDHpnsriE7NqBij59W4Q6XhMnUUhmNBK_iLvILYI-kQlDRx4InIuabdQ6O3nYQ6VT31G56Gifhga_oWo5CtpcprILgDZo04yeu1n2aaLquMkN629vT37d7T_2YhJ6aXuHAgT7_5lxi9p9EuE_sDCV3mULmiAynIvTmJ0xE5RRHg7"
-            alt="Retrato editorial de una husky siberiana en un estudio, luz suave y natural."
+            src={heroUrl}
+            alt={heroAlt}
             fill
             priority
             sizes="(min-width: 1024px) 42vw, 100vw"

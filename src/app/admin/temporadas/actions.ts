@@ -22,6 +22,8 @@ export async function guardarTemporada(input: {
   fechaInicioDia: number | null;
   fechaFinMes: number | null;
   fechaFinDia: number | null;
+  portadaUrl: string | null;
+  portadaAlt: string;
   productIds: string[];
 }) {
   const db = supabaseAdmin();
@@ -36,6 +38,8 @@ export async function guardarTemporada(input: {
       fecha_inicio_dia: input.fechaInicioDia,
       fecha_fin_mes: input.fechaFinMes,
       fecha_fin_dia: input.fechaFinDia,
+      portada_url: input.portadaUrl,
+      portada_alt: input.portadaAlt,
     })
     .eq("id", input.id);
   if (error) throw error;

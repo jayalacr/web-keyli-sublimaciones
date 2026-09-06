@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import Image from "next/image";
 import type { Contacto, TextosInicio } from "@/lib/db";
 import { guardarContacto, guardarTextosInicio } from "@/app/admin/configuracion/actions";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 const TABS: { id: "contacto" | "textos"; label: string; hint?: string }[] = [
   { id: "contacto", label: "Contacto", hint: "WhatsApp, Instagram, Facebook" },
@@ -84,6 +84,16 @@ export function ConfiguracionTabs({
         <div className="flex-1 flex flex-col space-y-6">
           {tab === "contacto" ? (
             <SettingsCard icon="alternate_email" title="Contacto">
+              <Field label="Logo del sitio" hint="Se muestra en el encabezado. Recomendado: cuadrado, mínimo 200x200px.">
+                <div className="max-w-[160px]">
+                  <ImageUploader
+                    src={contacto.logo_url || null}
+                    alt="Logo Keyli Sublimaciones"
+                    onChange={(url) => updateContacto("logo_url", url)}
+                    heightClass="h-24"
+                  />
+                </div>
+              </Field>
               <Field label="Número de WhatsApp" hint="Solo dígitos, con código de país. Ej: 5218110000000">
                 <input
                   type="text"
@@ -187,18 +197,7 @@ export function ConfiguracionTabs({
                   </div>
                   <div className="col-span-1 flex flex-col gap-2">
                     <label className="font-admin-label-caps text-on-surface-variant">Imagen de portada</label>
-                    <div className="relative rounded-lg overflow-hidden border border-outline-variant bg-surface-container h-48 w-full">
-                      {settings.hero_imagen_url && (
-                        <Image src={settings.hero_imagen_url} alt={settings.hero_imagen_alt} fill sizes="240px" className="object-cover" />
-                      )}
-                    </div>
-                    <input
-                      type="text"
-                      value={settings.hero_imagen_url}
-                      onChange={(e) => update("hero_imagen_url", e.target.value)}
-                      placeholder="URL de la imagen"
-                      className="w-full px-3 py-2 mt-1 text-sm bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
-                    />
+                    <ImageUploader src={settings.hero_imagen_url || null} alt={settings.hero_imagen_alt} onChange={(url) => update("hero_imagen_url", url)} heightClass="h-48" />
                     <input
                       type="text"
                       value={settings.hero_imagen_alt}
@@ -242,12 +241,36 @@ export function ConfiguracionTabs({
                   </div>
                   <div className="col-span-1 flex flex-col gap-2">
                     <label className="font-admin-label-caps text-on-surface-variant">Imagen de Keyli</label>
-                    <div className="relative rounded-lg overflow-hidden border border-outline-variant bg-surface-container h-48 w-full">
-                      {settings.historia_imagen_url && (
-                        <Image src={settings.historia_imagen_url} alt={settings.historia_imagen_alt} fill sizes="240px" className="object-cover" />
-                      )}
-                    </div>
+                    <ImageUploader src={settings.historia_imagen_url || null} alt={settings.historia_imagen_alt} onChange={(url) => update("historia_imagen_url", url)} heightClass="h-48" />
+                    <input
+                      type="text"
+                      value={settings.historia_imagen_alt}
+                      onChange={(e) => update("historia_imagen_alt", e.target.value)}
+                      placeholder="Texto alternativo (accesibilidad)"
+                      className="w-full px-3 py-2 text-sm bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
+                    />
                     <span className="font-admin-data text-outline mt-1 text-center">Recomendado: 1024x1024px, JPG o PNG.</span>
+                  </div>
+                </div>
+              </SettingsCard>
+
+              <SettingsCard icon="pets" title="Página Nosotros">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="col-span-2 flex flex-col gap-2 justify-center">
+                    <p className="font-admin-body text-sm text-on-surface-variant">
+                      Imagen principal de la página &quot;Nosotros&quot; del sitio público.
+                    </p>
+                  </div>
+                  <div className="col-span-1 flex flex-col gap-2">
+                    <label className="font-admin-label-caps text-on-surface-variant">Foto de portada</label>
+                    <ImageUploader src={settings.nosotros_imagen_url || null} alt={settings.nosotros_imagen_alt} onChange={(url) => update("nosotros_imagen_url", url)} heightClass="h-48" />
+                    <input
+                      type="text"
+                      value={settings.nosotros_imagen_alt}
+                      onChange={(e) => update("nosotros_imagen_alt", e.target.value)}
+                      placeholder="Texto alternativo (accesibilidad)"
+                      className="w-full px-3 py-2 text-sm bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
+                    />
                   </div>
                 </div>
               </SettingsCard>

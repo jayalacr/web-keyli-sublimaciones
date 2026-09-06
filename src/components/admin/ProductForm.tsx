@@ -4,6 +4,8 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { guardarProducto, eliminarProducto } from "@/app/admin/productos/actions";
+import { subirImagen } from "@/app/admin/actions";
+import { compressImage } from "@/lib/compressImage";
 
 export type ProductImage = { src: string; alt: string };
 
@@ -46,6 +48,8 @@ export function ProductForm({
   const [seasonSearch, setSeasonSearch] = useState("");
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   function save() {
     startTransition(async () => {
@@ -97,6 +101,37 @@ export function ProductForm({
     update(
       "seasons",
       form.seasons.includes(season) ? form.seasons.filter((s) => s !== season) : [...form.seasons, season]
+    );
+  }
+
+  async function handleFiles(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    setUploadError(null);
+    setIsUploading(true);
+    try {
+      for (const file of Array.from(files)) {
+        const blob = await compressImage(file);
+        const fd = new FormData();
+        fd.set("file", blob, "imagen.webp");
+        const url = await subirImagen(fd);
+        if (!form.imageSrc) {
+          update("imageSrc", url);
+          update("imageAlt", form.name || "Imagen de producto");
+        } else {
+          update("gallery", [...form.gallery, { src: url, alt: form.name || "Imagen de producto" }]);
+        }
+      }
+    } catch {
+      setUploadError("No se pudo procesar o subir la imagen. Verifica que sea JPG/PNG (HEIC de Mac no es compatible).");
+    } finally {
+      setIsUploading(false);
+    }
+  }
+
+  function removeGalleryImage(src: string) {
+    update(
+      "gallery",
+      form.gallery.filter((g) => g.src !== src)
     );
   }
 
@@ -345,28 +380,55 @@ export function ProductForm({
                 <span className="material-symbols-outlined mr-2 text-primary text-[20px]">image</span>
                 <h2 className="font-admin-section-header text-lg text-on-surface">Galería de Imágenes</h2>
               </div>
-              <span className="text-xs text-on-surface-variant">Max. 5MB por archivo (JPG, PNG)</span>
+              <span className="text-xs text-on-surface-variant">Se comprimen automáticamente a WebP</span>
             </div>
             <div className="p-6">
-              {/* ponytail: dropzone sólo visual — la subida real llega con Supabase Storage */}
-              <div className="w-full border-2 border-dashed border-outline-variant/50 rounded-xl bg-surface flex flex-col items-center justify-center py-8 mb-6 opacity-70">
+              <label className="w-full border-2 border-dashed border-outline-variant/50 rounded-xl bg-surface flex flex-col items-center justify-center py-8 mb-6 cursor-pointer hover:border-primary transition-colors">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  disabled={isUploading}
+                  onChange={(e) => {
+                    handleFiles(e.target.files);
+                    e.target.value = "";
+                  }}
+                />
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
                   <span className="material-symbols-outlined text-primary text-2xl">cloud_upload</span>
                 </div>
-                <p className="font-admin-section-header text-sm text-on-surface mb-1">Arrastra imágenes aquí o explora (próximamente)</p>
+                <p className="font-admin-section-header text-sm text-on-surface mb-1">
+                  {isUploading ? "Subiendo..." : "Arrastra imágenes aquí o explora"}
+                </p>
                 <p className="text-xs text-on-surface-variant">Dimensión recomendada: 1080x1080px</p>
-              </div>
+              </label>
+              {uploadError && <p className="text-xs text-error mb-4">{uploadError}</p>}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {form.imageSrc && (
-                  <div className="relative rounded-lg overflow-hidden border border-primary aspect-square shadow-sm">
+                  <div className="relative rounded-lg overflow-hidden border border-primary aspect-square shadow-sm group">
                     <div className="absolute top-2 left-2 bg-primary text-on-primary text-[10px] font-admin-label-caps px-2 py-1 rounded-sm z-10 shadow-sm">
                       PRINCIPAL
                     </div>
+                    <button
+                      onClick={() => update("imageSrc", null)}
+                      className="absolute top-2 right-2 w-6 h-6 rounded-full bg-surface/90 text-on-surface-variant flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:text-error z-10"
+                      aria-label="Quitar imagen principal"
+                    >
+                      <span className="material-symbols-outlined text-[14px]">close</span>
+                    </button>
                     <Image src={form.imageSrc} alt={form.imageAlt} fill sizes="200px" className="object-cover" />
                   </div>
                 )}
                 {form.gallery.map((img) => (
-                  <div key={img.src} className="relative rounded-lg overflow-hidden border border-outline-variant aspect-square bg-surface-container shadow-sm">
+                  <div key={img.src} className="relative rounded-lg overflow-hidden border border-outline-variant aspect-square bg-surface-container shadow-sm group">
+                    <button
+                      onClick={() => removeGalleryImage(img.src)}
+                      className="absolute top-2 right-2 w-6 h-6 rounded-full bg-surface/90 text-on-surface-variant flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:text-error z-10"
+                      aria-label="Quitar imagen"
+                    >
+                      <span className="material-symbols-outlined text-[14px]">close</span>
+                    </button>
                     <Image src={img.src} alt={img.alt} fill sizes="200px" className="object-cover" />
                   </div>
                 ))}

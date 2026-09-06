@@ -130,6 +130,8 @@ export type TextosInicio = {
   historia_texto: string;
   historia_imagen_url: string;
   historia_imagen_alt: string;
+  nosotros_imagen_url: string;
+  nosotros_imagen_alt: string;
   insignias_confianza: [string, string, string, string];
 };
 
@@ -149,6 +151,7 @@ export type Contacto = {
   instagram_widget_url: string;
   facebook_url: string;
   tiktok_urls: string[];
+  logo_url: string;
 };
 
 export type Opinion = {

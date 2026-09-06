@@ -11,6 +11,7 @@ export default async function SitioLayout({ children }: LayoutProps<"/">) {
         whatsapp={contacto?.whatsapp ?? DEFAULT_PHONE}
         instagramUrl={contacto?.instagram_url ?? "https://instagram.com/keylisublimaciones"}
         facebookUrl={contacto?.facebook_url ?? "https://facebook.com/keylisublimaciones"}
+        logoUrl={contacto?.logo_url || undefined}
       />
       <main className="flex-1">{children}</main>
       <Footer

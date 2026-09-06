@@ -8,6 +8,7 @@ const FALLBACK_CONTACTO: Contacto = {
   instagram_widget_url: "",
   facebook_url: "https://facebook.com/keylisublimaciones",
   tiktok_urls: [],
+  logo_url: "",
 };
 
 const FALLBACK: TextosInicio = {
@@ -20,6 +21,8 @@ const FALLBACK: TextosInicio = {
   historia_texto: "Keyli no es solo un nombre, es la inspiración detrás de nuestra dedicación.",
   historia_imagen_url: "",
   historia_imagen_alt: "",
+  nosotros_imagen_url: "",
+  nosotros_imagen_alt: "",
   insignias_confianza: ["Envíos a todo México", "Entrega en 3 a 5 días", "Diseño incluido sin costo", "Más de 500 pedidos entregados"],
 };
 

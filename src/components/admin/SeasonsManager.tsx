@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import Image from "next/image";
 import { toggleTemporadaActiva, guardarTemporada } from "@/app/admin/temporadas/actions";
 import { sortKeyTemporada } from "@/lib/temporadas";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 export type AdminSeason = {
   id: string;
@@ -90,6 +91,8 @@ export function SeasonsManager({ initialSeasons, allProducts }: { initialSeasons
         fechaInicioDia: draft.fechaInicioDia,
         fechaFinMes: draft.fechaFinMes,
         fechaFinDia: draft.fechaFinDia,
+        portadaUrl: draft.coverSrc,
+        portadaAlt: draft.coverAlt,
         productIds: draft.productIds,
       });
     });
@@ -275,15 +278,14 @@ export function SeasonsManager({ initialSeasons, allProducts }: { initialSeasons
 
               <div className="flex flex-col gap-2">
                 <label className="font-admin-label-caps text-on-surface-variant uppercase">Imagen de portada</label>
-                <div className="relative w-full h-40 rounded-lg border-2 border-dashed border-outline-variant overflow-hidden bg-surface-container">
-                  {draft.coverSrc ? (
-                    <Image src={draft.coverSrc} alt={draft.coverAlt} fill sizes="480px" className="object-cover" />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-on-surface-variant/60 text-sm">
-                      Sin imagen — subir desde &quot;Nueva temporada&quot; (próximamente)
-                    </div>
-                  )}
-                </div>
+                <ImageUploader src={draft.coverSrc} alt={draft.coverAlt || draft.name} onChange={(url) => updateDraft("coverSrc", url)} />
+                <input
+                  type="text"
+                  value={draft.coverAlt}
+                  onChange={(e) => updateDraft("coverAlt", e.target.value)}
+                  placeholder="Texto alternativo (accesibilidad)"
+                  className="w-full h-10 px-3 bg-surface-container-lowest border border-outline-variant rounded font-admin-body text-on-surface focus:outline-none focus:border-primary transition-colors"
+                />
               </div>
 
               <div className="flex flex-col gap-4 pt-4 border-t border-outline-variant">

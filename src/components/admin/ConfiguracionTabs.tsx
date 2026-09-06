@@ -43,7 +43,11 @@ export function ConfiguracionTabs({
 
   function save() {
     startTransition(async () => {
-      await Promise.all([guardarTextosInicio(settings), guardarContacto(contacto)]);
+      const contactoLimpio = {
+        ...contacto,
+        tiktok_urls: contacto.tiktok_urls.map((u) => u.trim()).filter(Boolean),
+      };
+      await Promise.all([guardarTextosInicio(settings), guardarContacto(contactoLimpio)]);
       setLastSaved(new Date().toLocaleString("es-MX", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }));
     });
   }
@@ -112,13 +116,42 @@ export function ConfiguracionTabs({
                   className="w-full max-w-md px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
                 />
               </Field>
-              <Field label="Videos de TikTok" hint="Una URL de video por línea (ej: https://www.tiktok.com/@usuario/video/1234567890123456789). Se muestran en Inicio.">
-                <textarea
-                  rows={4}
-                  value={contacto.tiktok_urls.join("\n")}
-                  onChange={(e) => updateContacto("tiktok_urls", e.target.value.split("\n").map((s) => s.trim()).filter(Boolean))}
-                  className="w-full max-w-md px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface resize-none"
-                />
+              <Field label="Videos de TikTok" hint="Una URL de video por campo (ej: https://www.tiktok.com/@usuario/video/1234567890123456789). Se muestran en Inicio.">
+                <div className="flex flex-col gap-2 max-w-md">
+                  {contacto.tiktok_urls.map((url, i) => (
+                    <div key={i} className="flex gap-2">
+                      <input
+                        type="text"
+                        value={url}
+                        placeholder="https://www.tiktok.com/@usuario/video/..."
+                        onChange={(e) =>
+                          updateContacto(
+                            "tiktok_urls",
+                            contacto.tiktok_urls.map((u, j) => (j === i ? e.target.value : u)),
+                          )
+                        }
+                        className="flex-1 px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateContacto("tiktok_urls", contacto.tiktok_urls.filter((_, j) => j !== i))
+                        }
+                        className="shrink-0 px-2 text-on-surface-variant hover:text-error transition-colors"
+                        aria-label="Eliminar video"
+                      >
+                        <span className="material-symbols-outlined">delete</span>
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => updateContacto("tiktok_urls", [...contacto.tiktok_urls, ""])}
+                    className="self-start flex items-center gap-1 text-primary hover:text-primary-container font-admin-body transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-base">add</span> Agregar video
+                  </button>
+                </div>
               </Field>
             </SettingsCard>
           ) : (

@@ -12,6 +12,16 @@ const NAV_LINKS = [
   { href: "/admin/configuracion", label: "Configuración", icon: "settings" },
 ];
 
+// ponytail: logout de HTTP Basic Auth — se manda una credencial inválida para
+// que el navegador descarte la cacheada del realm, luego se sale a la web pública.
+// Funciona en Chrome y Firefox; Safari a veces la reusa. El logout limpio llega con Supabase Auth.
+async function cerrarSesion() {
+  try {
+    await fetch("/admin", { headers: { Authorization: "Basic " + btoa("logout:logout") }, cache: "no-store" });
+  } catch {}
+  window.location.href = "/";
+}
+
 export function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
 
@@ -71,8 +81,7 @@ export function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => 
             <p className="text-xs font-admin-label-caps text-on-surface-variant">ADMINISTRADOR</p>
             <p className="text-sm font-admin-body truncate text-on-surface">admin@keylisub.com</p>
           </div>
-          {/* ponytail: sin logout real — HTTP Basic Auth no tiene sesión que cerrar; llega con Supabase Auth */}
-          <button className="w-full flex items-center px-2 py-2 text-error hover:bg-error-container/20 rounded-lg transition-colors" disabled>
+          <button onClick={cerrarSesion} className="w-full flex items-center px-2 py-2 text-error hover:bg-error-container/20 rounded-lg transition-colors">
             <span className="material-symbols-outlined mr-3">logout</span>
             Cerrar sesión
           </button>

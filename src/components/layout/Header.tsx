@@ -3,25 +3,46 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { waLink } from "@/lib/constants";
+import { SOCIAL_ICONS } from "@/components/SocialIcons";
 
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/articulos", label: "Artículos" },
   { href: "/temporadas", label: "Temporadas" },
   { href: "/nosotros", label: "Nosotros" },
-  { href: "/contacto", label: "Contacto" },
+  { href: "/proceso", label: "Proceso" },
 ];
 
-export function Header() {
+export function Header({
+  whatsapp,
+  instagramUrl,
+  facebookUrl,
+}: {
+  whatsapp: string;
+  instagramUrl: string;
+  facebookUrl: string;
+}) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+  const contactRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!contactOpen) return;
+    const onClickOutside = (e: MouseEvent) => {
+      if (contactRef.current && !contactRef.current.contains(e.target as Node)) setContactOpen(false);
+    };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [contactOpen]);
 
   return (
     <header
@@ -30,14 +51,20 @@ export function Header() {
       }`}
     >
       <div className="h-20 w-full px-container-margin flex items-center justify-between">
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center gap-3">
           <Image
             src="/logoKeyli.jpeg"
             alt="Keyli Sublimaciones"
-            width={64}
-            height={64}
-            className="w-16 h-16 rounded-full object-cover"
+            width={48}
+            height={48}
+            className="w-12 h-12 rounded-full object-cover shrink-0"
           />
+          <span
+            className="hidden sm:block text-xl font-bold tracking-tight text-on-surface leading-none"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            Keyli <span className="text-primary">Sublimaciones</span>
+          </span>
         </Link>
         <nav className="hidden lg:flex items-center gap-stack-lg">
           {NAV_LINKS.map((link) => {
@@ -58,13 +85,44 @@ export function Header() {
             );
           })}
         </nav>
-        <div className="flex items-center">
-          <Link
-            href="/contacto"
-            className="px-6 py-2 border border-on-secondary-fixed-variant rounded-full font-label-caps text-on-secondary-fixed-variant hover:bg-on-secondary-fixed-variant hover:text-white transition-all"
+        <div className="relative flex items-center" ref={contactRef}>
+          <button
+            type="button"
+            onClick={() => setContactOpen((v) => !v)}
+            aria-expanded={contactOpen}
+            className="px-6 py-2 border border-on-secondary-fixed-variant rounded-full font-label-caps text-on-secondary-fixed-variant hover:bg-on-secondary-fixed-variant hover:text-white transition-all inline-flex items-center gap-1"
           >
-            Cotizar
-          </Link>
+            Contacto
+            <span className="material-symbols-outlined text-[18px]">{contactOpen ? "expand_less" : "expand_more"}</span>
+          </button>
+          {contactOpen && (
+            <div className="absolute right-0 top-full mt-2 w-56 bg-surface rounded-2xl border border-outline-variant/20 shadow-lg py-2 flex flex-col">
+              <a
+                href={waLink(whatsapp)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-3 flex items-center gap-3 font-label-caps text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors"
+              >
+                {SOCIAL_ICONS.whatsapp} WhatsApp
+              </a>
+              <a
+                href={instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-3 flex items-center gap-3 font-label-caps text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors"
+              >
+                {SOCIAL_ICONS.instagram} Instagram
+              </a>
+              <a
+                href={facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-3 flex items-center gap-3 font-label-caps text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors"
+              >
+                {SOCIAL_ICONS.facebook} Facebook
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </header>

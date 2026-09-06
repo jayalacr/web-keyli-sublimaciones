@@ -96,12 +96,28 @@ export function ConfiguracionTabs({
                   className="w-full max-w-md px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
                 />
               </Field>
+              <Field label="Widget de Instagram" hint="Pega la URL del iframe que te da SnapWidget/Elfsight/Behold para mostrar tus publicaciones en Inicio.">
+                <input
+                  type="text"
+                  value={contacto.instagram_widget_url}
+                  onChange={(e) => updateContacto("instagram_widget_url", e.target.value)}
+                  className="w-full max-w-md px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
+                />
+              </Field>
               <Field label="Facebook" hint="URL completa de la página.">
                 <input
                   type="text"
                   value={contacto.facebook_url}
                   onChange={(e) => updateContacto("facebook_url", e.target.value)}
                   className="w-full max-w-md px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface"
+                />
+              </Field>
+              <Field label="Videos de TikTok" hint="Una URL de video por línea (ej: https://www.tiktok.com/@usuario/video/1234567890123456789). Se muestran en Inicio.">
+                <textarea
+                  rows={4}
+                  value={contacto.tiktok_urls.join("\n")}
+                  onChange={(e) => updateContacto("tiktok_urls", e.target.value.split("\n").map((s) => s.trim()).filter(Boolean))}
+                  className="w-full max-w-md px-3 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-admin-body text-on-surface resize-none"
                 />
               </Field>
             </SettingsCard>

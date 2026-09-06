@@ -146,7 +146,9 @@ export async function getTextosInicio(): Promise<TextosInicio | null> {
 export type Contacto = {
   whatsapp: string;
   instagram_url: string;
+  instagram_widget_url: string;
   facebook_url: string;
+  tiktok_urls: string[];
 };
 
 export type Opinion = {

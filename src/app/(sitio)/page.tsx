@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { DEFAULT_PHONE, waLink } from "@/lib/constants";
+import { DEFAULT_PHONE, tiktokProfileUrl, waLink } from "@/lib/constants";
 import { getContacto, getOpinionesAprobadas, getTemporadasActivas, getTextosInicio } from "@/lib/db";
 import { SeasonCard } from "@/components/SeasonCard";
 import { TestimonialForm } from "@/components/TestimonialForm";
+import { TikTokEmbed } from "@/components/TikTokEmbed";
+import { SOCIAL_ICONS } from "@/components/SocialIcons";
 
 const FEATURED = [
   {
@@ -40,18 +42,6 @@ const FEATURED = [
   },
 ];
 
-// ponytail: desfase vertical cíclico por índice para el mosaico de tarjetas — es presentación, no dato de la opinión.
-const TESTIMONIAL_OFFSETS = ["md:mt-0", "md:mt-16", "md:mt-32"];
-
-const INSTAGRAM_STRIP = [
-  { alt: "Taza sublimada sobre mesa de madera junto a un cuaderno.", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDMYAl-tsYTVEIXvVJc69h_-AU1JQIIqaeN2Fmt1SZFWHeX7-dsJTbNN6kCP5acqn6gnm6NNjxwFqBejaEJqB7_6tf92SsyOfz-g6Ah1N0v-8k8vR-kJZe7Q3bV1hW0rhnp9mM683lTXyzHv7K01nvf7TIvsf3_rohBMCkrjDZV7G6supu7_mLZU6ODZwwM6dmHerGHWnfbQL4BvA-LXerwIc9ts7NWYLoDNpDdn8ImBql4hPocJy2o" },
-  { alt: "Playera doblada con estampado tipográfico junto a muestras de color.", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBGKFQT3_YxO4tFkxwjIBfSIncSqA8tlrB_jU8ZVmuWblJzSefQPMTEJSIoqg3k4-C2L6EzOL0EQJf8SVWPudXikMJwA54XvsDT-hTu1n_HPSYhODpfRi-io5tzuAWWx4xuYxe8GSv5Rumh0QCcVUtIerMwTErGicB_8SyOw7SHrDWDRySmrCXCF_QKCaHibQEiCvcHtFy9MCq8NRrKpqX6xicUwxcT5vG0K0rKbNo6h84d1UXuVp_Q" },
-  { alt: "Termo negro personalizado sostenido contra un cielo azul.", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDvvpOxZDXXyauI1hjxozPEiXKOU0JHsfFzYIM1LTQdAMUaHx0ZDB1RtglfszxZ_oY5osf5PQHUAoFM6v5qA8rnJhiRfTHegqULFiYuhbZv71DboCp63ijejtYBXC-giIcg1Zi51jSWQUqlVHjv4u69xD-h8TSB8pISObpkg5ac82oVNXFqgeuZMwHRjSgTUo0ViZt7MVWzoqmBZje9Un-j5XwtuLOFRGruWqR69SYWD-Bz4j2XF1ZS" },
-  { alt: "Macro de tinta de sublimación fundida con la tela.", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuA60oOIWp_X2KcyWjXlxTX0oNBuE8QIvoolXCfxStHXu0XA58R7GgCxzTgYwz9J-7p4eF1Al_Fg4mkQlAVL1-MBnjQNAgLscbzrNacHsJqKtV9EWHSzIg8eiEfYF8vuKnsrsIRDD74L_lIPi-ClGl2vyQ-whmqdQ661pMA1Kn0iFGLNngvR67dWoWEUlGzw2iTQ4shErNsknxc6R_Z-besHrCSeshsklSJB-fr-qCD2NiNXfu6ZSnz9" },
-  { alt: "Posavasos recién impresos en patrones geométricos sobre mármol.", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuC0p8VMxLuF6fKAFMcUc6pfiSRQhEMw7Yn_ZjQW8Otr-QDG7ooWk4YhfRVLYjomssEw7Iz2l1nrzw4dbpvtaS5zH7Gxs4sJJbxdh1bh3NdTJn6AcVXoT-LMcDTc1mceHBgpw-adqx1V03MUZrEaIidtYO3fRbHhK8zhoiDi_jzpbLvP9ia66D23HcqGaRuuBCJNIn-1q1dxcFKACSba_pdOQkbWsbfCUCwj5HwZt-b4SJ3phfgS0lKL" },
-  { alt: "Pedido empacado en caja kraft con listón color ciruela.", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCtOXODlHkuZ0hdic1_snze43lTHEv5gYcZTCBZjpFA_sTziuwoUDyUKmNP8fjg6ba9XsdfkLe3L75H9RdIKuUVFsM1GR3v4SNyR1yewI7Js5spPVNawsmmhx74jHMM5wsFKmJtmxACsBiGEBqnIidK3vo4ssDIs7prqUrkToCjOh7wILWtyPF-9Po8yMMOMWNXQ_EXT65RBAeOVBt2HZk1NY96OdudlDJ2OcC1OxnURV8eoRWw3IUM" },
-];
-
 const TEXTOS_INICIO_FALLBACK = {
   hero_titulo: "Lo personalizado se siente distinto",
   hero_subtitulo: "Creamos piezas únicas a través de la sublimación. Cada artículo cuenta una historia pensada exclusivamente para ti.",
@@ -74,9 +64,27 @@ export default async function Home() {
     getOpinionesAprobadas(),
   ]);
   const seasons = temporadas.filter((t) => t.portada_url).slice(0, 3);
+  const opinionesDestacadas =
+    opiniones.length > 5 ? [...opiniones].sort(() => Math.random() - 0.5).slice(0, 5) : opiniones;
   const whatsapp = contacto?.whatsapp ?? DEFAULT_PHONE;
   const instagramUrl = contacto?.instagram_url ?? "https://instagram.com/keylisublimaciones";
   const facebookUrl = contacto?.facebook_url ?? "https://facebook.com/keylisublimaciones";
+  const tiktokUrls = contacto?.tiktok_urls ?? [];
+  const tiktokDestacados =
+    tiktokUrls.length > 3 ? [...tiktokUrls].sort(() => Math.random() - 0.5).slice(0, 3) : tiktokUrls;
+  const tiktokPreviews = await Promise.all(
+    tiktokDestacados.map(async (url) => {
+      try {
+        const res = await fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`, {
+          next: { revalidate: 3600 },
+        });
+        const data = res.ok ? await res.json() : null;
+        return { url, thumbnailUrl: data?.thumbnail_url as string | undefined, title: data?.title as string | undefined };
+      } catch {
+        return { url, thumbnailUrl: undefined, title: undefined };
+      }
+    })
+  );
 
   return (
     <div className="flex flex-col w-full bg-surface">
@@ -220,7 +228,7 @@ export default async function Home() {
       </section>
 
       {/* Brand Story */}
-      <section className="w-full bg-secondary-fixed/30 py-[140px] my-section-gap-desktop">
+      <section className="w-full bg-secondary-fixed/30 py-[140px] mt-section-gap-desktop">
         <div className="px-container-margin grid grid-cols-1 md:grid-cols-12 gap-grid-gutter items-center">
           <div className="col-span-1 md:col-span-5 relative -mt-[180px] md:-mt-[240px] z-10 aspect-[3/4]">
             <Image
@@ -246,38 +254,73 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Process teaser */}
-      <section className="w-full py-section-gap-mobile">
-        <div className="px-container-margin">
-          <div className="bg-surface-container-low rounded-2xl px-8 py-16 md:py-20 flex flex-col items-center text-center gap-6">
-            <span className="font-label-caps text-on-surface-variant tracking-[0.2em]">Cómo trabajamos</span>
-            <h2 className="font-display-md text-on-surface leading-[1.1] max-w-xl">
-              De tu idea a tu pedido, en tres pasos simples
-            </h2>
-            <Link
-              href="/proceso"
-              className="inline-flex items-center gap-2 mt-2 px-8 py-3 bg-primary text-on-primary font-label-caps rounded-full transition-transform hover:-translate-y-1"
+      {/* Redes sociales: Instagram (widget embed) + TikTok (embed nativo) en dos columnas */}
+      <section className="w-full pt-section-gap-desktop overflow-hidden">
+        <div className="px-container-margin mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <span className="font-display-md text-on-surface text-2xl tracking-tight">Síguenos en redes</span>
+          <div className="flex flex-wrap gap-6">
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 group font-label-caps text-on-surface-variant hover:text-on-surface transition-colors pb-2 border-b border-outline-variant/30 hover:border-on-surface"
             >
-              Ver el proceso completo
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </Link>
+              {SOCIAL_ICONS.instagram}
+              <span>Instagram</span>
+              <span className="material-symbols-outlined text-[16px]">arrow_outward</span>
+            </a>
+            <a
+              href={facebookUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 group font-label-caps text-on-surface-variant hover:text-on-surface transition-colors pb-2 border-b border-outline-variant/30 hover:border-on-surface"
+            >
+              {SOCIAL_ICONS.facebook}
+              <span>Facebook</span>
+              <span className="material-symbols-outlined text-[16px]">arrow_outward</span>
+            </a>
+            {tiktokUrls.length > 0 && (
+              <a
+                href={tiktokProfileUrl(tiktokUrls)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 group font-label-caps text-on-surface-variant hover:text-on-surface transition-colors pb-2 border-b border-outline-variant/30 hover:border-on-surface"
+              >
+                {SOCIAL_ICONS.tiktok}
+                <span>TikTok</span>
+                <span className="material-symbols-outlined text-[16px]">arrow_outward</span>
+              </a>
+            )}
           </div>
         </div>
+        {tiktokPreviews.length > 0 && (
+          <div className="px-container-margin flex flex-wrap justify-center gap-8">
+            {tiktokPreviews.map((preview) => (
+              <div key={preview.url} className="w-full max-w-[320px] sm:w-[320px]">
+                <TikTokEmbed url={preview.url} thumbnailUrl={preview.thumbnailUrl} title={preview.title} />
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Testimonials */}
       <section className="w-full py-section-gap-desktop bg-surface-container-low">
         <div className="px-container-margin">
-          {opiniones.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-stack-lg">
-              {opiniones.map((o, i) => (
-                <div key={o.id} className={`col-span-1 md:col-span-4 ${TESTIMONIAL_OFFSETS[i % TESTIMONIAL_OFFSETS.length]}`}>
-                  <div className="bg-surface p-8 rounded-2xl border border-outline-variant/20">
-                    <p className="font-body-main text-on-surface italic mb-6">&ldquo;{o.texto}&rdquo;</p>
-                    <div className="flex flex-col">
-                      <span className="font-label-caps text-on-surface">{o.nombre}</span>
-                      {o.detalle && <span className="font-body-secondary text-on-surface-variant text-sm">{o.detalle}</span>}
-                    </div>
+          <div className="text-center max-w-xl mx-auto mb-stack-lg">
+            <h2 className="font-display-md text-on-surface tracking-tight">Lo que dicen nuestros clientes</h2>
+            <p className="font-body-main text-on-surface-variant mt-3">
+              Historias reales de quienes ya personalizaron su pieza con nosotros.
+            </p>
+          </div>
+          {opinionesDestacadas.length > 0 ? (
+            <div className="flex flex-wrap justify-center gap-8 mb-stack-lg">
+              {opinionesDestacadas.map((o) => (
+                <div key={o.id} className="w-full md:w-[calc(33.333%-1.5rem)] bg-surface p-8 rounded-2xl border border-outline-variant/20">
+                  <p className="font-body-main text-on-surface italic mb-6">&ldquo;{o.texto}&rdquo;</p>
+                  <div className="flex flex-col">
+                    <span className="font-label-caps text-on-surface">{o.nombre}</span>
+                    {o.detalle && <span className="font-body-secondary text-on-surface-variant text-sm">{o.detalle}</span>}
                   </div>
                 </div>
               ))}
@@ -291,34 +334,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Instagram Strip */}
-      <section className="w-full pt-section-gap-desktop overflow-hidden">
-        <div className="px-container-margin mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="font-display-md text-on-surface text-2xl tracking-tight">@keylisublimaciones</span>
-          <a
-            href={instagramUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-label-caps text-on-surface-variant hover:text-primary transition-colors"
-          >
-            Síguenos en Instagram
-          </a>
-        </div>
-        <div className="flex w-full overflow-x-auto snap-x snap-mandatory pb-8 md:pb-0 [scrollbar-width:none]">
-          <div className="flex flex-nowrap w-[200%] md:w-full">
-            {INSTAGRAM_STRIP.map((img) => (
-              <div key={img.src} className="w-1/3 md:w-1/6 aspect-square snap-center shrink-0 p-1">
-                <div className="relative w-full h-full rounded-lg overflow-hidden">
-                  <Image src={img.src} alt={img.alt} fill sizes="200px" className="object-cover" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Contact Band */}
-      <section className="w-full bg-on-secondary-fixed-variant text-white py-[100px] mt-section-gap-desktop">
+      <section className="w-full bg-on-secondary-fixed-variant text-white py-[100px]">
         <div className="px-container-margin flex flex-col items-center text-center max-w-4xl mx-auto space-y-stack-lg">
           <h2 className="font-display-md text-white tracking-tight leading-tight">Cuéntanos qué tienes en mente</h2>
           <p className="font-body-main text-white/80 max-w-lg">
@@ -330,24 +347,27 @@ export default async function Home() {
               href={waLink(whatsapp)}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-4 bg-white text-on-secondary-fixed-variant font-label-caps rounded-full hover:scale-105 transition-transform"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-on-secondary-fixed-variant font-label-caps rounded-full hover:scale-105 transition-transform"
             >
+              {SOCIAL_ICONS.whatsapp}
               WhatsApp
             </a>
             <a
               href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-4 border border-white/30 text-white font-label-caps rounded-full hover:bg-white/10 transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-4 border border-white/30 text-white font-label-caps rounded-full hover:bg-white/10 transition-colors"
             >
+              {SOCIAL_ICONS.instagram}
               Instagram
             </a>
             <a
               href={facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-4 border border-white/30 text-white font-label-caps rounded-full hover:bg-white/10 transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-4 border border-white/30 text-white font-label-caps rounded-full hover:bg-white/10 transition-colors"
             >
+              {SOCIAL_ICONS.facebook}
               Facebook
             </a>
           </div>

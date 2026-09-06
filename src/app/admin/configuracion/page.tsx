@@ -5,7 +5,9 @@ import { ConfiguracionTabs } from "@/components/admin/ConfiguracionTabs";
 const FALLBACK_CONTACTO: Contacto = {
   whatsapp: DEFAULT_PHONE,
   instagram_url: "https://instagram.com/keylisublimaciones",
+  instagram_widget_url: "",
   facebook_url: "https://facebook.com/keylisublimaciones",
+  tiktok_urls: [],
 };
 
 const FALLBACK: TextosInicio = {

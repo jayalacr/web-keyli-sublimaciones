@@ -33,7 +33,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ s
             fill
             priority
             sizes="100vw"
-            className="object-cover -z-10"
+            className="object-cover"
           />
         )}
         <div className="absolute inset-0 bg-on-tertiary-fixed-variant/60 mix-blend-multiply" />

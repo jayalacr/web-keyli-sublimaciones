@@ -278,7 +278,12 @@ export function SeasonsManager({ initialSeasons, allProducts }: { initialSeasons
 
               <div className="flex flex-col gap-2">
                 <label className="font-admin-label-caps text-on-surface-variant uppercase">Imagen de portada</label>
-                <ImageUploader src={draft.coverSrc} alt={draft.coverAlt || draft.name} onChange={(url) => updateDraft("coverSrc", url)} />
+                <ImageUploader
+                  src={draft.coverSrc}
+                  alt={draft.coverAlt || draft.name}
+                  onChange={(url) => updateDraft("coverSrc", url)}
+                  folder={`temporadas/${draft.slug}`}
+                />
                 <input
                   type="text"
                   value={draft.coverAlt}

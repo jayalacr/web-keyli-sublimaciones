@@ -90,6 +90,7 @@ export function ConfiguracionTabs({
                     src={contacto.logo_url || null}
                     alt="Logo Keyli Sublimaciones"
                     onChange={(url) => updateContacto("logo_url", url)}
+                    folder="sitio"
                     heightClass="h-24"
                   />
                 </div>
@@ -197,7 +198,7 @@ export function ConfiguracionTabs({
                   </div>
                   <div className="col-span-1 flex flex-col gap-2">
                     <label className="font-admin-label-caps text-on-surface-variant">Imagen de portada</label>
-                    <ImageUploader src={settings.hero_imagen_url || null} alt={settings.hero_imagen_alt} onChange={(url) => update("hero_imagen_url", url)} heightClass="h-48" />
+                    <ImageUploader src={settings.hero_imagen_url || null} alt={settings.hero_imagen_alt} onChange={(url) => update("hero_imagen_url", url)} folder="sitio" heightClass="h-48" />
                     <input
                       type="text"
                       value={settings.hero_imagen_alt}
@@ -241,7 +242,7 @@ export function ConfiguracionTabs({
                   </div>
                   <div className="col-span-1 flex flex-col gap-2">
                     <label className="font-admin-label-caps text-on-surface-variant">Imagen de Keyli</label>
-                    <ImageUploader src={settings.historia_imagen_url || null} alt={settings.historia_imagen_alt} onChange={(url) => update("historia_imagen_url", url)} heightClass="h-48" />
+                    <ImageUploader src={settings.historia_imagen_url || null} alt={settings.historia_imagen_alt} onChange={(url) => update("historia_imagen_url", url)} folder="sitio" heightClass="h-48" />
                     <input
                       type="text"
                       value={settings.historia_imagen_alt}
@@ -263,7 +264,7 @@ export function ConfiguracionTabs({
                   </div>
                   <div className="col-span-1 flex flex-col gap-2">
                     <label className="font-admin-label-caps text-on-surface-variant">Foto de portada</label>
-                    <ImageUploader src={settings.nosotros_imagen_url || null} alt={settings.nosotros_imagen_alt} onChange={(url) => update("nosotros_imagen_url", url)} heightClass="h-48" />
+                    <ImageUploader src={settings.nosotros_imagen_url || null} alt={settings.nosotros_imagen_alt} onChange={(url) => update("nosotros_imagen_url", url)} folder="sitio" heightClass="h-48" />
                     <input
                       type="text"
                       value={settings.nosotros_imagen_alt}

@@ -13,6 +13,8 @@ const LAYOUT_VARIANTS = [
   { aspect: "aspect-[4/3]", offset: "md:-mt-8" },
 ];
 
+const PAGE_SIZE = 12;
+
 export function ArticulosGrid({
   categorias,
   productos,
@@ -28,8 +30,10 @@ export function ArticulosGrid({
     initialCategory && categorias.includes(initialCategory) ? initialCategory : "Todos"
   );
   const [selected, setSelected] = useState<Producto | null>(null);
+  const [visible, setVisible] = useState(PAGE_SIZE);
 
   const filtered = category === "Todos" ? productos : productos.filter((p) => p.categoria?.nombre === category);
+  const shown = filtered.slice(0, visible);
 
   return (
     <>
@@ -48,7 +52,10 @@ export function ArticulosGrid({
               {["Todos", ...categorias].map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setCategory(cat)}
+                  onClick={() => {
+                    setCategory(cat);
+                    setVisible(PAGE_SIZE);
+                  }}
                   className={
                     cat === category
                       ? "px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-caps transition-colors"
@@ -66,7 +73,7 @@ export function ArticulosGrid({
 
       <div className="px-container-margin pb-section-gap-desktop w-full max-w-[1440px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-grid-gutter items-start">
-          {filtered.map((producto, i) => {
+          {shown.map((producto, i) => {
             const layout = LAYOUT_VARIANTS[i % LAYOUT_VARIANTS.length];
             return (
               <button
@@ -92,14 +99,31 @@ export function ArticulosGrid({
             );
           })}
         </div>
+        {visible < filtered.length && (
+          <div className="flex justify-center mt-stack-lg">
+            <button
+              onClick={() => setVisible((v) => v + PAGE_SIZE)}
+              className="px-8 py-3 rounded-full border border-outline-variant font-label-caps text-on-surface-variant hover:bg-surface-container transition-colors"
+            >
+              Cargar más piezas
+            </button>
+          </div>
+        )}
       </div>
 
-      {selected && <ProductModal producto={selected} whatsapp={whatsapp} onClose={() => setSelected(null)} />}
+      {selected && <ProductModal key={selected.slug} producto={selected} whatsapp={whatsapp} onClose={() => setSelected(null)} />}
     </>
   );
 }
 
 function ProductModal({ producto, whatsapp, onClose }: { producto: Producto; whatsapp: string; onClose: () => void }) {
+  const images = [
+    ...(producto.imagen_url ? [{ url: producto.imagen_url, alt: producto.imagen_alt ?? producto.nombre }] : []),
+    ...producto.galeria,
+  ];
+  const [mainIndex, setMainIndex] = useState(0);
+  const main = images[mainIndex];
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-surface/90 backdrop-blur-sm px-4 py-6 sm:py-12 overflow-y-auto"
@@ -117,16 +141,20 @@ function ProductModal({ producto, whatsapp, onClose }: { producto: Producto; wha
         </button>
         <div className="w-full lg:w-1/2 flex flex-col">
           <div className="aspect-[4/5] w-full bg-surface-variant relative overflow-hidden">
-            {producto.imagen_url && (
-              <Image src={producto.imagen_url} alt={producto.imagen_alt ?? producto.nombre} fill sizes="50vw" className="object-cover" />
-            )}
+            {main && <Image src={main.url} alt={main.alt} fill sizes="50vw" className="object-cover" />}
           </div>
-          {producto.galeria.length > 0 && (
+          {images.length > 1 && (
             <div className="grid grid-cols-3 gap-1 mt-1 bg-surface-container p-4">
-              {producto.galeria.map((img) => (
-                <div key={img.url} className="aspect-square bg-surface-variant rounded-lg relative overflow-hidden">
+              {images.map((img, i) => (
+                <button
+                  key={img.url}
+                  onClick={() => setMainIndex(i)}
+                  className={`aspect-square bg-surface-variant rounded-lg relative overflow-hidden ${
+                    i === mainIndex ? "ring-2 ring-primary" : "opacity-80 hover:opacity-100"
+                  } transition-opacity`}
+                >
                   <Image src={img.url} alt={img.alt} fill sizes="150px" className="object-cover" />
-                </div>
+                </button>
               ))}
             </div>
           )}

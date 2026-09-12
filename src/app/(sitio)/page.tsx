@@ -1,46 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { DEFAULT_PHONE, tiktokProfileUrl, waLink } from "@/lib/constants";
-import { getContacto, getOpinionesAprobadas, getTemporadasActivas, getTextosInicio } from "@/lib/db";
+import { getContacto, getOpinionesAprobadas, getProductosActivos, getTemporadasActivas, getTextosInicio, type Producto } from "@/lib/db";
 import { SeasonCard } from "@/components/SeasonCard";
 import { TestimonialForm } from "@/components/TestimonialForm";
 import { TikTokEmbed } from "@/components/TikTokEmbed";
 import { SOCIAL_ICONS } from "@/components/SocialIcons";
-
-const FEATURED = [
-  {
-    href: "/articulos?categoria=Tazas",
-    tag: "Tazas",
-    title: "Tazas de Cerámica",
-    size: "large" as const,
-    alt: "Taza de cerámica personalizada rodeada de flores secas, luz cálida de mañana.",
-    src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCD2fdG3gwpLVvRHAZ_IpnFJBmX9zi0wpEnZWZafTAlElJyR0nyh7BdC4A713DlcSlZ_pOGGuuU-2LYgqLFPf_8kwKtMG3cK3so-ZULGCUxVllsqERMmEqM2nc5AnI-QC3jjtVeZU2RLdwztxJE0bU2FQVrQI7Q4JT1YiGdkzyTLJci5SvtdrcHh32qZsRHpPjIZKmkuoQF7SjOHOKv2V2kSGQhvfprAl8GnBWZqHllaf0J3cA41dx-",
-  },
-  {
-    href: "/articulos?categoria=Playeras",
-    tag: "Playeras",
-    title: "Playeras Premium",
-    size: "medium" as const,
-    alt: "Playera premium sublimada colgada en un gancho de madera contra pared de yeso.",
-    src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCsFmvlh7BLf7lT-mmjOjWC7Bg-GN9iB68nERgmTSavG201_KTZ3WhAQrr0osnSOrjxgx6p1OrEALJ-gS1IEVqNASuscyGIRbUYTr0IJJ6ZuJGRPAQ3SEZDaBGAfLFytuxtK7tjfTLNkOH6TXd6rcL0SF5QtImZ54hfeGHdhpOgHhZUnkKubaIvQtveruX1NM0BtSGqxZE7pcoIkB_ETxRolPkiZGEWsl6DFSSr-hqHU7yGcJ3fuXgf",
-  },
-  {
-    href: "/articulos?categoria=Termos",
-    tag: "Termos",
-    title: "Termos",
-    size: "small" as const,
-    alt: "Termo de acero inoxidable personalizado con gotas de condensación.",
-    src: "https://lh3.googleusercontent.com/aida-public/AB6AXuASSX2QvjoM7ZWlXUbClJtREgHmFKRROHHmw_J73pqmFvV9XLVba-R8Fhva7AUOOr7rMfD-yLhpUX_EFwulKhKjPd9_Vbz7R4orUU3rUNvNRqY4vUqhAg4xfoNsrl-2hevwvfYqqdzffoFQbMTvzMAVqACQjaxMpJRmUrgRAZS41OrAt0Mx2_1Hqzws6DUXH6DQ7KWZCWFZuM9-ljVc7d078vi5A-ZRJffpE8i77EHnFcFbEzBsGKcF",
-  },
-  {
-    href: "/articulos?categoria=Papelería",
-    tag: "Papelería",
-    title: "Accesorios",
-    size: "small" as const,
-    alt: "Mousepads y posavasos personalizados sobre un escritorio de roble.",
-    src: "https://lh3.googleusercontent.com/aida-public/AB6AXuC5Bolqxku_HBxuhDyXm9hnu_UcuCSBuB6bAXljRqnGnICFr8oHJ-bV7B0qfF_AsuMAT9TKj97tdHNthy9Wa9bvLU4Dj9nAZSmKfOOah2ITeb8puNhCc8ldx6g0mOsH9dab4tqnjmnMir1lajglFCVj0tKvAOUpDUAo7250b_0fRksZ62gtAnwcr3g6EvWI1ca0ZgirvxIM-E_C26-6yZjt_ei2eg-wh72Iq2apsUocdkcuVNNHdF3T",
-  },
-];
 
 const TEXTOS_INICIO_FALLBACK = {
   hero_titulo: "Lo personalizado se siente distinto",
@@ -60,13 +25,15 @@ const TEXTOS_INICIO_FALLBACK = {
 };
 
 export default async function Home() {
-  const [textos, temporadas, contacto, opiniones] = await Promise.all([
+  const [textos, temporadas, contacto, opiniones, productos] = await Promise.all([
     getTextosInicio().then((t) => t ?? TEXTOS_INICIO_FALLBACK),
     getTemporadasActivas(),
     getContacto(),
     getOpinionesAprobadas(),
+    getProductosActivos(),
   ]);
   const seasons = temporadas.filter((t) => t.portada_url).slice(0, 3);
+  const destacados = productos.filter((p) => p.destacado && p.imagen_url).slice(0, 4);
   const opinionesDestacadas =
     opiniones.length > 5 ? [...opiniones].sort(() => Math.random() - 0.5).slice(0, 5) : opiniones;
   const whatsapp = contacto?.whatsapp ?? DEFAULT_PHONE;
@@ -149,58 +116,38 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Lo Más Pedido */}
-      <section className="w-full py-section-gap-desktop">
-        <div className="px-container-margin">
-          <div className="flex flex-col gap-2 mb-stack-lg">
-            <span className="font-label-caps text-on-surface-variant tracking-[0.2em]">Selección</span>
-            <h2 className="font-display-md text-on-surface tracking-tight">Lo más pedido</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-2 gap-4 md:gap-6 h-auto md:h-[700px]">
-            <Link
-              href={FEATURED[0].href}
-              className="group col-span-1 md:col-span-6 md:row-span-2 relative block overflow-hidden bg-surface-container rounded-2xl min-h-[240px] md:min-h-[300px]"
-            >
-              <FeaturedImage item={FEATURED[0]} />
-              <div className="absolute bottom-0 left-0 p-6 md:p-8 flex flex-col items-start gap-3">
-                <span className="px-3 py-1 bg-surface/90 backdrop-blur-sm rounded-full font-label-caps text-on-surface text-[10px] tracking-widest">
-                  {FEATURED[0].tag}
-                </span>
-                <h3 className="font-display-sm-mobile text-on-surface">{FEATURED[0].title}</h3>
-              </div>
-            </Link>
-            <Link
-              href={FEATURED[1].href}
-              className="group col-span-1 md:col-span-6 md:row-span-1 relative block overflow-hidden bg-surface-container rounded-2xl min-h-[240px] md:min-h-[300px]"
-            >
-              <FeaturedImage item={FEATURED[1]} />
-              <div className="absolute bottom-0 left-0 p-6 flex flex-col items-start gap-3">
-                <span className="px-3 py-1 bg-surface/90 backdrop-blur-sm rounded-full font-label-caps text-on-surface text-[10px] tracking-widest">
-                  {FEATURED[1].tag}
-                </span>
-                <h3 className="font-body-main font-semibold text-on-surface text-xl">{FEATURED[1].title}</h3>
-              </div>
-            </Link>
-            <div className="col-span-1 md:col-span-6 md:row-span-1 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-              {FEATURED.slice(2).map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="group relative block overflow-hidden bg-surface-container rounded-2xl min-h-[240px] md:min-h-[300px]"
-                >
-                  <FeaturedImage item={item} />
-                  <div className="absolute bottom-0 left-0 p-6 flex flex-col items-start gap-2">
-                    <span className="px-3 py-1 bg-surface/90 backdrop-blur-sm rounded-full font-label-caps text-on-surface text-[10px] tracking-widest">
-                      {item.tag}
-                    </span>
-                    <h3 className="font-body-main font-semibold text-on-surface text-lg">{item.title}</h3>
-                  </div>
-                </Link>
-              ))}
+      {/* Lo Más Pedido — administrado desde /admin/productos: toggle "Destacado en Inicio" de cada producto */}
+      {destacados.length > 0 && (
+        <section className="w-full py-section-gap-desktop">
+          <div className="px-container-margin">
+            <div className="flex flex-col gap-2 mb-stack-lg">
+              <span className="font-label-caps text-on-surface-variant tracking-[0.2em]">Selección</span>
+              <h2 className="font-display-md text-on-surface tracking-tight">Lo más pedido</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-2 gap-4 md:gap-6 md:h-[700px]">
+              <FeaturedTile
+                producto={destacados[0]}
+                className="col-span-1 md:col-span-6 md:row-span-2"
+                titleClass="font-display-sm-mobile text-on-surface"
+              />
+              {destacados[1] && (
+                <FeaturedTile
+                  producto={destacados[1]}
+                  className="col-span-1 md:col-span-6 md:row-span-1"
+                  titleClass="font-body-main font-semibold text-on-surface text-xl"
+                />
+              )}
+              {destacados.length > 2 && (
+                <div className="col-span-1 md:col-span-6 md:row-span-1 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                  {destacados.slice(2).map((p) => (
+                    <FeaturedTile key={p.id} producto={p} titleClass="font-body-main font-semibold text-on-surface text-lg" />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Seasons Teaser */}
       <section className="w-full py-section-gap-mobile">
@@ -380,17 +327,36 @@ export default async function Home() {
   );
 }
 
-function FeaturedImage({ item }: { item: (typeof FEATURED)[number] }) {
+function FeaturedTile({
+  producto,
+  className = "",
+  titleClass,
+}: {
+  producto: Producto;
+  className?: string;
+  titleClass: string;
+}) {
   return (
-    <>
+    <Link
+      href={`/articulos?categoria=${encodeURIComponent(producto.categoria?.nombre ?? "")}`}
+      className={`group relative block overflow-hidden bg-surface-container rounded-2xl min-h-[240px] md:min-h-[300px] ${className}`}
+    >
       <Image
-        src={item.src}
-        alt={item.alt}
+        src={producto.imagen_url!}
+        alt={producto.imagen_alt ?? producto.nombre}
         fill
-        sizes={item.size === "large" ? "50vw" : item.size === "medium" ? "50vw" : "25vw"}
+        sizes="50vw"
         className="object-cover transition-transform duration-700 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-surface/80 to-transparent" />
-    </>
+      <div className="absolute bottom-0 left-0 p-6 md:p-8 flex flex-col items-start gap-3">
+        {producto.categoria?.nombre && (
+          <span className="px-3 py-1 bg-surface/90 backdrop-blur-sm rounded-full font-label-caps text-on-surface text-[10px] tracking-widest">
+            {producto.categoria.nombre}
+          </span>
+        )}
+        <h3 className={titleClass}>{producto.nombre}</h3>
+      </div>
+    </Link>
   );
 }

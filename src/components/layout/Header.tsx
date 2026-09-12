@@ -27,6 +27,8 @@ export function Header({
   logoUrl?: string;
 }) {
   const pathname = usePathname();
+  // ponytail: portada de temporada es oscura y el header flotante se pierde encima — ahí forzamos fondo sólido siempre.
+  const isSeasonDetail = pathname.startsWith("/temporadas/");
   const [scrolled, setScrolled] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -50,7 +52,7 @@ export function Header({
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled || menuOpen ? "bg-surface shadow-[0_1px_8px_rgba(0,0,0,0.04)]" : "bg-transparent"
+        scrolled || menuOpen || isSeasonDetail ? "bg-surface shadow-[0_1px_8px_rgba(0,0,0,0.04)]" : "bg-transparent"
       }`}
     >
       <div className="h-16 md:h-20 w-full px-container-margin flex items-center justify-between gap-3">

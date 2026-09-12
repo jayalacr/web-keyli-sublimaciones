@@ -9,11 +9,13 @@ export function ImageUploader({
   src,
   alt,
   onChange,
+  folder,
   heightClass = "h-40",
 }: {
   src: string | null;
   alt: string;
   onChange: (url: string) => void;
+  folder: string;
   heightClass?: string;
 }) {
   const [uploading, setUploading] = useState(false);
@@ -27,6 +29,7 @@ export function ImageUploader({
       const blob = await compressImage(file);
       const fd = new FormData();
       fd.set("file", blob, "imagen.webp");
+      fd.set("folder", folder);
       onChange(await subirImagen(fd));
     } catch {
       setError("No se pudo subir la imagen. Si es HEIC (foto de Mac), conviértela a JPG/PNG.");

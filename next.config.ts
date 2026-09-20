@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Fotos de celular sin comprimir (ej. HEIC que el navegador no pudo procesar) pueden pesar varios MB.
+    serverActions: { bodySizeLimit: "15mb" },
+  },
   images: {
     remotePatterns: [
       // ponytail: placeholders de Stitch mientras no hay fotos reales del cliente

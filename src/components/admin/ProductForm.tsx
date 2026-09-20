@@ -122,8 +122,9 @@ export function ProductForm({
           update("gallery", [...form.gallery, { src: url, alt: form.name || "Imagen de producto" }]);
         }
       }
-    } catch {
-      setUploadError("No se pudo procesar o subir la imagen. Verifica que sea JPG/PNG (HEIC de Mac no es compatible).");
+    } catch (e) {
+      console.error("subirImagen falló:", e);
+      setUploadError(`No se pudo subir la imagen: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setIsUploading(false);
     }

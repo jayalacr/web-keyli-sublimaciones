@@ -31,8 +31,9 @@ export function ImageUploader({
       fd.set("file", blob ?? file, blob ? "imagen.webp" : file.name);
       fd.set("folder", folder);
       onChange(await subirImagen(fd));
-    } catch {
-      setError("No se pudo subir la imagen. Prueba con otra foto o convirtiéndola a JPG/PNG.");
+    } catch (e) {
+      console.error("subirImagen falló:", e);
+      setError(`No se pudo subir la imagen: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setUploading(false);
     }

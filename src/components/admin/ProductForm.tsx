@@ -114,7 +114,9 @@ export function ProductForm({
         const fd = new FormData();
         fd.set("file", blob ?? file, blob ? "imagen.webp" : file.name);
         fd.set("folder", `productos/${form.slug || form.id || "sin-guardar"}`);
-        const url = await subirImagen(fd);
+        const result = await subirImagen(fd);
+        if ("error" in result) throw new Error(result.error);
+        const url = result.url;
         if (!form.imageSrc) {
           update("imageSrc", url);
           update("imageAlt", form.name || "Imagen de producto");

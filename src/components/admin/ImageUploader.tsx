@@ -30,7 +30,9 @@ export function ImageUploader({
       const fd = new FormData();
       fd.set("file", blob ?? file, blob ? "imagen.webp" : file.name);
       fd.set("folder", folder);
-      onChange(await subirImagen(fd));
+      const result = await subirImagen(fd);
+      if ("error" in result) throw new Error(result.error);
+      onChange(result.url);
     } catch (e) {
       console.error("subirImagen falló:", e);
       setError(`No se pudo subir la imagen: ${e instanceof Error ? e.message : String(e)}`);

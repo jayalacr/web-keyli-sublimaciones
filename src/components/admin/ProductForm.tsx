@@ -112,7 +112,7 @@ export function ProductForm({
       for (const file of Array.from(files)) {
         const blob = await compressImage(file);
         const fd = new FormData();
-        fd.set("file", blob, "imagen.webp");
+        fd.set("file", blob ?? file, blob ? "imagen.webp" : file.name);
         fd.set("folder", `productos/${form.slug || form.id || "sin-guardar"}`);
         const url = await subirImagen(fd);
         if (!form.imageSrc) {

@@ -28,11 +28,11 @@ export function ImageUploader({
     try {
       const blob = await compressImage(file);
       const fd = new FormData();
-      fd.set("file", blob, "imagen.webp");
+      fd.set("file", blob ?? file, blob ? "imagen.webp" : file.name);
       fd.set("folder", folder);
       onChange(await subirImagen(fd));
     } catch {
-      setError("No se pudo subir la imagen. Si es HEIC (foto de Mac), conviértela a JPG/PNG.");
+      setError("No se pudo subir la imagen. Prueba con otra foto o convirtiéndola a JPG/PNG.");
     } finally {
       setUploading(false);
     }

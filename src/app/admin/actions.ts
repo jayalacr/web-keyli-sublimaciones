@@ -15,8 +15,9 @@ export async function subirImagen(formData: FormData) {
     .join("/");
 
   const db = supabaseAdmin();
-  const path = `${folder}/${crypto.randomUUID()}.webp`;
-  const { error } = await db.storage.from("productos").upload(path, file, { contentType: "image/webp" });
+  const ext = file.type === "image/webp" ? "webp" : (file.name.split(".").pop() ?? "jpg").toLowerCase();
+  const path = `${folder}/${crypto.randomUUID()}.${ext}`;
+  const { error } = await db.storage.from("productos").upload(path, file, { contentType: file.type || "application/octet-stream" });
   if (error) throw error;
 
   const { data } = db.storage.from("productos").getPublicUrl(path);

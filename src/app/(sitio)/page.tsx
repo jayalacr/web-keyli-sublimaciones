@@ -185,6 +185,7 @@ export default async function Home() {
               src={textos.historia_imagen_url}
               alt={textos.historia_imagen_alt}
               fill
+              sizes="(min-width: 768px) 42vw, 100vw"
               className="object-cover rounded-2xl shadow-xl"
             />
           </div>

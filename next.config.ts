@@ -1,11 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    // Fotos de celular sin comprimir (ej. HEIC que el navegador no pudo procesar) pueden pesar varios MB.
-    serverActions: { bodySizeLimit: "15mb" },
-  },
   images: {
+    formats: ["image/avif", "image/webp"],
+    // Las imágenes subidas tienen nombre UUID y nunca cambian: cachear las versiones optimizadas 1 año.
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       // ponytail: placeholders de Stitch mientras no hay fotos reales del cliente
       { protocol: "https", hostname: "lh3.googleusercontent.com" },

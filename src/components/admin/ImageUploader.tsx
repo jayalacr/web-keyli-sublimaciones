@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { compressImage } from "@/lib/compressImage";
-import { subirImagen } from "@/app/admin/actions";
+import { subirImagen } from "@/lib/uploadImage";
 
 export function ImageUploader({
   src,
@@ -26,13 +25,7 @@ export function ImageUploader({
     setError(null);
     setUploading(true);
     try {
-      const blob = await compressImage(file);
-      const fd = new FormData();
-      fd.set("file", blob ?? file, blob ? "imagen.webp" : file.name);
-      fd.set("folder", folder);
-      const result = await subirImagen(fd);
-      if ("error" in result) throw new Error(result.error);
-      onChange(result.url);
+      onChange(await subirImagen(file, folder));
     } catch (e) {
       console.error("subirImagen falló:", e);
       setError(`No se pudo subir la imagen: ${e instanceof Error ? e.message : String(e)}`);

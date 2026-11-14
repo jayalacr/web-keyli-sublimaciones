@@ -4,8 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { guardarProducto, eliminarProducto } from "@/app/admin/productos/actions";
-import { subirImagen } from "@/app/admin/actions";
-import { compressImage } from "@/lib/compressImage";
+import { subirImagen } from "@/lib/uploadImage";
 
 export type ProductImage = { src: string; alt: string };
 
@@ -110,19 +109,14 @@ export function ProductForm({
     setIsUploading(true);
     try {
       for (const file of Array.from(files)) {
-        const blob = await compressImage(file);
-        const fd = new FormData();
-        fd.set("file", blob ?? file, blob ? "imagen.webp" : file.name);
-        fd.set("folder", `productos/${form.slug || form.id || "sin-guardar"}`);
-        const result = await subirImagen(fd);
-        if ("error" in result) throw new Error(result.error);
-        const url = result.url;
-        if (!form.imageSrc) {
-          update("imageSrc", url);
-          update("imageAlt", form.name || "Imagen de producto");
-        } else {
-          update("gallery", [...form.gallery, { src: url, alt: form.name || "Imagen de producto" }]);
-        }
+        const url = await subirImagen(file, `productos/${form.slug || form.id || "sin-guardar"}`);
+        // setForm funcional: con varios archivos, "form" del closure queda viejo y se perderían imágenes.
+        setForm((f) => {
+          const alt = f.name || "Imagen de producto";
+          return f.imageSrc
+            ? { ...f, gallery: [...f.gallery, { src: url, alt }] }
+            : { ...f, imageSrc: url, imageAlt: alt };
+        });
       }
     } catch (e) {
       console.error("subirImagen falló:", e);

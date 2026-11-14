@@ -39,7 +39,7 @@ export function SeasonCard({
             sizes="(min-width: 768px) 33vw, 100vw"
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-on-secondary-fixed-variant/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-strong/80 via-primary-strong/20 to-transparent" />
           <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
             <h3 className="font-display-sm-mobile text-white mb-2">{title}</h3>
             <span className="font-label-caps text-white/80 tracking-widest">Explorar colección</span>
@@ -53,7 +53,7 @@ export function SeasonCard({
             sizes="(min-width: 768px) 33vw, 100vw"
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-on-secondary-fixed-variant/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-strong/70 to-transparent" />
           <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
             <span className="font-label-caps text-white tracking-widest">Explorar colección</span>
           </div>

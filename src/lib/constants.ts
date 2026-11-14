@@ -9,3 +9,10 @@ export function tiktokProfileUrl(tiktokUrls: string[]) {
   const handle = tiktokUrls[0]?.match(/tiktok\.com\/(@[^/]+)/)?.[1];
   return handle ? `https://www.tiktok.com/${handle}` : tiktokUrls[0];
 }
+
+const MXN = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 });
+
+// Devuelve null si el producto no tiene precio capturado (0), para no mostrar "Desde $0".
+export function precioDesde(centavos: number) {
+  return centavos > 0 ? `Desde ${MXN.format(centavos / 100)}` : null;
+}

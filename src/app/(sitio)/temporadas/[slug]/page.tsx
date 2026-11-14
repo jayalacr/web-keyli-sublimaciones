@@ -22,7 +22,11 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ s
   const otherSeasons = (await getTemporadasActivas()).filter((s) => s.slug !== temporada.slug).slice(0, 3);
 
   return (
-    <div className="flex flex-col w-full bg-surface">
+    <div
+      className="flex flex-col w-full bg-surface"
+      // Acento de la temporada (docs/marca.md); si el slug no tiene color, usa el primario.
+      style={{ "--season": `var(--color-season-${temporada.slug}, var(--color-primary))` } as React.CSSProperties}
+    >
       <section
         className="relative w-full h-[70vh] min-h-[380px] md:h-[60vh] md:min-h-[500px] flex flex-col justify-end px-container-margin py-section-gap-mobile"
       >
@@ -36,7 +40,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ s
             className="object-cover"
           />
         )}
-        <div className="absolute inset-0 bg-on-tertiary-fixed-variant/60 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-(--season)/60 mix-blend-multiply" />
         <div className="relative z-10 max-w-4xl">
           <nav className="flex flex-wrap items-center gap-2 mb-stack-md font-label-caps text-on-primary opacity-80 uppercase tracking-widest">
             <span>Catálogo</span>
@@ -73,10 +77,10 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ s
         </section>
       )}
 
-      <section className="w-full py-section-gap-mobile bg-secondary-fixed">
+      <section className="w-full py-section-gap-mobile bg-(--season)/10">
         <div className="max-w-3xl mx-auto px-container-margin text-center flex flex-col items-center">
-          <h2 className="font-display-md text-on-secondary-fixed mb-stack-sm">Pide con tiempo</h2>
-          <p className="font-body-main text-on-secondary-fixed-variant mb-stack-lg max-w-lg">
+          <h2 className="font-display-md text-on-surface mb-stack-sm">Pide con tiempo</h2>
+          <p className="font-body-main text-on-surface-variant mb-stack-lg max-w-lg">
             La temporada alta requiere mayor tiempo de producción. Asegura tus piezas personalizadas
             con anticipación para garantizar la entrega a tiempo.
           </p>
@@ -84,7 +88,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ s
             href={waLink(whatsapp, `Hola, quiero cotizar algo de la colección ${temporada.nombre}`)}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block px-8 py-4 rounded-full bg-on-secondary-fixed text-secondary-fixed font-label-caps hover:bg-on-secondary-fixed-variant transition-colors shadow-md"
+            className="inline-block px-8 py-4 rounded-full bg-(--season) text-white font-label-caps hover:brightness-90 transition-colors shadow-md"
           >
             Contactar por WhatsApp
           </a>
@@ -117,7 +121,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ s
                   className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                 />
               )}
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-t from-primary-strong/60 to-transparent" />
               <div className="absolute inset-0 p-6 flex flex-col justify-end">
                 <h4 className="font-display-sm-mobile text-white text-xl sm:text-2xl">{s.nombre}</h4>
               </div>

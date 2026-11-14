@@ -25,11 +25,11 @@ export default async function ArticulosPage(props: PageProps<"/articulos">) {
 
       <ArticulosGrid categorias={categorias.map((c) => c.nombre)} productos={productos} initialCategory={categoriaParam} whatsapp={whatsapp} />
 
-      <div className="bg-surface-container-low mt-section-gap-mobile w-full py-section-gap-desktop px-container-margin relative overflow-hidden">
+      <div className="bg-surface-tint-soft mt-section-gap-mobile w-full py-section-gap-desktop px-container-margin relative overflow-hidden">
         <div className="absolute -right-32 -top-32 w-[600px] h-[600px] max-w-full bg-primary/5 rounded-full blur-3xl" />
         <div className="max-w-3xl mx-auto flex flex-col items-center text-center gap-stack-lg relative z-10">
           <div className="flex flex-col items-center gap-4">
-            <h2 className="font-display-md text-on-surface-variant">¿Traes una idea que no está aquí?</h2>
+            <h2 className="font-display-md text-on-surface">¿Traes una idea que no está aquí?</h2>
             <p className="font-body-main text-on-surface-variant/80 max-w-lg">
               Escríbenos y diseñamos algo único para ti. Nuestro taller está equipado para hacer
               realidad tus proyectos más creativos.

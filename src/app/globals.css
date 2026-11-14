@@ -57,6 +57,21 @@
   --color-on-background: #1b1b1e;
   --color-success: #2e7d32;
 
+  /* Marca — derivados del logo, ver docs/marca.md */
+  --color-primary-strong: #4a2d6b;
+  --color-accent: #ffc61c;
+  --color-accent-soft: #d4a9df;
+  --color-accent-pink: #eb959e;
+  --color-surface-tint-soft: #f4ecf8;
+
+  /* Acento por temporada (slug de la tabla temporadas) */
+  --color-season-san-valentin: #c2185b;
+  --color-season-primavera: #3d7330;
+  --color-season-dia-de-las-madres: #b5476b;
+  --color-season-regreso-a-clases: #1f6fb2;
+  --color-season-dia-de-muertos: #c4500f;
+  --color-season-navidad: #a5262a;
+
   --font-display: var(--font-bricolage), sans-serif;
   --font-body: var(--font-hanken), sans-serif;
   --font-sans: var(--font-hanken), sans-serif;
@@ -156,6 +171,73 @@
   font-size: 13px;
   line-height: 18px;
   font-weight: 400;
+}
+
+/* ponytail: <dialog> modal no bloquea el scroll por sí solo. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Caja lila detrás de una palabra (como la K del logo). Se "pinta" al entrar en pantalla. */
+.marca {
+  background: linear-gradient(var(--color-accent-soft), var(--color-accent-soft)) no-repeat 0 88% / 100% 0.42em;
+  padding-inline: 0.06em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Destellos dorados: brillo al entrar en pantalla, escalonado. */
+.destellos path {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@supports (animation-timeline: view()) {
+  .marca {
+    animation: marca-pinta linear both;
+    animation-timeline: view();
+    animation-range: entry 30% cover 40%;
+  }
+  .destellos path {
+    animation: destello linear both;
+    animation-timeline: view();
+    animation-range: entry 20% cover 35%;
+  }
+  .destellos g:nth-child(2) path { animation-range: entry 35% cover 40%; }
+  .destellos g:nth-child(3) path { animation-range: entry 50% cover 45%; }
+}
+
+@keyframes marca-pinta {
+  from { background-size: 0% 0.42em; }
+}
+@keyframes destello {
+  from { transform: scale(0) rotate(-45deg); opacity: 0; }
+  70% { transform: scale(1.15); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marca, .destellos path { animation: none; }
+}
+
+/* Foco visible de marca; en fondos oscuros, dorado (contraste 7.1 sobre primary-strong). */
+/* ponytail: en @layer base para que outline-none/ring de los utilities sigan ganando. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+  .bg-primary-strong :focus-visible {
+    outline-color: var(--color-accent);
+  }
 }
 
 body {

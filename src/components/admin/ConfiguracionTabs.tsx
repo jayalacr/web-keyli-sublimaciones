@@ -170,7 +170,7 @@ export function ConfiguracionTabs({
               <SettingsCard icon="home" title="Inicio">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="col-span-2 flex flex-col gap-5">
-                    <Field label="Título principal" hint="Se muestra en el banner superior de la página principal.">
+                    <Field label="Título principal" hint="Se muestra en el banner superior de la página principal. Encierra una palabra entre *asteriscos* para resaltarla en lila.">
                       <input
                         type="text"
                         value={settings.hero_titulo}
@@ -214,7 +214,7 @@ export function ConfiguracionTabs({
               <SettingsCard icon="history_edu" title="Historia">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="col-span-2 flex flex-col gap-5">
-                    <Field label="Título de la sección">
+                    <Field label="Título de la sección" hint="Encierra una palabra entre *asteriscos* para resaltarla en lila.">
                       <input
                         type="text"
                         value={settings.historia_titulo}

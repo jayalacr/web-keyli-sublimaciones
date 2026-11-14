@@ -6,15 +6,16 @@ import { SeasonCard } from "@/components/SeasonCard";
 import { TestimonialForm } from "@/components/TestimonialForm";
 import { TikTokEmbed } from "@/components/TikTokEmbed";
 import { SOCIAL_ICONS } from "@/components/SocialIcons";
+import { conMarca, Destellos } from "@/components/Marca";
 
 const TEXTOS_INICIO_FALLBACK = {
-  hero_titulo: "Lo personalizado se siente distinto",
+  hero_titulo: "Lo *personalizado* se siente distinto",
   hero_subtitulo: "Creamos piezas únicas a través de la sublimación. Cada artículo cuenta una historia pensada exclusivamente para ti.",
   hero_cta: "Ver artículos",
   hero_imagen_url:
     "https://lh3.googleusercontent.com/aida-public/AB6AXuBAPGKwmkRk1c-SeY9RxFxWCn9T0FRlX0Ia85So39yAv2fKWVlkHkPfAWLlBemvLR4mn-bdbYmb1O7G8H9AjjO_XtFcdtZNU_QR70VqQwdGzxJedmJf5k640Eum6hOl6a5lj1Uh91CQNoGvUQqXMmMBgQHj6OQypfREa9Nl8MWDZr6L5uUCW4S5yS4Yw674FxBaM0zFqXDg3CfC8elUN1_tmEqu57qjHaiepQ7SwUh7N6EEDq5z8gsD",
   hero_imagen_alt: "Termo y playera personalizados sobre una superficie de concreto, iluminación editorial.",
-  historia_titulo: "Todo empezó con Keyli",
+  historia_titulo: "Todo empezó con *Keyli*",
   historia_texto: "Keyli no es solo un nombre, es la inspiración detrás de nuestra dedicación. Al igual que la lealtad y el carácter único de un husky, cada pieza que creamos está hecha con un propósito y atención inquebrantable.",
   historia_imagen_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBoQpbkM9y29c7H5i7QhXN0ox7NTur9mEEez8oZ_2dLy1TsMyctEz4c3CuF-5vs60LzGZCxrR0EmdVsKYzsm-xzAqCggKygAy6L7mNOdSZdGADGhRJXIfgqBsWe0_QP2kwtSzgORvkvH7vsV5RVk-5eCbAyiDCLTS0uwYdRM9BG3VZ7Gxgt2alF9RmxeKLvyEjUVOGopwDhtF-6aWkP958I3u_QcskaXNS7k6XlxGSl-U4c0LTvmpjX",
   historia_imagen_alt: "Retrato de un husky en un estudio minimalista, luz cálida y natural.",
@@ -66,7 +67,8 @@ export default async function Home() {
               Monterrey, México
             </span>
             <h1 className="font-display-lg text-on-surface leading-[0.9] -ml-1">
-              {textos.hero_titulo}
+              {conMarca(textos.hero_titulo)}
+              <Destellos className="inline-block w-[0.55em] h-[0.5em] ml-2 align-top" />
             </h1>
             <p className="font-body-main text-on-surface-variant max-w-[400px]">
               {textos.hero_subtitulo}
@@ -100,7 +102,7 @@ export default async function Home() {
       </section>
 
       {/* Trust Row */}
-      <section className="w-full bg-surface-container-low py-stack-lg">
+      <section className="w-full bg-surface-tint-soft py-stack-lg">
         <div className="px-container-margin grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4">
           {textos.insignias_confianza.map((item, i) => {
             const icon = ["local_shipping", "schedule", "palette", "verified"][i];
@@ -122,7 +124,10 @@ export default async function Home() {
           <div className="px-container-margin">
             <div className="flex flex-col gap-2 mb-stack-lg">
               <span className="font-label-caps text-on-surface-variant tracking-[0.2em]">Selección</span>
-              <h2 className="font-display-md text-on-surface tracking-tight">Lo más pedido</h2>
+              <h2 className="font-display-md text-on-surface tracking-tight">
+                {conMarca("Lo más *pedido*")}
+                <Destellos className="inline-block w-[0.55em] h-[0.5em] ml-2 align-top" />
+              </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-2 gap-4 md:gap-6 md:h-[700px]">
               <FeaturedTile
@@ -191,7 +196,7 @@ export default async function Home() {
           </div>
           <div className="col-span-1 md:col-span-6 md:col-start-7 flex flex-col items-start space-y-6 pt-12 md:pt-0">
             <span className="font-label-caps text-on-surface-variant tracking-[0.2em]">Nuestra historia</span>
-            <h2 className="font-display-md text-on-surface leading-[1.1]">{textos.historia_titulo}</h2>
+            <h2 className="font-display-md text-on-surface leading-[1.1]">{conMarca(textos.historia_titulo)}</h2>
             <div className="space-y-4 font-body-main text-on-surface-variant max-w-[480px]">
               <p>{textos.historia_texto}</p>
             </div>
@@ -256,7 +261,7 @@ export default async function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="w-full py-section-gap-desktop bg-surface-container-low">
+      <section className="w-full py-section-gap-desktop bg-surface-tint-soft">
         <div className="px-container-margin">
           <div className="text-center max-w-xl mx-auto mb-stack-lg">
             <h2 className="font-display-md text-on-surface tracking-tight">Lo que dicen nuestros clientes</h2>
@@ -286,7 +291,7 @@ export default async function Home() {
       </section>
 
       {/* Contact Band */}
-      <section className="w-full bg-on-secondary-fixed-variant text-white py-section-gap-mobile md:py-[100px]">
+      <section className="w-full bg-primary-strong text-white py-section-gap-mobile md:py-[100px]">
         <div className="px-container-margin flex flex-col items-center text-center max-w-4xl mx-auto space-y-stack-lg">
           <h2 className="font-display-md text-white tracking-tight leading-tight">Cuéntanos qué tienes en mente</h2>
           <p className="font-body-main text-white/80 max-w-lg">
@@ -298,7 +303,7 @@ export default async function Home() {
               href={waLink(whatsapp)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-on-secondary-fixed-variant font-label-caps rounded-full hover:scale-105 transition-transform"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-primary-strong font-label-caps rounded-full hover:scale-105 transition-transform"
             >
               {SOCIAL_ICONS.whatsapp}
               WhatsApp
@@ -339,7 +344,7 @@ function FeaturedTile({
 }) {
   return (
     <Link
-      href={`/articulos?categoria=${encodeURIComponent(producto.categoria?.nombre ?? "")}`}
+      href={`/articulos?producto=${encodeURIComponent(producto.slug)}`}
       className={`group relative block overflow-hidden bg-surface-container rounded-2xl min-h-[240px] md:min-h-[300px] ${className}`}
     >
       <Image

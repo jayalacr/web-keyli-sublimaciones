@@ -114,7 +114,7 @@ export default async function NosotrosPage() {
       </section>
 
       {/* Closing */}
-      <section className="w-full bg-on-secondary-fixed-variant px-container-margin py-section-gap-mobile lg:py-section-gap-desktop">
+      <section className="w-full bg-primary-strong px-container-margin py-section-gap-mobile lg:py-section-gap-desktop">
         <div className="max-w-4xl flex flex-col gap-stack-md">
           <div className="flex flex-col gap-4">
             <h2 className="font-display-md text-on-primary">Hagamos algo juntos</h2>

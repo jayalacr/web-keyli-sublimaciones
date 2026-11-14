@@ -63,7 +63,7 @@ export default async function TemporadasPage() {
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-strong/80 via-primary-strong/20 to-transparent" />
                 <div className={`absolute inset-0 flex flex-col justify-end text-white ${layout.padLg ? "p-6 md:p-12" : "p-6 md:p-8"}`}>
                   <span className="font-label-caps opacity-80 mb-3 tracking-wider">{temporada.piezas} piezas</span>
                   <h2

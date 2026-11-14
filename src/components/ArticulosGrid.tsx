@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
-import { waLink } from "@/lib/constants";
+import { useSearchParams } from "next/navigation";
+import { precioDesde, waLink } from "@/lib/constants";
+import { Dialog } from "@/components/Dialog";
 import type { Producto } from "@/lib/db";
 
 // ponytail: variantes de layout tipo mosaico, cíclicas por índice — es presentación, no dato del producto.
@@ -29,7 +31,29 @@ export function ArticulosGrid({
   const [category, setCategory] = useState(
     initialCategory && categorias.includes(initialCategory) ? initialCategory : "Todos"
   );
-  const [selected, setSelected] = useState<Producto | null>(null);
+  // El producto abierto vive en la URL (?producto=slug): se puede compartir y "atrás" cierra el detalle.
+  const searchParams = useSearchParams();
+  const selected = productos.find((p) => p.slug === searchParams.get("producto")) ?? null;
+  const pushedRef = useRef(false);
+
+  function openProducto(slug: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("producto", slug);
+    window.history.pushState(null, "", `?${params}`);
+    pushedRef.current = true;
+  }
+
+  function closeProducto() {
+    if (pushedRef.current) {
+      pushedRef.current = false;
+      window.history.back();
+      return;
+    }
+    // Llegó por link directo: no hay entrada previa a la que volver.
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("producto");
+    window.history.replaceState(null, "", params.size ? `?${params}` : window.location.pathname);
+  }
   const [visible, setVisible] = useState(PAGE_SIZE);
 
   const filtered = category === "Todos" ? productos : productos.filter((p) => p.categoria?.nombre === category);
@@ -41,7 +65,7 @@ export function ArticulosGrid({
         <div className="flex flex-col gap-stack-lg max-w-4xl">
           <div className="flex flex-col gap-stack-sm">
             <span className="font-label-caps text-secondary tracking-widest uppercase">Catálogo</span>
-            <h1 className="font-display-lg text-on-surface-variant">Artículos</h1>
+            <h1 className="font-display-lg text-on-surface">Artículos</h1>
             <p className="font-body-main text-on-surface-variant/80 max-w-2xl mt-4">
               Este es un catálogo informativo. Todas las piezas se personalizan y se cotizan
               directamente por WhatsApp para asegurar el mejor resultado.
@@ -78,7 +102,7 @@ export function ArticulosGrid({
             return (
               <button
                 key={producto.slug}
-                onClick={() => setSelected(producto)}
+                onClick={() => openProducto(producto.slug)}
                 className={`group cursor-pointer flex flex-col gap-4 ${layout.offset} relative overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-500 hover:shadow-xl hover:-translate-y-2 text-left`}
               >
                 <div className={`${layout.aspect} w-full bg-surface-variant relative overflow-hidden`}>
@@ -94,6 +118,9 @@ export function ArticulosGrid({
                 <div className="p-5 sm:p-6 pt-2 flex flex-col gap-1">
                   <span className="font-label-caps text-primary">{producto.categoria?.nombre}</span>
                   <h3 className="font-body-main text-on-surface font-semibold text-lg">{producto.nombre}</h3>
+                  {precioDesde(producto.precio_desde_centavos) && (
+                    <span className="font-body-secondary text-on-surface-variant">{precioDesde(producto.precio_desde_centavos)}</span>
+                  )}
                 </div>
               </button>
             );
@@ -111,7 +138,7 @@ export function ArticulosGrid({
         )}
       </div>
 
-      {selected && <ProductModal key={selected.slug} producto={selected} whatsapp={whatsapp} onClose={() => setSelected(null)} />}
+      {selected && <ProductModal key={selected.slug} producto={selected} whatsapp={whatsapp} onClose={closeProducto} />}
     </>
   );
 }
@@ -124,17 +151,14 @@ function ProductModal({ producto, whatsapp, onClose }: { producto: Producto; wha
   const [mainIndex, setMainIndex] = useState(0);
   const main = images[mainIndex];
 
+  const precio = precioDesde(producto.precio_desde_centavos);
+
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-surface/90 backdrop-blur-sm px-4 py-6 sm:py-12 overflow-y-auto"
-      onClick={onClose}
-    >
-      <div
-        className="bg-surface w-full max-w-6xl rounded-[24px] shadow-2xl flex flex-col lg:flex-row overflow-hidden relative"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <Dialog label={producto.nombre} onClose={onClose} className="max-w-6xl rounded-[24px]">
+      <div className="bg-surface w-full rounded-[24px] shadow-2xl flex flex-col lg:flex-row overflow-hidden relative">
         <button
           onClick={onClose}
+          aria-label="Cerrar"
           className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-variant transition-colors"
         >
           <span className="material-symbols-outlined text-on-surface-variant">close</span>
@@ -163,7 +187,8 @@ function ProductModal({ producto, whatsapp, onClose }: { producto: Producto; wha
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <span className="font-label-caps text-primary uppercase tracking-widest">{producto.categoria?.nombre}</span>
-              <h2 className="font-display-md text-on-surface-variant leading-tight">{producto.nombre}</h2>
+              <h2 className="font-display-md text-on-surface leading-tight">{producto.nombre}</h2>
+              {precio && <span className="font-body-main text-primary font-semibold text-lg">{precio}</span>}
             </div>
             <p className="font-body-main text-on-surface-variant/80">{producto.descripcion}</p>
             <div className="flex flex-col gap-4 mt-4">
@@ -179,7 +204,7 @@ function ProductModal({ producto, whatsapp, onClose }: { producto: Producto; wha
             </div>
           </div>
           <a
-            href={waLink(whatsapp, `Hola, quiero cotizar: ${producto.nombre}`)}
+            href={waLink(whatsapp, `¡Hola! Vi *${producto.nombre}* en su página y me gustaría cotizarlo.`)}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-8 lg:mt-12 w-full py-4 rounded-full bg-primary text-on-primary font-label-caps hover:bg-on-primary-fixed-variant transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-xl"
@@ -189,7 +214,7 @@ function ProductModal({ producto, whatsapp, onClose }: { producto: Producto; wha
           </a>
         </div>
       </div>
-    </div>
+    </Dialog>
   );
 }
 

@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { enviarOpinion } from "@/app/(sitio)/actions";
+import { Dialog } from "@/components/Dialog";
+import { Destellos } from "@/components/Marca";
 
 export function TestimonialForm() {
   const [open, setOpen] = useState(false);
@@ -42,14 +44,8 @@ function TestimonialModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-surface/90 backdrop-blur-sm px-4"
-      onClick={onClose}
-    >
-      <div
-        className="bg-surface w-full max-w-md rounded-2xl shadow-2xl relative p-8"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <Dialog label="Comparte tu opinión" onClose={onClose} className="max-w-md rounded-2xl">
+      <div className="bg-surface w-full rounded-2xl shadow-2xl relative p-8">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-variant transition-colors"
@@ -59,9 +55,10 @@ function TestimonialModal({ onClose }: { onClose: () => void }) {
         </button>
 
         {sent ? (
-          <p className="font-body-main text-on-surface text-center py-8">
-            ¡Gracias por tu opinión!
-          </p>
+          <div className="flex flex-col items-center gap-3 py-8">
+            <Destellos className="w-12 h-11" />
+            <p className="font-body-main text-on-surface text-center">¡Gracias por tu opinión!</p>
+          </div>
         ) : (
           <form onSubmit={submit} className="flex flex-col gap-4 mt-2">
             <h3 className="font-label-caps text-secondary tracking-widest uppercase text-center">¿Nos compraste algo?</h3>
@@ -116,6 +113,6 @@ function TestimonialModal({ onClose }: { onClose: () => void }) {
           </form>
         )}
       </div>
-    </div>
+    </Dialog>
   );
 }

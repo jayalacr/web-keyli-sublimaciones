@@ -15,7 +15,7 @@ export function Footer({
   tiktokUrls: string[];
 }) {
   return (
-    <footer className="w-full bg-surface-container-low border-t border-outline-variant/20">
+    <footer className="w-full bg-surface-tint-soft border-t border-outline-variant/20">
       <div className="w-full px-container-margin py-section-gap-mobile">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-grid-gutter">
           <div className="col-span-1 md:col-span-1 flex flex-col gap-4">

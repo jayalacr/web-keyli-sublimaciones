@@ -96,14 +96,14 @@ export function ArticulosGrid({
       </div>
 
       <div className="px-container-margin pb-section-gap-desktop w-full max-w-[1440px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-grid-gutter items-start">
+        <div key={category} className="aparece grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-grid-gutter items-start">
           {shown.map((producto, i) => {
             const layout = LAYOUT_VARIANTS[i % LAYOUT_VARIANTS.length];
             return (
               <button
                 key={producto.slug}
                 onClick={() => openProducto(producto.slug)}
-                className={`group cursor-pointer flex flex-col gap-4 ${layout.offset} relative overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-500 hover:shadow-xl hover:-translate-y-2 text-left`}
+                className={`revela group cursor-pointer flex flex-col gap-4 ${layout.offset} relative overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-500 hover:shadow-xl hover:-translate-y-2 text-left`}
               >
                 <div className={`${layout.aspect} w-full bg-surface-variant relative overflow-hidden`}>
                   {producto.imagen_url && (

@@ -63,17 +63,17 @@ export default async function Home() {
       <section className="relative w-full pt-20 pb-section-gap-mobile md:pt-28 md:min-h-screen md:flex md:items-center md:pb-0">
         <div className="px-container-margin grid grid-cols-1 md:grid-cols-12 gap-grid-gutter items-center w-full">
           <div className="col-span-1 md:col-span-5 flex flex-col items-start space-y-stack-md z-10">
-            <span className="font-label-caps text-on-surface-variant text-[11px] tracking-[0.2em] uppercase">
+            <span className="entrada font-label-caps text-on-surface-variant text-[11px] tracking-[0.2em] uppercase" style={{ "--i": 0 } as React.CSSProperties}>
               Monterrey, México
             </span>
-            <h1 className="font-display-lg text-on-surface leading-[0.9] -ml-1">
+            <h1 className="entrada font-display-lg text-on-surface leading-[0.9] -ml-1" style={{ "--i": 1 } as React.CSSProperties}>
               {conMarca(textos.hero_titulo)}
               <Destellos className="inline-block w-[0.55em] h-[0.5em] ml-2 align-top" />
             </h1>
-            <p className="font-body-main text-on-surface-variant max-w-[400px]">
+            <p className="entrada font-body-main text-on-surface-variant max-w-[400px]" style={{ "--i": 2 } as React.CSSProperties}>
               {textos.hero_subtitulo}
             </p>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pt-4">
+            <div className="entrada flex flex-col sm:flex-row items-start sm:items-center gap-6 pt-4" style={{ "--i": 3 } as React.CSSProperties}>
               <Link
                 href="/articulos"
                 className="inline-flex items-center justify-center px-8 py-3 bg-primary text-on-primary font-label-caps rounded-full transition-transform hover:-translate-y-1"
@@ -95,7 +95,7 @@ export default async function Home() {
               fill
               priority
               sizes="(min-width: 768px) 60vw, 100vw"
-              className="object-cover"
+              className="object-cover entrada-foto"
             />
           </div>
         </div>
@@ -122,7 +122,7 @@ export default async function Home() {
       {destacados.length > 0 && (
         <section className="w-full py-section-gap-desktop">
           <div className="px-container-margin">
-            <div className="flex flex-col gap-2 mb-stack-lg">
+            <div className="revela flex flex-col gap-2 mb-stack-lg">
               <span className="font-label-caps text-on-surface-variant tracking-[0.2em]">Selección</span>
               <h2 className="font-display-md text-on-surface tracking-tight">
                 {conMarca("Lo más *pedido*")}
@@ -157,7 +157,7 @@ export default async function Home() {
       {/* Seasons Teaser */}
       <section className="w-full py-section-gap-mobile">
         <div className="px-container-margin">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-stack-lg">
+          <div className="revela flex flex-col md:flex-row md:items-end justify-between gap-6 mb-stack-lg">
             <h2 className="font-display-md text-on-surface tracking-tight">Colecciones por temporada</h2>
             <Link
               href="/temporadas"
@@ -194,7 +194,7 @@ export default async function Home() {
               className="object-cover rounded-2xl shadow-xl"
             />
           </div>
-          <div className="col-span-1 md:col-span-6 md:col-start-7 flex flex-col items-start space-y-6 pt-12 md:pt-0">
+          <div className="revela col-span-1 md:col-span-6 md:col-start-7 flex flex-col items-start space-y-6 pt-12 md:pt-0">
             <span className="font-label-caps text-on-surface-variant tracking-[0.2em]">Nuestra historia</span>
             <h2 className="font-display-md text-on-surface leading-[1.1]">{conMarca(textos.historia_titulo)}</h2>
             <div className="space-y-4 font-body-main text-on-surface-variant max-w-[480px]">
@@ -212,7 +212,7 @@ export default async function Home() {
 
       {/* Redes sociales: Instagram (widget embed) + TikTok (embed nativo) en dos columnas */}
       <section className="w-full pt-section-gap-desktop overflow-hidden">
-        <div className="px-container-margin mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="revela px-container-margin mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <span className="font-display-md text-on-surface text-2xl tracking-tight">Síguenos en redes</span>
           <div className="flex flex-wrap gap-6">
             <a
@@ -263,7 +263,7 @@ export default async function Home() {
       {/* Testimonials */}
       <section className="w-full py-section-gap-desktop bg-surface-tint-soft">
         <div className="px-container-margin">
-          <div className="text-center max-w-xl mx-auto mb-stack-lg">
+          <div className="revela text-center max-w-xl mx-auto mb-stack-lg">
             <h2 className="font-display-md text-on-surface tracking-tight">Lo que dicen nuestros clientes</h2>
             <p className="font-body-main text-on-surface-variant mt-3">
               Historias reales de quienes ya personalizaron su pieza con nosotros.
@@ -272,7 +272,7 @@ export default async function Home() {
           {opinionesDestacadas.length > 0 ? (
             <div className="flex flex-wrap justify-center gap-8 mb-stack-lg">
               {opinionesDestacadas.map((o) => (
-                <div key={o.id} className="w-full md:w-[calc(33.333%-1.5rem)] bg-surface p-8 rounded-2xl border border-outline-variant/20">
+                <div key={o.id} className="revela w-full md:w-[calc(33.333%-1.5rem)] bg-surface p-8 rounded-2xl border border-outline-variant/20">
                   <p className="font-body-main text-on-surface italic mb-6">&ldquo;{o.texto}&rdquo;</p>
                   <div className="flex flex-col">
                     <span className="font-label-caps text-on-surface">{o.nombre}</span>
@@ -292,7 +292,7 @@ export default async function Home() {
 
       {/* Contact Band */}
       <section className="w-full bg-primary-strong text-white py-section-gap-mobile md:py-[100px]">
-        <div className="px-container-margin flex flex-col items-center text-center max-w-4xl mx-auto space-y-stack-lg">
+        <div className="revela px-container-margin flex flex-col items-center text-center max-w-4xl mx-auto space-y-stack-lg">
           <h2 className="font-display-md text-white tracking-tight leading-tight">Cuéntanos qué tienes en mente</h2>
           <p className="font-body-main text-white/80 max-w-lg">
             Estamos listos para materializar tus ideas. Contáctanos por tu medio preferido para
@@ -345,7 +345,7 @@ function FeaturedTile({
   return (
     <Link
       href={`/articulos?producto=${encodeURIComponent(producto.slug)}`}
-      className={`group relative block overflow-hidden bg-surface-container rounded-2xl min-h-[240px] md:min-h-[300px] ${className}`}
+      className={`revela group relative block overflow-hidden bg-surface-container rounded-2xl min-h-[240px] md:min-h-[300px] ${className}`}
     >
       <Image
         src={producto.imagen_url!}

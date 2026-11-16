@@ -29,7 +29,7 @@ export function SeasonCard({
   }, [galeria]);
 
   return (
-    <Link href={href} className="group block h-[300px] sm:h-[360px] md:h-[400px] rounded-2xl [perspective:1500px]">
+    <Link href={href} className="revela group block h-[300px] sm:h-[360px] md:h-[400px] rounded-2xl [perspective:1500px]">
       <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
         <div className="absolute inset-0 rounded-2xl overflow-hidden [backface-visibility:hidden]">
           <Image

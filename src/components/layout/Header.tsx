@@ -142,7 +142,7 @@ export function Header({
       </div>
 
       {menuOpen && (
-        <nav className="lg:hidden border-t border-outline-variant/20 bg-surface px-container-margin py-4 flex flex-col max-h-[calc(100dvh-4rem)] overflow-y-auto">
+        <nav className="baja lg:hidden border-t border-outline-variant/20 bg-surface px-container-margin py-4 flex flex-col max-h-[calc(100dvh-4rem)] overflow-y-auto">
           {NAV_LINKS.map((link) => {
             const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
             return (

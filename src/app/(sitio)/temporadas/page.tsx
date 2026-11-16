@@ -52,7 +52,7 @@ export default async function TemporadasPage() {
               <Link
                 key={temporada.slug}
                 href={`/temporadas/${temporada.slug}`}
-                className={`group relative bg-surface-container rounded-[20px] overflow-hidden cursor-pointer ${layout.wrap}`}
+                className={`revela group relative bg-surface-container rounded-[20px] overflow-hidden cursor-pointer ${layout.wrap}`}
               >
                 {temporada.portada_url && (
                   <Image

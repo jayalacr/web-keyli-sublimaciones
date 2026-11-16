@@ -34,7 +34,7 @@ export function SeasonProductGrid({ products }: { products: SeasonProduct[] }) {
           ))}
         </div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-grid-gutter">
+      <div key={active} className="aparece grid grid-cols-1 md:grid-cols-12 gap-grid-gutter">
         {columns.map((col, i) => (
           <div
             key={i}
@@ -45,7 +45,7 @@ export function SeasonProductGrid({ products }: { products: SeasonProduct[] }) {
             {col.map((product, j) => (
               <div
                 key={product.title}
-                className={`group relative overflow-hidden rounded-2xl bg-surface-container ${ASPECT_VARIANTS[j % ASPECT_VARIANTS.length]} border border-outline-variant/20 shadow-sm hover:shadow-md transition-shadow`}
+                className={`revela group relative overflow-hidden rounded-2xl bg-surface-container ${ASPECT_VARIANTS[j % ASPECT_VARIANTS.length]} border border-outline-variant/20 shadow-sm hover:shadow-md transition-shadow`}
               >
                 {product.src && (
                   <Image

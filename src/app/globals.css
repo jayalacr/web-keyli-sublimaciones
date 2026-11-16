@@ -224,8 +224,64 @@ html:has(dialog[open]) {
   70% { transform: scale(1.15); opacity: 1; }
 }
 
+/* Entrada del hero: escalonada con --i (0, 1, 2…). */
+.entrada {
+  animation: sube 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+/* Foto del hero: sólo zoom, sin fade, para no retrasar el LCP. */
+.entrada-foto {
+  animation: acerca 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* Fundido corto al cambiar de filtro. */
+.aparece {
+  animation: aparece 0.25s ease-out both;
+}
+/* Menú de celular. */
+.baja {
+  animation: baja 0.2s ease-out both;
+}
+/* Botón flotante de WhatsApp: un solo pulso, 3s después de cargar. */
+.pulso {
+  animation: pulso 1.2s ease-out 3s 1;
+}
+
+/* Revela al hacer scroll. ponytail: usa transform, no translate/scale, para no chocar con
+   hover:-translate-y-* / hover:scale-* de Tailwind v4 (que usan esas propiedades aparte). */
+@supports (animation-timeline: view()) {
+  .revela {
+    animation: sube linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 45%;
+  }
+}
+
+@keyframes sube {
+  from { opacity: 0; transform: translateY(20px); }
+}
+@keyframes acerca {
+  from { transform: scale(1.06); }
+}
+@keyframes aparece {
+  from { opacity: 0; }
+}
+@keyframes baja {
+  from { opacity: 0; transform: translateY(-8px); }
+}
+@keyframes pulso {
+  from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary-strong) 55%, transparent); }
+  to { box-shadow: 0 0 0 18px transparent; }
+}
+
+/* Botones pill: se encogen al presionar. En base para que los utilities (hover:scale-105) sigan ganando. */
+@layer base {
+  :where(a, button).rounded-full:active:not(:disabled) {
+    scale: 0.97;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .marca, .destellos path { animation: none; }
+  .marca, .destellos path, .entrada, .entrada-foto, .revela, .aparece, .baja, .pulso { animation: none; }
 }
 
 /* Foco visible de marca; en fondos oscuros, dorado (contraste 7.1 sobre primary-strong). */

@@ -21,7 +21,7 @@ export default async function SitioLayout({ children }: LayoutProps<"/">) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Escríbenos por WhatsApp"
-        className="lg:hidden fixed z-40 right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] w-14 h-14 rounded-full bg-primary-strong text-white shadow-lg flex items-center justify-center active:scale-95 transition-transform [&>svg]:w-7 [&>svg]:h-7"
+        className="pulso lg:hidden fixed z-40 right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] w-14 h-14 rounded-full bg-primary-strong text-white shadow-lg flex items-center justify-center active:scale-95 transition-transform [&>svg]:w-7 [&>svg]:h-7"
       >
         {SOCIAL_ICONS.whatsapp}
       </a>

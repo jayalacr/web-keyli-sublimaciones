@@ -1,27 +1,29 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google";
+import { Hanken_Grotesk, Lilita_One } from "next/font/google";
 import "./globals.css";
-
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
-  subsets: ["latin"],
-});
 
 const hanken = Hanken_Grotesk({
   variable: "--font-hanken",
   subsets: ["latin"],
 });
 
+// Títulos: gruesos y redondeados, como el "KEYLI" del logo.
+const lilita = Lilita_One({
+  variable: "--font-lilita",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 export const metadata: Metadata = {
-  title: "Keyli Sublimaciones",
-  description: "Artículos personalizados por sublimación",
+  title: "Keyli Studio — Diseño & Personalización",
+  description: "Diseño y personalización en Monterrey: sublimación, vinil, DTF y papelería creativa para regalos, eventos y negocios.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${bricolage.variable} ${hanken.variable} h-full antialiased`}
+      className={`${hanken.variable} ${lilita.variable} h-full antialiased`}
     >
       <head>
         <link

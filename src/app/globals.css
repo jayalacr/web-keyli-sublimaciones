@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Design tokens from Stitch "Catálogo Editorial Keyli Sublimaciones v2" — see docs/stitch-design-system.md */
+/* Tokens de Keyli Studio (rebranding 2026-11). Estructura MD3 heredada de Stitch — ver docs/stitch-design-system.md; marca en .agents/product-marketing.md */
 @theme {
   --color-surface: #fbf9fc;
   --color-surface-dim: #dbd9dc;
@@ -11,7 +11,7 @@
   --color-surface-container-high: #e9e7ea;
   --color-surface-container-highest: #e3e2e5;
   --color-surface-variant: #e3e2e5;
-  --color-surface-tint: #6c538b;
+  --color-surface-tint: #89399f;
   --color-on-surface: #1b1b1e;
   --color-on-surface-variant: #4a454e;
   --color-inverse-surface: #303033;
@@ -20,10 +20,10 @@
   --color-outline: #7b757f;
   --color-outline-variant: #ccc4cf;
 
-  --color-primary: #6c538b;
+  --color-primary: #89399f;
   --color-on-primary: #ffffff;
-  --color-primary-container: #a78bc7;
-  --color-on-primary-container: #3b2358;
+  --color-primary-container: #d699e4;
+  --color-on-primary-container: #3b0f4a;
   --color-inverse-primary: #d8baf9;
   --color-primary-fixed: #eedbff;
   --color-primary-fixed-dim: #d8baf9;
@@ -34,10 +34,10 @@
   --color-on-secondary: #ffffff;
   --color-secondary-container: #efdcf8;
   --color-on-secondary-container: #6d5f76;
-  --color-secondary-fixed: #efdcf8;
+  --color-secondary-fixed: #f1d9f7;
   --color-secondary-fixed-dim: #d2c0db;
   --color-on-secondary-fixed: #22172b;
-  --color-on-secondary-fixed-variant: #4f4258;
+  --color-on-secondary-fixed-variant: #5a1f6b;
 
   --color-tertiary: #605d66;
   --color-on-tertiary: #ffffff;
@@ -57,12 +57,12 @@
   --color-on-background: #1b1b1e;
   --color-success: #2e7d32;
 
-  /* Marca — derivados del logo, ver docs/marca.md */
-  --color-primary-strong: #4a2d6b;
-  --color-accent: #ffc61c;
-  --color-accent-soft: #d4a9df;
-  --color-accent-pink: #eb959e;
-  --color-surface-tint-soft: #f4ecf8;
+  /* Marca Keyli Studio — muestreados del logo (morado #89399f, lila #d699e4, estrella #ffde59).
+     Contrastes: blanco/primary 6.7, blanco/primary-strong 11.4, accent/primary-strong 8.6. */
+  --color-primary-strong: #5a1f6b;
+  --color-accent: #ffde59;
+  --color-accent-soft: #d699e4;
+  --color-surface-tint-soft: #f8edfb;
 
   /* Acento por temporada (slug de la tabla temporadas) */
   --color-season-san-valentin: #c2185b;
@@ -72,7 +72,7 @@
   --color-season-dia-de-muertos: #c4500f;
   --color-season-navidad: #a5262a;
 
-  --font-display: var(--font-bricolage), sans-serif;
+  --font-display: var(--font-lilita), sans-serif;
   --font-body: var(--font-hanken), sans-serif;
   --font-sans: var(--font-hanken), sans-serif;
 
@@ -99,22 +99,22 @@
   font-family: var(--font-display);
   font-size: clamp(38px, 8.5vw, 72px);
   line-height: 0.95;
-  letter-spacing: -0.04em;
-  font-weight: 800;
+  letter-spacing: -0.01em;
+  font-weight: 400;
 }
 @utility font-display-md {
   font-family: var(--font-display);
   font-size: clamp(28px, 5.5vw, 48px);
   line-height: 1;
-  letter-spacing: -0.03em;
-  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-weight: 400;
 }
 @utility font-display-sm-mobile {
   font-family: var(--font-display);
   font-size: clamp(24px, 4.5vw, 36px);
   line-height: 1.06;
-  letter-spacing: -0.02em;
-  font-weight: 700;
+  letter-spacing: 0;
+  font-weight: 400;
 }
 @utility font-body-main {
   font-family: var(--font-body);
@@ -134,7 +134,7 @@
   font-family: var(--font-body);
   font-size: 12px;
   line-height: 16px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.25em;
   font-weight: 600;
 }
 
@@ -171,6 +171,105 @@
   font-size: 13px;
   line-height: 18px;
   font-weight: 400;
+}
+
+/* ── Lenguaje visual "taller de stickers"  ───────────────
+   Tapete de corte, stickers troquelados, línea de corte, cinta y sello.
+   Sin animaciones en bucle (docs/marca.md). */
+
+/* Tapete de corte: cuadrícula tenue del color de marca. */
+.tapete {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-primary) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-primary) 7%, transparent) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: -1px -1px;
+}
+.tapete-oscuro {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+/* Sticker troquelado: borde blanco + sombra suave, inclinado con --giro; se endereza al pasar el cursor.
+   ponytail: usa rotate/translate (propiedades sueltas), no transform, para no chocar con .revela. */
+.sticker {
+  border: 6px solid #fff;
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.06),
+    0 14px 28px -14px color-mix(in srgb, var(--color-primary-strong) 55%, transparent);
+  rotate: var(--giro, 0deg);
+  transition: rotate 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), translate 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+}
+@media (hover: hover) {
+  .group:hover .sticker,
+  .sticker:hover {
+    rotate: 0deg;
+    translate: 0 -6px;
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.06),
+      0 22px 36px -16px color-mix(in srgb, var(--color-primary-strong) 60%, transparent);
+  }
+}
+
+/* Línea de corte punteada alrededor del sticker principal (como la del plotter de vinil). */
+.corte::before {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  border: 2px dashed color-mix(in srgb, var(--color-primary) 45%, transparent);
+  border-radius: 40px;
+  pointer-events: none;
+}
+
+/* Botón principal: se "levanta" con rebote corto. */
+.boton-sticker {
+  box-shadow: 0 4px 0 var(--color-primary-strong);
+  transition: translate 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+.boton-sticker.bg-accent {
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--color-accent) 55%, #000);
+}
+@media (hover: hover) {
+  .boton-sticker:hover {
+    translate: 0 -2px;
+    box-shadow: 0 6px 0 var(--color-primary-strong);
+  }
+  .boton-sticker.bg-accent:hover {
+    box-shadow: 0 6px 0 color-mix(in srgb, var(--color-accent) 55%, #000);
+  }
+}
+.boton-sticker:active {
+  translate: 0 3px;
+  box-shadow: 0 1px 0 var(--color-primary-strong);
+}
+
+/* Cinta de servicios: inclinada como masking tape, estática. */
+.cinta {
+  rotate: -1.5deg;
+  margin-inline: -2rem;
+  box-shadow: 0 10px 24px -14px rgb(0 0 0 / 0.45);
+}
+
+/* Sello: gira un poco al pasar el cursor (no en bucle). */
+.sello svg {
+  rotate: -12deg;
+  transition: rotate 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 8px 14px rgb(0 0 0 / 0.18));
+}
+@media (hover: hover) {
+  .sello:hover svg { rotate: 20deg; }
+}
+
+/* Entrada tipo "pegar sticker": aparece girado y pequeño, se asienta con rebote. */
+.pega {
+  /* ponytail: "backwards", no "both" — al terminar suelta rotate para que el hover del sticker siga funcionando. */
+  animation: pega 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 90ms + 120ms);
+}
+@keyframes pega {
+  from { opacity: 0; scale: 0.88; rotate: -6deg; }
 }
 
 /* ponytail: <dialog> modal no bloquea el scroll por sí solo. */
@@ -281,7 +380,7 @@ html:has(dialog[open]) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marca, .destellos path, .entrada, .entrada-foto, .revela, .aparece, .baja, .pulso { animation: none; }
+  .marca, .destellos path, .entrada, .entrada-foto, .revela, .aparece, .baja, .pulso, .pega { animation: none; }
 }
 
 /* Foco visible de marca; en fondos oscuros, dorado (contraste 7.1 sobre primary-strong). */

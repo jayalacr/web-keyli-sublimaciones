@@ -2,16 +2,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { DEFAULT_PHONE, waLink } from "@/lib/constants";
 import { getContacto, getTemporadasActivas } from "@/lib/db";
+import { SOCIAL_ICONS } from "@/components/SocialIcons";
+import { Destellos } from "@/components/Marca";
 
-// ponytail: variantes de tamaño/posición del mosaico, cíclicas por índice — es presentación, no dato de la temporada.
-const LAYOUT_VARIANTS = [
-  { wrap: "md:col-span-5 h-[340px] sm:h-[480px] md:h-[700px]", title2xl: false, padLg: false },
-  { wrap: "md:col-span-7 h-[300px] sm:h-[420px] md:h-[550px] md:mt-24", title2xl: false, padLg: false },
-  { wrap: "md:col-span-6 h-[320px] sm:h-[450px] md:h-[600px]", title2xl: false, padLg: false },
-  { wrap: "md:col-span-5 md:col-start-8 h-[330px] sm:h-[460px] md:h-[650px] md:-mt-16", title2xl: false, padLg: false },
-  { wrap: "md:col-span-4 h-[340px] sm:h-[480px] md:h-[600px]", title2xl: true, padLg: false },
-  { wrap: "md:col-span-8 h-[320px] sm:h-[450px] md:h-[600px] md:mt-32", title2xl: false, padLg: true },
-];
+export const metadata = {
+  title: "Temporadas — Keyli Studio",
+  description: "Colecciones personalizadas para San Valentín, Día de las Madres, Navidad y cada fecha del año, hechas en Monterrey.",
+};
+
+// ponytail: inclinación de cada sticker, cíclica por índice — es presentación, no dato de la temporada.
+const GIROS = ["-1.2deg", "1deg", "-0.6deg", "1.4deg", "-1.5deg", "0.8deg"];
 
 export default async function TemporadasPage() {
   const [temporadas, contacto] = await Promise.all([getTemporadasActivas(), getContacto()]);
@@ -19,91 +19,83 @@ export default async function TemporadasPage() {
 
   return (
     <div className="flex flex-col w-full bg-surface">
-      <section className="w-full px-container-margin pt-section-gap-desktop pb-stack-lg max-w-7xl mx-auto">
-        <div className="flex flex-col gap-6 md:w-8/12 lg:w-6/12">
-          <span className="font-label-caps text-on-surface-variant uppercase tracking-widest text-[11px] opacity-70">
-            Catálogo
+      <section className="tapete w-full pt-28 md:pt-36 pb-12 md:pb-16">
+        <div className="px-container-margin max-w-[1440px] mx-auto flex flex-col gap-6">
+          <span className="entrada font-label-caps text-primary" style={{ "--i": 0 } as React.CSSProperties}>
+            Para cada fecha
           </span>
-          <h1 className="font-display-lg text-on-surface leading-none -ml-1">Temporadas</h1>
-          <p className="font-body-main text-on-surface-variant max-w-md mt-4 opacity-80 leading-relaxed text-[17px]">
-            Cada temporada reúne las piezas diseñadas especialmente para ese momento del año.
-            Ediciones limitadas que cuentan una historia.
+          <h1 className="entrada font-display-lg text-on-surface leading-[0.95]" style={{ "--i": 1 } as React.CSSProperties}>
+            Colecciones por <span className="marca">temporada</span>
+            <Destellos className="inline-block w-[0.55em] h-[0.5em] ml-2 align-top" />
+          </h1>
+          <p className="entrada font-body-main text-on-surface-variant max-w-2xl" style={{ "--i": 2 } as React.CSSProperties}>
+            Piezas pensadas para cada momento del año: para regalar, para tu evento o para tu negocio.
+            Elige una colección y la personalizamos contigo.
           </p>
         </div>
       </section>
 
-      <section className="w-full px-container-margin pb-section-gap-mobile max-w-7xl mx-auto">
-        <div className="flex items-center gap-8 border-b border-outline-variant/30 w-full relative">
-          <Link href="/articulos" className="font-body-main text-on-surface-variant pb-4 hover:text-on-surface transition-colors">
-            Artículos
-          </Link>
-          <span className="font-body-main text-on-surface pb-4 relative">
-            Temporadas
-            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-on-surface" />
-          </span>
-        </div>
-      </section>
-
-      <section className="w-full px-container-margin pb-section-gap-desktop max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-y-8 md:gap-y-16 gap-x-8 md:gap-x-12">
-          {temporadas.map((temporada, i) => {
-            const layout = LAYOUT_VARIANTS[i % LAYOUT_VARIANTS.length];
-            return (
-              <Link
-                key={temporada.slug}
-                href={`/temporadas/${temporada.slug}`}
-                className={`revela group relative bg-surface-container rounded-[20px] overflow-hidden cursor-pointer ${layout.wrap}`}
-              >
-                {temporada.portada_url && (
-                  <Image
-                    src={temporada.portada_url}
-                    alt={temporada.portada_alt ?? temporada.nombre}
-                    fill
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-primary-strong/80 via-primary-strong/20 to-transparent" />
-                <div className={`absolute inset-0 flex flex-col justify-end text-white ${layout.padLg ? "p-6 md:p-12" : "p-6 md:p-8"}`}>
-                  <span className="font-label-caps opacity-80 mb-3 tracking-wider">{temporada.piezas} piezas</span>
-                  <h2
-                    className={`leading-tight mb-2 transition-transform duration-500 ease-out group-hover:-translate-y-2 ${
-                      layout.title2xl ? "font-display-sm-mobile" : "font-display-md"
-                    }`}
-                  >
-                    {temporada.nombre}
-                  </h2>
-                  <p className="font-body-main opacity-90 transition-transform duration-500 ease-out group-hover:-translate-y-2 delay-75">
-                    {temporada.eslogan}
-                  </p>
+      <section className="w-full px-container-margin pt-12 md:pt-16 pb-section-gap-mobile max-w-[1440px] mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          {temporadas.map((temporada, i) => (
+            <Link
+              key={temporada.slug}
+              href={`/temporadas/${temporada.slug}`}
+              className="revela group block rounded-[28px]"
+              style={{ "--season": `var(--color-season-${temporada.slug}, var(--color-primary))` } as React.CSSProperties}
+            >
+              <div className="sticker relative aspect-[4/5] rounded-[28px]" style={{ "--giro": GIROS[i % GIROS.length] } as React.CSSProperties}>
+                <div className="absolute inset-0 rounded-[22px] overflow-hidden bg-surface-container">
+                  {temporada.portada_url && (
+                    <Image
+                      src={temporada.portada_url}
+                      alt={temporada.portada_alt ?? temporada.nombre}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-(--season) via-(--season)/25 to-transparent opacity-90" />
+                  <div className="absolute inset-x-0 bottom-0 p-6 md:p-7 flex flex-col items-start gap-2 text-white">
+                    <h2 className="font-display-md text-[34px] md:text-[40px] leading-[1] drop-shadow-sm">{temporada.nombre}</h2>
+                    {temporada.eslogan && <p className="font-body-secondary text-white/90">{temporada.eslogan}</p>}
+                  </div>
                 </div>
-              </Link>
-            );
-          })}
+                {temporada.piezas > 0 && (
+                  <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-accent text-primary-strong font-label-caps text-[10px]">
+                    {temporada.piezas} {temporada.piezas === 1 ? "pieza" : "piezas"}
+                  </span>
+                )}
+              </div>
+              <span className="mt-5 px-1 inline-flex items-center gap-2 font-label-caps text-primary">
+                Explorar colección
+                <span className="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1" aria-hidden="true">
+                  arrow_forward
+                </span>
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
-      <section className="w-full px-container-margin pb-section-gap-desktop max-w-7xl mx-auto">
-        <div className="bg-surface-container rounded-[24px] p-8 md:p-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-12 relative overflow-hidden">
-          <div className="absolute -right-24 -top-24 w-64 h-64 border border-outline-variant/30 rounded-full opacity-50 pointer-events-none" />
-          <div className="absolute right-12 -bottom-12 w-32 h-32 border border-outline-variant/20 rounded-full opacity-50 pointer-events-none" />
-          <div className="flex flex-col gap-4 max-w-xl z-10">
-            <h3 className="font-display-md text-on-surface leading-tight text-3xl md:text-4xl">
-              ¿Preparas algo para una fecha especial?
-            </h3>
-            <p className="font-body-main text-on-surface-variant text-lg">
-              Creamos colecciones exclusivas para eventos, marcas y celebraciones únicas. Cuéntanos
-              tu idea y diseñaremos algo irrepetible.
+      <section className="w-full px-container-margin pb-section-gap-mobile max-w-[1440px] mx-auto">
+        <div className="tapete-oscuro relative overflow-hidden rounded-[36px] bg-primary-strong text-white px-6 py-16 md:px-16 md:py-20 flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <Destellos className="absolute top-8 right-8 w-12 h-12 md:w-16 md:h-16" />
+          <div className="revela relative flex flex-col gap-4 max-w-xl">
+            <h2 className="font-display-md text-white leading-tight">¿Preparas algo para una fecha especial?</h2>
+            <p className="font-body-main text-white/85">
+              Diseñamos colecciones para eventos, marcas y celebraciones. Cuéntanos tu idea y la hacemos
+              con tiempo.
             </p>
           </div>
           <a
-            href={waLink(whatsapp)}
+            href={waLink(whatsapp, "¡Hola! Estoy preparando algo para una fecha especial y me gustaría cotizar.")}
             target="_blank"
             rel="noopener noreferrer"
-            className="z-10 shrink-0 inline-flex w-full md:w-auto items-center justify-center px-6 md:px-8 py-4 text-center bg-primary text-on-primary rounded-full font-label-caps tracking-widest hover:bg-on-surface transition-colors duration-300"
+            className="boton-sticker relative shrink-0 inline-flex items-center justify-center gap-2 min-h-12 px-8 py-4 rounded-full bg-accent text-primary-strong font-label-caps"
           >
-            <span className="material-symbols-outlined mr-2 text-[18px]">chat</span>
-            Contactar por WhatsApp
+            {SOCIAL_ICONS.whatsapp}
+            Escríbenos
           </a>
         </div>
       </section>

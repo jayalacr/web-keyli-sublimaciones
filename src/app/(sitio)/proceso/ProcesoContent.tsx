@@ -1,10 +1,9 @@
-"use client";
-
-import { useState } from "react";
 import { waLink } from "@/lib/constants";
+import { SOCIAL_ICONS } from "@/components/SocialIcons";
+import { Destellos } from "@/components/Marca";
 
 const STEPS = [
-  { title: "Cotiza tu idea", icon: "chat", desc: "Escríbenos por WhatsApp con el producto, cantidad y referencias o foto del diseño. Aprobamos la mockup contigo." },
+  { title: "Cotiza tu idea", icon: "chat", desc: "Escríbenos por WhatsApp con el producto, la cantidad y tus referencias o foto. Aprobamos el diseño (mockup) contigo." },
   { title: "Apartamos y producimos", icon: "precision_manufacturing", desc: "Separas tu pedido con el 50% del total y comenzamos la producción. Te compartimos el avance." },
   { title: "Recibe tu pedido", icon: "local_shipping", desc: "Liquidas el 50% restante y entregamos en domicilio, punto acordado o envío nacional." },
 ];
@@ -12,20 +11,20 @@ const STEPS = [
 const PAYMENT_METHODS = [
   { title: "Transferencia", desc: "BBVA, Banamex, Santander · Cuenta proporcionada por WhatsApp", icon: "account_balance" },
   { title: "Depósito en efectivo", desc: "OXXO, BBVA, sucursales bancarias", icon: "payments" },
-  { title: "Efectivo a la entrega", desc: "Solo para entregas en persona dentro de Monterrey y área metropolitana", icon: "credit_card" },
+  { title: "Efectivo a la entrega", desc: "Solo para entregas en persona dentro de Monterrey y área metropolitana", icon: "handshake" },
 ];
 
 const CANCELLATION_POLICY = [
-  { title: "Antes de aprobar diseño", status: "Cancelación libre", tone: "ok", body: "Si aún no se aprueba la mockup ni se ha apartado, puedes cancelar sin costo." },
-  { title: "Después de aprobar diseño y apartar", status: "Reembolso parcial", tone: "warn", body: "Se reembolsa el 70% del apartado. El 30% cubre diseño y materiales preparados." },
-  { title: "Pedido en producción", status: "Sin reembolso", tone: "danger", body: "Una vez impreso el diseño no es posible cancelar. Puedes recoger el pedido o redirigirlo." },
-  { title: "Cambios de diseño tras aprobar", status: "Aplica re-cotización", tone: "warn", body: "Si necesitas modificar arte/talla después de aprobar, se cotiza nuevamente desde el paso 2." },
+  { title: "Antes de aprobar diseño", status: "Cancelación libre", tone: "ok", icon: "check_circle", body: "Si aún no se aprueba la mockup ni se ha apartado, puedes cancelar sin costo." },
+  { title: "Después de aprobar diseño y apartar", status: "Reembolso parcial", tone: "warn", icon: "info", body: "Se reembolsa el 70% del apartado. El 30% cubre diseño y materiales preparados." },
+  { title: "Pedido en producción", status: "Sin reembolso", tone: "danger", icon: "block", body: "Una vez impreso el diseño no es posible cancelar. Puedes recoger el pedido o redirigirlo." },
+  { title: "Cambios de diseño tras aprobar", status: "Aplica re-cotización", tone: "warn", icon: "edit", body: "Si necesitas modificar arte o talla después de aprobar, se cotiza nuevamente desde el paso 2." },
 ] as const;
 
 const TONE_CLASSES = {
-  ok: "border-success/40 bg-success/10 text-success",
-  warn: "border-tertiary/40 bg-tertiary-fixed text-on-tertiary-fixed-variant",
-  danger: "border-error/40 bg-error-container text-on-error-container",
+  ok: "bg-success/10 text-success",
+  warn: "bg-accent/40 text-primary-strong",
+  danger: "bg-error-container text-on-error-container",
 };
 
 const FAQS = [
@@ -36,112 +35,152 @@ const FAQS = [
   { q: "¿Y si mi diseño no es muy bueno?", a: "No te preocupes. Te ayudamos a mejorarlo o lo rediseñamos sin costo si es ajuste menor. Diseño desde cero se cotiza aparte." },
 ];
 
-export function ProcesoContent({ whatsapp }: { whatsapp: string }) {
-  const [openFaq, setOpenFaq] = useState(0);
+const GIROS = ["-1.5deg", "1.2deg", "-0.8deg"];
 
+export function ProcesoContent({ whatsapp }: { whatsapp: string }) {
   return (
     <div className="flex flex-col w-full bg-surface text-on-surface">
       {/* Hero */}
-      <section className="w-full px-container-margin pt-section-gap-mobile lg:pt-section-gap-desktop pb-stack-md text-center">
-        <span className="font-label-caps text-secondary tracking-widest uppercase">Cómo trabajamos contigo</span>
-        <h1 className="font-display-md mt-3 mb-4">De tu idea a tu pedido, en tres pasos simples</h1>
-        <p className="font-body-main text-on-surface-variant max-w-2xl mx-auto">
-          Así es como producimos tu pedido personalizado, del primer mensaje a la entrega.
-        </p>
+      <section className="tapete w-full pt-28 md:pt-36 pb-12 md:pb-16">
+        <div className="px-container-margin max-w-[1440px] mx-auto flex flex-col items-start gap-6">
+          <span className="entrada font-label-caps text-primary" style={{ "--i": 0 } as React.CSSProperties}>
+            Cómo trabajamos contigo
+          </span>
+          <h1 className="entrada font-display-lg text-on-surface leading-[0.95] max-w-4xl" style={{ "--i": 1 } as React.CSSProperties}>
+            De tu idea a tu pedido en <span className="marca">tres pasos</span>
+            <Destellos className="inline-block w-[0.55em] h-[0.5em] ml-2 align-top" />
+          </h1>
+          <p className="entrada font-body-main text-on-surface-variant max-w-2xl" style={{ "--i": 2 } as React.CSSProperties}>
+            Así producimos tu pedido personalizado, del primer mensaje a la entrega.
+          </p>
+        </div>
       </section>
 
-      {/* Steps */}
-      <section className="w-full px-container-margin py-section-gap-mobile lg:py-section-gap-desktop">
-        <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-grid-gutter">
-          <div className="hidden sm:block absolute top-8 left-[16.66%] right-[16.66%] h-px bg-outline-variant/40" />
+      {/* Pasos: stickers unidos por una línea de corte */}
+      <section className="w-full px-container-margin py-section-gap-mobile">
+        <ol className="relative max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+          <span
+            aria-hidden="true"
+            className="absolute left-7 top-8 bottom-8 border-l-2 border-dashed border-primary/35 md:left-[16%] md:right-[16%] md:top-7 md:bottom-auto md:border-l-0 md:border-t-2"
+          />
           {STEPS.map((step, i) => (
-            <div key={step.title} className="relative flex flex-col items-center text-center gap-3">
-              <div className="w-16 h-16 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
-                <span className="material-symbols-outlined">{step.icon}</span>
+            <li key={step.title} className="revela relative flex md:flex-col items-start md:items-center gap-5 md:text-center">
+              <span className="relative z-10 shrink-0 w-14 h-14 rounded-full bg-accent text-primary-strong font-display-sm-mobile text-[26px] flex items-center justify-center ring-[6px] ring-surface">
+                {i + 1}
+              </span>
+              <div
+                className="sticker flex-1 w-full flex flex-col md:items-center gap-3 p-6 rounded-[24px] bg-surface-container-lowest"
+                style={{ "--giro": GIROS[i] } as React.CSSProperties}
+              >
+                <span className="material-symbols-outlined text-primary text-[28px]" aria-hidden="true">{step.icon}</span>
+                <h2 className="font-display-sm-mobile text-[24px] text-on-surface">{step.title}</h2>
+                <p className="font-body-secondary text-on-surface-variant max-w-xs">{step.desc}</p>
               </div>
-              <span className="font-label-caps text-xs text-on-surface-variant">Paso {i + 1}</span>
-              <h3 className="font-body-main font-semibold">{step.title}</h3>
-              <p className="font-body-secondary text-on-surface-variant text-sm max-w-xs">{step.desc}</p>
-            </div>
+            </li>
           ))}
+        </ol>
+      </section>
+
+      {/* Pago */}
+      <section className="w-full px-container-margin pb-section-gap-mobile">
+        <div className="rounded-[36px] bg-surface-tint-soft px-6 py-14 md:px-14 md:py-16 max-w-[1440px] mx-auto">
+          <div className="revela text-center flex flex-col items-center gap-3 mb-10">
+            <span className="font-label-caps text-primary">Pago</span>
+            <h2 className="font-display-md text-on-surface">Métodos de pago</h2>
+            <div className="flex flex-wrap justify-center gap-3 mt-2">
+              <span className="px-5 py-2 rounded-full bg-primary text-on-primary font-label-caps">50% al apartar</span>
+              <span className="px-5 py-2 rounded-full bg-accent text-primary-strong font-label-caps">50% al entregar</span>
+            </div>
+            <p className="font-body-main text-on-surface-variant max-w-xl">
+              Confirmas el pago enviándonos foto del comprobante por WhatsApp.
+            </p>
+          </div>
+          <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-5xl mx-auto">
+            {PAYMENT_METHODS.map((m) => (
+              <li key={m.title} className="revela flex flex-col items-center text-center gap-3 p-6 rounded-[24px] bg-surface-container-lowest">
+                <span className="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center">
+                  <span className="material-symbols-outlined" aria-hidden="true">{m.icon}</span>
+                </span>
+                <h3 className="font-display-sm-mobile text-[22px] text-on-surface">{m.title}</h3>
+                <p className="font-body-secondary text-on-surface-variant">{m.desc}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      {/* Payment methods */}
-      <section className="w-full px-container-margin py-section-gap-mobile lg:py-section-gap-desktop bg-surface-container-low">
-        <div className="text-center mb-stack-md">
-          <span className="font-label-caps text-secondary tracking-widest uppercase">Pago</span>
-          <h2 className="font-display-sm-mobile mt-3 mb-2">Métodos de pago aceptados</h2>
-          <p className="font-body-main text-on-surface-variant max-w-xl mx-auto">
-            50% al apartar · 50% al entregar. Confirmas el pago enviándonos foto del comprobante por WhatsApp.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-grid-gutter max-w-4xl mx-auto">
-          {PAYMENT_METHODS.map((m) => (
-            <div key={m.title} className="bg-surface-container-lowest rounded-lg p-6 text-center border border-outline-variant/20">
-              <span className="material-symbols-outlined text-3xl text-primary mb-2">{m.icon}</span>
-              <h4 className="font-body-main font-semibold mb-1">{m.title}</h4>
-              <p className="font-body-secondary text-on-surface-variant text-sm">{m.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Cancellation policy */}
-      <section className="w-full px-container-margin py-section-gap-mobile lg:py-section-gap-desktop max-w-3xl mx-auto">
-        <h2 className="font-display-sm-mobile mb-2">Política de cancelaciones y cambios</h2>
-        <p className="font-body-main text-on-surface-variant mb-stack-md">
-          Trabajamos con producción bajo pedido: cada diseño es único. Por eso las reglas de cancelación dependen del momento en que solicites cancelar.
-        </p>
-        <div className="flex flex-col gap-4">
-          {CANCELLATION_POLICY.map((c) => (
-            <div key={c.title} className={`rounded-lg border-l-4 p-4 ${TONE_CLASSES[c.tone]}`}>
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
-                <h4 className="font-body-main font-semibold text-on-surface">{c.title}</h4>
-                <span className="font-label-caps text-xs px-3 py-1 rounded-full bg-surface-container-lowest">{c.status}</span>
-              </div>
-              <p className="font-body-secondary text-on-surface-variant text-sm">{c.body}</p>
-            </div>
-          ))}
+      {/* Política de cancelaciones */}
+      <section className="w-full px-container-margin pb-section-gap-mobile">
+        <div className="max-w-3xl mx-auto">
+          <div className="revela flex flex-col gap-2 mb-8">
+            <span className="font-label-caps text-primary">Sin sorpresas</span>
+            <h2 className="font-display-md text-on-surface">Cancelaciones y cambios</h2>
+            <p className="font-body-main text-on-surface-variant">
+              Trabajamos bajo pedido: cada diseño es único. Por eso las reglas dependen del momento en que
+              solicites cancelar.
+            </p>
+          </div>
+          <ul className="flex flex-col gap-4">
+            {CANCELLATION_POLICY.map((c) => (
+              <li key={c.title} className="revela flex gap-4 p-5 rounded-[20px] bg-surface-container-lowest border-2 border-outline-variant/30">
+                <span className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${TONE_CLASSES[c.tone]}`}>
+                  <span className="material-symbols-outlined text-[20px]" aria-hidden="true">{c.icon}</span>
+                </span>
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="font-body-main font-semibold text-on-surface">{c.title}</h3>
+                    <span className={`font-label-caps text-[10px] px-2.5 py-1 rounded-full ${TONE_CLASSES[c.tone]}`}>{c.status}</span>
+                  </div>
+                  <p className="font-body-secondary text-on-surface-variant">{c.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="w-full px-container-margin py-section-gap-mobile lg:py-section-gap-desktop bg-surface-container-low">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="font-display-sm-mobile mb-2">Preguntas frecuentes</h2>
-          <p className="font-body-main text-on-surface-variant mb-stack-md">
-            Lo que la mayoría nos pregunta. Si tu duda no aparece, pregúntanos por WhatsApp.
-          </p>
-          <div className="bg-surface-container-lowest rounded-lg border border-outline-variant/20 overflow-hidden">
+      {/* Preguntas frecuentes — <details> nativo: accesible y sin JavaScript */}
+      <section className="tapete w-full px-container-margin py-section-gap-mobile md:py-section-gap-desktop">
+        <div className="max-w-3xl mx-auto">
+          <div className="revela flex flex-col gap-2 mb-8 text-center items-center">
+            <span className="font-label-caps text-primary">Dudas</span>
+            <h2 className="font-display-md text-on-surface">Preguntas <span className="marca">frecuentes</span></h2>
+          </div>
+          <div className="flex flex-col gap-3">
             {FAQS.map((f, i) => (
-              <div key={f.q} className={i < FAQS.length - 1 ? "border-b border-outline-variant/20" : ""}>
-                <button
-                  onClick={() => setOpenFaq(openFaq === i ? -1 : i)}
-                  className="w-full flex items-center justify-between gap-4 px-6 py-4 text-left font-body-main font-semibold"
-                >
-                  <span>{f.q}</span>
-                  <span
-                    className={`material-symbols-outlined text-primary shrink-0 transition-transform ${openFaq === i ? "rotate-180" : ""}`}
-                  >
-                    expand_more
+              <details
+                key={f.q}
+                open={i === 0}
+                className="revela group rounded-[20px] bg-surface-container-lowest border-2 border-outline-variant/30 open:border-primary/40 transition-colors"
+              >
+                <summary className="flex items-center justify-between gap-4 min-h-14 px-6 py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden font-body-main font-semibold text-on-surface">
+                  {f.q}
+                  <span className="shrink-0 w-8 h-8 rounded-full bg-surface-tint-soft text-primary flex items-center justify-center transition-transform group-open:rotate-45">
+                    <span className="material-symbols-outlined text-[20px]" aria-hidden="true">add</span>
                   </span>
-                </button>
-                {openFaq === i && (
-                  <p className="font-body-secondary text-on-surface-variant px-6 pb-4">{f.a}</p>
-                )}
-              </div>
+                </summary>
+                <p className="font-body-main text-on-surface-variant px-6 pb-5">{f.a}</p>
+              </details>
             ))}
           </div>
-          <div className="text-center mt-stack-md">
-            <p className="font-body-secondary text-on-surface-variant mb-3">¿No encontraste tu respuesta?</p>
+        </div>
+      </section>
+
+      {/* Cierre */}
+      <section className="w-full px-container-margin py-section-gap-mobile">
+        <div className="tapete-oscuro relative overflow-hidden rounded-[36px] bg-primary-strong text-white px-6 py-16 md:py-20 max-w-[1440px] mx-auto">
+          <Destellos className="absolute top-8 right-8 w-12 h-12 md:w-16 md:h-16" />
+          <div className="revela relative flex flex-col items-center text-center gap-stack-md max-w-2xl mx-auto">
+            <h2 className="font-display-md text-white">¿No encontraste tu respuesta?</h2>
+            <p className="font-body-main text-white/85">Escríbenos y te ayudamos con lo que necesites.</p>
             <a
-              href={waLink(whatsapp, "Hola Keyli, tengo una duda.")}
+              href={waLink(whatsapp, "¡Hola! Tengo una duda sobre su proceso.")}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-on-primary font-label-caps hover:bg-primary-container hover:text-on-primary-container transition-colors"
+              className="boton-sticker mt-2 inline-flex items-center gap-2 min-h-12 px-8 py-4 rounded-full bg-accent text-primary-strong font-label-caps"
             >
-              <span className="material-symbols-outlined text-sm">chat</span> Pregúntanos por WhatsApp
+              {SOCIAL_ICONS.whatsapp}
+              Pregúntanos por WhatsApp
             </a>
           </div>
         </div>

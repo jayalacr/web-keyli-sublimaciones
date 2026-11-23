@@ -84,17 +84,6 @@ export function ConfiguracionTabs({
         <div className="flex-1 flex flex-col space-y-6">
           {tab === "contacto" ? (
             <SettingsCard icon="alternate_email" title="Contacto">
-              <Field label="Logo del sitio" hint="Se muestra en el encabezado. Recomendado: cuadrado, mínimo 200x200px.">
-                <div className="max-w-[160px]">
-                  <ImageUploader
-                    src={contacto.logo_url || null}
-                    alt="Logo Keyli Sublimaciones"
-                    onChange={(url) => updateContacto("logo_url", url)}
-                    folder="sitio"
-                    heightClass="h-24"
-                  />
-                </div>
-              </Field>
               <Field label="Número de WhatsApp" hint="Solo dígitos, con código de país. Ej: 5218110000000">
                 <input
                   type="text"

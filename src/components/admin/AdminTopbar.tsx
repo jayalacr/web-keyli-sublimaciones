@@ -13,10 +13,11 @@ export function AdminTopbar({ onMenuClick }: { onMenuClick: () => void }) {
         >
           <span className="material-symbols-outlined">menu</span>
         </button>
-        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-          <span className="material-symbols-outlined text-on-primary text-[18px]">brush</span>
+        <div className="w-8 h-8 bg-surface-tint-soft rounded-lg flex items-center justify-center overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/keyli-husky.png" alt="" className="h-6 w-auto" />
         </div>
-        <span className="hidden sm:inline font-admin-title text-base text-on-surface">Keyli Sub.</span>
+        <span className="hidden sm:inline font-admin-title text-base text-on-surface">Keyli Studio</span>
       </div>
       <div className="flex items-center gap-4">
         <Link

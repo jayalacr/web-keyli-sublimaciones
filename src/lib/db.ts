@@ -108,11 +108,11 @@ export async function getTemporadaConProductos(slug: string) {
 
   const { data: relaciones, error: relErr } = await db
     .from("productos_temporadas")
-    .select("productos(id,nombre,imagen_url,imagen_alt,activo,categoria:categorias(nombre))")
+    .select("productos(id,nombre,slug,imagen_url,imagen_alt,activo,categoria:categorias(nombre))")
     .eq("temporada_id", temporada.id);
   if (relErr) throw relErr;
 
-  type Row = { productos: { id: string; nombre: string; imagen_url: string | null; imagen_alt: string | null; activo: boolean; categoria: { nombre: string } | null } | null };
+  type Row = { productos: { id: string; nombre: string; slug: string; imagen_url: string | null; imagen_alt: string | null; activo: boolean; categoria: { nombre: string } | null } | null };
   const productos = (relaciones as unknown as Row[])
     .map((r) => r.productos)
     .filter((p): p is NonNullable<Row["productos"]> => !!p && p.activo);

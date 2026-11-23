@@ -42,10 +42,11 @@ export function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => 
       >
         <div className="p-6 mb-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <span className="material-symbols-outlined text-on-primary">brush</span>
+            <div className="w-10 h-10 bg-surface-tint-soft rounded-lg flex items-center justify-center overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/keyli-husky.png" alt="" className="h-8 w-auto" />
             </div>
-            <span className="font-admin-title text-lg text-on-surface">Keyli Sub.</span>
+            <span className="font-admin-title text-lg text-on-surface">Keyli Studio</span>
           </div>
           <button
             onClick={onClose}
@@ -79,7 +80,7 @@ export function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => 
         <div className="mt-auto p-4 border-t border-outline-variant bg-surface-container-low/50">
           <div className="px-2 py-2 mb-2">
             <p className="text-xs font-admin-label-caps text-on-surface-variant">ADMINISTRADOR</p>
-            <p className="text-sm font-admin-body truncate text-on-surface">admin@keylisub.com</p>
+            <p className="text-sm font-admin-body truncate text-on-surface">Panel de administración</p>
           </div>
           <button onClick={cerrarSesion} className="w-full flex items-center px-2 py-2 text-error hover:bg-error-container/20 rounded-lg transition-colors">
             <span className="material-symbols-outlined mr-3">logout</span>

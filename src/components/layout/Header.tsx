@@ -19,16 +19,12 @@ export function Header({
   whatsapp,
   instagramUrl,
   facebookUrl,
-  logoUrl = "/logoKeyli.jpeg",
 }: {
   whatsapp: string;
   instagramUrl: string;
   facebookUrl: string;
-  logoUrl?: string;
 }) {
   const pathname = usePathname();
-  // ponytail: portada de temporada es oscura y el header flotante se pierde encima — ahí forzamos fondo sólido siempre.
-  const isSeasonDetail = pathname.startsWith("/temporadas/");
   const [scrolled, setScrolled] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -52,24 +48,19 @@ export function Header({
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled || menuOpen || isSeasonDetail ? "bg-surface shadow-[0_1px_8px_rgba(0,0,0,0.04)]" : "bg-transparent"
+        scrolled || menuOpen ? "bg-surface shadow-[0_1px_8px_rgba(0,0,0,0.04)]" : "bg-transparent"
       }`}
     >
-      <div className="h-16 md:h-20 w-full px-container-margin flex items-center justify-between gap-3">
-        <Link href="/" className="flex items-center gap-3 min-w-0">
+      <div className="h-20 md:h-24 w-full px-container-margin flex items-center justify-between gap-3">
+        <Link href="/" className="shrink-0">
           <Image
-            src={logoUrl}
-            alt="Keyli Sublimaciones"
-            width={48}
-            height={48}
-            className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shrink-0"
+            src="/logo-keyli-studio-v6.png"
+            alt="Keyli Studio"
+            width={1000}
+            height={501}
+            priority
+            className="h-16 md:h-20 w-auto"
           />
-          <span
-            className="hidden sm:block text-lg md:text-xl font-bold tracking-tight text-on-surface leading-none truncate"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            Keyli <span className="text-primary">Sublimaciones</span>
-          </span>
         </Link>
         <nav className="hidden lg:flex items-center gap-stack-lg">
           {NAV_LINKS.map((link) => {
@@ -142,7 +133,7 @@ export function Header({
       </div>
 
       {menuOpen && (
-        <nav className="baja lg:hidden border-t border-outline-variant/20 bg-surface px-container-margin py-4 flex flex-col max-h-[calc(100dvh-4rem)] overflow-y-auto">
+        <nav className="baja lg:hidden border-t border-outline-variant/20 bg-surface px-container-margin py-4 flex flex-col max-h-[calc(100dvh-5rem)] overflow-y-auto">
           {NAV_LINKS.map((link) => {
             const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
             return (

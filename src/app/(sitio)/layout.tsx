@@ -10,9 +10,8 @@ export default async function SitioLayout({ children }: LayoutProps<"/">) {
     <>
       <Header
         whatsapp={contacto?.whatsapp ?? DEFAULT_PHONE}
-        instagramUrl={contacto?.instagram_url ?? "https://instagram.com/keylisublimaciones"}
+        instagramUrl={contacto?.instagram_url ?? "https://instagram.com/keylistudio.mx"}
         facebookUrl={contacto?.facebook_url ?? "https://facebook.com/keylisublimaciones"}
-        logoUrl={contacto?.logo_url || undefined}
       />
       <main className="flex-1">{children}</main>
       {/* WhatsApp flotante sólo en celular/tablet; en escritorio el Header ya tiene "Contáctanos". */}
@@ -27,7 +26,7 @@ export default async function SitioLayout({ children }: LayoutProps<"/">) {
       </a>
       <Footer
         whatsapp={contacto?.whatsapp ?? DEFAULT_PHONE}
-        instagramUrl={contacto?.instagram_url ?? "https://instagram.com/keylisublimaciones"}
+        instagramUrl={contacto?.instagram_url ?? "https://instagram.com/keylistudio.mx"}
         facebookUrl={contacto?.facebook_url ?? "https://facebook.com/keylisublimaciones"}
         tiktokUrls={contacto?.tiktok_urls ?? []}
       />

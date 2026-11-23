@@ -1,7 +1,13 @@
-import Link from "next/link";
 import { DEFAULT_PHONE, waLink } from "@/lib/constants";
 import { getCategorias, getContacto, getProductosActivos } from "@/lib/db";
 import { ArticulosGrid } from "@/components/ArticulosGrid";
+import { SOCIAL_ICONS } from "@/components/SocialIcons";
+import { Destellos } from "@/components/Marca";
+
+export const metadata = {
+  title: "Artículos — Keyli Studio",
+  description: "Termos, tazas, playeras, papelería, vinil y más, personalizados en Monterrey. Cotiza por WhatsApp.",
+};
 
 export default async function ArticulosPage(props: PageProps<"/articulos">) {
   const searchParams = await props.searchParams;
@@ -11,41 +17,29 @@ export default async function ArticulosPage(props: PageProps<"/articulos">) {
 
   return (
     <div className="flex flex-col w-full bg-surface text-on-surface">
-      <div className="px-container-margin w-full max-w-[1440px] mx-auto">
-        <div className="flex flex-wrap gap-stack-md border-b border-outline-variant/30 pb-4 mt-8 relative pt-section-gap-desktop">
-          <span className="font-label-caps text-on-surface-variant tracking-wider relative">
-            Artículos
-            <span className="absolute -bottom-4 left-0 w-full h-[2px] bg-primary rounded-full" />
-          </span>
-          <Link href="/temporadas" className="font-label-caps text-secondary/60 tracking-wider hover:text-on-surface transition-colors">
-            Temporadas
-          </Link>
-        </div>
-      </div>
-
       <ArticulosGrid categorias={categorias.map((c) => c.nombre)} productos={productos} initialCategory={categoriaParam} whatsapp={whatsapp} />
 
-      <div className="bg-surface-tint-soft mt-section-gap-mobile w-full py-section-gap-desktop px-container-margin relative overflow-hidden">
-        <div className="absolute -right-32 -top-32 w-[600px] h-[600px] max-w-full bg-primary/5 rounded-full blur-3xl" />
-        <div className="max-w-3xl mx-auto flex flex-col items-center text-center gap-stack-lg relative z-10">
-          <div className="flex flex-col items-center gap-4">
-            <h2 className="font-display-md text-on-surface">¿Traes una idea que no está aquí?</h2>
-            <p className="font-body-main text-on-surface-variant/80 max-w-lg">
-              Escríbenos y diseñamos algo único para ti. Nuestro taller está equipado para hacer
-              realidad tus proyectos más creativos.
+      {/* Cierre: idea a la medida — bloque morado con el tapete en blanco */}
+      <section className="w-full px-container-margin pb-section-gap-mobile max-w-[1440px] mx-auto">
+        <div className="tapete-oscuro relative overflow-hidden rounded-[36px] bg-primary-strong text-white px-6 py-16 md:py-20">
+          <Destellos className="absolute top-8 right-8 md:top-10 md:right-14 w-12 h-12 md:w-16 md:h-16" />
+          <div className="revela relative max-w-2xl mx-auto flex flex-col items-center text-center gap-stack-md">
+            <h2 className="font-display-md text-white leading-tight">¿Traes una idea que no está aquí?</h2>
+            <p className="font-body-main text-white/85 max-w-lg">
+              Escríbenos y la diseñamos contigo: un regalo, algo para tu evento o piezas para tu negocio.
             </p>
+            <a
+              href={waLink(whatsapp, "¡Hola! Tengo una idea que no vi en su catálogo y me gustaría cotizarla.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="boton-sticker mt-2 inline-flex items-center gap-2 min-h-12 px-8 py-4 rounded-full bg-accent text-primary-strong font-label-caps"
+            >
+              {SOCIAL_ICONS.whatsapp}
+              Platícanos tu idea
+            </a>
           </div>
-          <a
-            href={waLink(whatsapp)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-6 sm:px-8 py-4 rounded-full bg-primary text-on-primary font-label-caps hover:bg-on-primary-fixed-variant transition-colors shadow-lg hover:shadow-xl inline-flex items-center gap-2 text-center"
-          >
-            Iniciar conversación
-            <span className="material-symbols-outlined text-[18px]">chat</span>
-          </a>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

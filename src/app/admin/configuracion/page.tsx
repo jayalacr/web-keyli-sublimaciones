@@ -4,7 +4,7 @@ import { ConfiguracionTabs } from "@/components/admin/ConfiguracionTabs";
 
 const FALLBACK_CONTACTO: Contacto = {
   whatsapp: DEFAULT_PHONE,
-  instagram_url: "https://instagram.com/keylisublimaciones",
+  instagram_url: "https://instagram.com/keylistudio.mx",
   instagram_widget_url: "",
   facebook_url: "https://facebook.com/keylisublimaciones",
   tiktok_urls: [],
@@ -13,7 +13,7 @@ const FALLBACK_CONTACTO: Contacto = {
 
 const FALLBACK: TextosInicio = {
   hero_titulo: "Lo personalizado se siente distinto",
-  hero_subtitulo: "Creamos piezas únicas a través de la sublimación. Cada artículo cuenta una historia pensada exclusivamente para ti.",
+  hero_subtitulo: "Diseñamos y personalizamos regalos, papelería y prendas para ti, tus eventos o tu negocio.",
   hero_cta: "Ver artículos",
   hero_imagen_url: "",
   hero_imagen_alt: "",
@@ -23,7 +23,7 @@ const FALLBACK: TextosInicio = {
   historia_imagen_alt: "",
   nosotros_imagen_url: "",
   nosotros_imagen_alt: "",
-  insignias_confianza: ["Envíos a todo México", "Entrega en 3 a 5 días", "Diseño incluido sin costo", "Más de 500 pedidos entregados"],
+  insignias_confianza: ["Envíos a todo México", "Desde 2021", "Sublimación, vinil, DTF y papelería", "Apruebas tu diseño antes de producir"],
 };
 
 export default async function AdminConfiguracionPage() {

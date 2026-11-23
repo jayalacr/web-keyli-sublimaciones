@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { enviarOpinion } from "@/app/(sitio)/actions";
 import { Dialog } from "@/components/Dialog";
+import Image from "next/image";
 import { Destellos } from "@/components/Marca";
 
 export function TestimonialForm() {
@@ -11,8 +12,9 @@ export function TestimonialForm() {
   return (
     <div className="text-center">
       <button
+        type="button"
         onClick={() => setOpen(true)}
-        className="px-8 py-3 bg-primary text-on-primary rounded-full font-label-caps hover:bg-primary-container hover:text-on-primary-container transition-colors"
+        className="boton-sticker inline-flex items-center gap-2 min-h-12 px-8 py-3 bg-primary text-on-primary rounded-full font-label-caps"
       >
         Comparte tu opinión
       </button>
@@ -44,27 +46,32 @@ function TestimonialModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <Dialog label="Comparte tu opinión" onClose={onClose} className="max-w-md rounded-2xl">
-      <div className="bg-surface w-full rounded-2xl shadow-2xl relative p-8">
+    <Dialog label="Comparte tu opinión" onClose={onClose} className="max-w-md rounded-[28px]">
+      <div className="bg-surface w-full rounded-[28px] shadow-2xl relative p-7 sm:p-8">
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-variant transition-colors"
+          className="absolute top-4 right-4 w-11 h-11 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-tint-soft transition-colors"
           aria-label="Cerrar"
         >
           <span className="material-symbols-outlined text-on-surface-variant">close</span>
         </button>
 
         {sent ? (
-          <div className="flex flex-col items-center gap-3 py-8">
-            <Destellos className="w-12 h-11" />
-            <p className="font-body-main text-on-surface text-center">¡Gracias por tu opinión!</p>
+          <div className="flex flex-col items-center gap-3 py-6 text-center">
+            <div className="relative">
+              <Image src="/keyli-husky.png" alt="" width={304} height={480} className="h-36 w-auto" />
+              <Destellos className="absolute -top-1 -right-8 w-10 h-10" />
+            </div>
+            <h2 className="font-display-sm-mobile text-on-surface">¡Gracias por tu opinión!</h2>
+            <p className="font-body-secondary text-on-surface-variant">La revisamos y pronto aparecerá en la página.</p>
           </div>
         ) : (
           <form onSubmit={submit} className="flex flex-col gap-4 mt-2">
-            <h3 className="font-label-caps text-secondary tracking-widest uppercase text-center">¿Nos compraste algo?</h3>
-            <p className="font-body-secondary text-on-surface-variant text-sm text-center -mt-2">
-              Cuéntanos tu experiencia.
-            </p>
+            <div className="text-center pr-8 pl-8">
+              <h2 className="font-display-sm-mobile text-on-surface">¿Nos compraste algo?</h2>
+              <p className="font-body-secondary text-on-surface-variant mt-1">Cuéntanos tu experiencia.</p>
+            </div>
             {!anonimo && (
               <input
                 type="text"
@@ -73,7 +80,8 @@ function TestimonialModal({ onClose }: { onClose: () => void }) {
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 placeholder="Tu nombre"
-                className="w-full px-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none font-body-main text-on-surface"
+                aria-label="Tu nombre"
+                className="w-full px-4 py-2 bg-surface-container-lowest border-2 border-outline-variant/60 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none font-body-main text-on-surface"
               />
             )}
             <label className="flex items-center gap-2 -mt-1 font-body-secondary text-sm text-on-surface-variant">
@@ -91,7 +99,8 @@ function TestimonialModal({ onClose }: { onClose: () => void }) {
               value={detalle}
               onChange={(e) => setDetalle(e.target.value)}
               placeholder="Qué pediste (opcional)"
-              className="w-full px-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none font-body-main text-on-surface"
+              aria-label="Qué pediste (opcional)"
+              className="w-full px-4 py-2 bg-surface-container-lowest border-2 border-outline-variant/60 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none font-body-main text-on-surface"
             />
             <textarea
               required
@@ -100,13 +109,14 @@ function TestimonialModal({ onClose }: { onClose: () => void }) {
               value={texto}
               onChange={(e) => setTexto(e.target.value)}
               placeholder="Tu opinión"
-              className="w-full px-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none font-body-main text-on-surface resize-none"
+              aria-label="Tu opinión"
+              className="w-full px-4 py-2 bg-surface-container-lowest border-2 border-outline-variant/60 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none font-body-main text-on-surface resize-none"
             />
             {error && <p className="text-sm text-error text-center">{error}</p>}
             <button
               type="submit"
               disabled={isPending}
-              className="self-center px-8 py-3 bg-primary text-on-primary rounded-full font-label-caps hover:bg-primary-container hover:text-on-primary-container transition-colors disabled:opacity-60"
+              className="boton-sticker self-center min-h-12 px-8 py-3 bg-primary text-on-primary rounded-full font-label-caps disabled:opacity-60"
             >
               {isPending ? "Enviando..." : "Enviar opinión"}
             </button>
